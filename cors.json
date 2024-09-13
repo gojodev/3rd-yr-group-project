@@ -1,0 +1,12 @@
+[
+    {
+        "origin": [
+            "https://rd-year-project-1f41d.web.app",
+            "http://127.0.0.1:5500"
+        ],
+        "method": [
+            "GET"
+        ],
+        "maxAgeSeconds": 3600
+    }
+]
