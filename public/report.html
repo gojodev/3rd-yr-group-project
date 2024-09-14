@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <script src="https://kit.fontawesome.com/cdbe41a012.js" crossorigin="anonymous"></script>
+    <style>
+   
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-image: url("images/stockmarketbackground.jpeg");
+            background-size: cover;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: black;
+            color: white;
+        }
+
+        .header-top .name {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .header-top .contact {
+            text-align: right;
+        }
+
+        .header-top .contact p {
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: white;
+        }
+
+        .header-bottom {
+            background-color: black;
+        }
+
+        .header-bottom nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .header-bottom nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .header-bottom nav a:hover {
+            background-color: #555;
+        }
+
+        .header-bottom .signup {
+            border: 2px solid red;
+            padding: 8px 18px;
+            border-radius: 5px;
+            transition: background-color 0.5s ease, background-position 0.5s ease;
+            margin-left: 1vw;
+            margin-right: 1vw;
+        }
+
+        .header-bottom .signup:hover {
+            background-color: red;
+            color: white;
+        }
+
+        .main {
+            background-color: rgba(0, 0, 0, 0.5);
+            text-align: center;
+            color: white;
+            width: 50%;
+            margin-left: 25%;
+            padding: 20px;
+            margin-top: 3%;
+        }
+   
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-top">
+            <div class="name">Buy High, Cry Later</div>
+            <div class="contact">
+                <p>Call us: (123) 456-7890</p>
+                <p>Email: info@example.com</p>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="header-bottom">
+            <nav>
+                <a href="loggedinhomepage.html">Home</a>
+                <a href="clients.html">Clients</a>
+                <a href="predict.html">Predict</a>
+                <a href="report.html">Report</a>
+                <a href="homepage.html" class="signup">Sign Out</a>
+                <a href="pricealerts.html"><i class="fa-solid fa-bell fa-2x" style="color: white;"></i></a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="main">
+            
+        </div>
+    </main>
+
+</body>
+</html>
