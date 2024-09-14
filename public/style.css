@@ -44,3 +44,27 @@ body {
 #SignInButton:hover {
     transform: scale(1.05);
 }
+
+#SignInButton:active {
+    color: aqua;
+}
+
+#errorContainer {
+    background-color: grey;
+    color: white;
+    border: 3px solid black;
+    width: 70%;
+    margin: 15px auto auto auto;
+    padding: 10px;
+    border-radius: 20px;
+    display: none;
+}
+
+#statusText {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.errorBorder {
+    border: 3px solid red;
+}

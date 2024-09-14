@@ -13,9 +13,9 @@ let credsArr = {
     }
 };
 
-// console.log(credsArr["user4"]);
+console.log(credsArr["user1"].email);
 
-let email = 'test@gmail.com';
-email = email.split('@gmail.com')[0];
+// let email = 'test@gmail.com';
+// email = email.split('@gmail.com')[0];
 
-console.log(email);
+// console.log(email);

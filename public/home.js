@@ -30,21 +30,32 @@ async function getRef_text(refItem) {
     return data;
 }
 
-var email = document.getElementById('email').value;
-var password = document.getElementById('password').value;
+function getUsername(email) {
+    return email.split('@gmail.com')[0];
+}
 
 function isUser(email) {
-    let res = false;
     var test;
-
-    let username = email.split('@gmail.com')[0];
+    let username = getUsername(email);
     try {
         test = credsArr[username];
+        return true;
     }
     catch {
-        res = (test == undefined) && (document.getElementById('password') == test.password) ? false : true;
+        return (test != undefined) ? true : false;
     }
-    return username;
+}
+
+function errorInput(elementsArr) {
+    for (let i = 0; i < elementsArr.length; i++) {
+        document.getElementById(elementsArr[i]).classList.add('errorBorder');
+    }
+
+    setTimeout(() => {
+        for (let i = 0; i < elementsArr.length; i++) {
+            document.getElementById(elementsArr[i]).classList.remove('errorBorder');
+        }
+    }, 3000);
 }
 
 const storage = getStorage(); // ! global
@@ -61,13 +72,53 @@ loadInfo();
 
 let signInButton = document.getElementById('SignInButton');
 
-signInButton, addEventListener('click', () => {
-    if (email != "" && password != "") {
-        if (isUser(email)) {
-            console.log(email, password);
+// ! GLOBAL
+var status = "";
+var email = document.getElementById('email');
+var password = document.getElementById('password');
+
+email.addEventListener('click', () => {
+    email.classList.toggle('errorBorder');
+});
+
+password.addEventListener('click', () => {
+    password.classList.toggle('errorBorder');
+});
+
+
+signInButton.addEventListener('click', () => {
+    var emailtext = email.value;
+    var passwordtext = password.value;
+    var username = getUsername(emailtext);
+    var userCrds = credsArr[username];
+
+    if (emailtext != "" && passwordtext != "") {
+        if (emailtext != userCrds.email || passwordtext != userCrds.password) {
+            status = 'incorrect username or password'
         }
-        else {
-            console.log(`${email}`)
+
+        if (emailtext == userCrds.email && passwordtext == userCrds.password) {
+            status = `${username} has logged in successfully`;
         }
+    }
+
+    if (emailtext == "" && passwordtext == "") {
+        status = 'Please enter email and password'
+    }
+    else if (emailtext != "" && passwordtext == "") {
+        status = 'Please enter password'
+    }
+    else if (emailtext == "" && passwordtext != "") {
+        status = 'Please enter email'
+    }
+    else if (!isUser(emailtext)) {
+        status = `no account associated with ${emailtext}`;
+    }
+
+    if (status != '') {
+        var errorContainer = document.getElementById('errorContainer');
+        errorContainer.style.display = "block";
+        errorInput(['email', 'password']);
+        document.getElementById('statusText').innerHTML = status;
     }
 });
