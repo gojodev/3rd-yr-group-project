@@ -1,0 +1,33 @@
+<!-- templates/about.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Flask App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>About Us</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('about') }}">About Us</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <h2>Our Mission</h2>
+        <p>We are dedicated to building user-friendly web applications using Flask and other technologies. Our goal is to provide a simple yet powerful experience to users and developers alike.</p>
+        
+        <h2>Team</h2>
+        <p>Our team consists of passionate developers who are enthusiastic about web development and creating awesome products.</p>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Flask App</p>
+    </footer>
+</body>
+</html>
