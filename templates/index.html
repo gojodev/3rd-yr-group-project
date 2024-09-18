@@ -1,3 +1,4 @@
+<!-- templates/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +7,7 @@
     <title>Document</title>
     <script type = "text/javascript"
         src = "{{ url_for('static', filename = '/hello.js') }}" ></script>
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='static/style.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <input type="button" onClick = "test()" value = "test" />
@@ -15,8 +16,8 @@
         <p><input type="text" name="nm" placeholder="Password"/></p>
         <p><input type ="submit" value="Login" ></p>
     </form>
-    <p><a>Support</a></p>
-    <p><a>Review</a></p>
+    <h4><a>Support</a></h4>
+    <h4><a>Review</a></h4>
 
 </body>
 </html>
