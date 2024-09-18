@@ -1,14 +1,14 @@
 from flask import Flask, render_template, request, make_response, session as flask_session
 
-
 app = Flask(__name__)
+app.secret_key = 'your_secret_key'  # Add a secret key for sessions
 
 def show():
     return 'testing'
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html')  # No need to include 'templates/' in the path
 
 def test():
     print("log")
@@ -54,6 +54,4 @@ def getsession():
     return '<h1>No session data found</h1>'
 
 if __name__ == '__main__':
-    app.debug = True
-    app.run(port=3001)
-    app.run(debug=True )
+    app.run(debug=True)
