@@ -12,5 +12,13 @@ def index():
 def about():
     return render_template('about.html')
 
+@app.route('/review')
+def review():
+    return render_template('review.html')
+
+@app.route('support')
+def support():
+    return render_template('support.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
