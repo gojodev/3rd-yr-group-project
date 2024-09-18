@@ -14,7 +14,7 @@ def about():
 def review():
     return render_template('review.html')
 
-@app.route('support')
+@app.route('/support')
 def support():
     return render_template('support.html')
 
