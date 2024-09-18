@@ -1,17 +1,17 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    color: #333;
+    background-color: #333;
+    color: #3A3335;
     justify-content: center;
 }
 
-h1 {
-    color: #0056b3;
+h3 {
+    color: #8A84E2;
 }
 
 a {
     text-decoration: none;
-    color: #007bff;
+    color: #F8F1FF;
 }
 p{
     align-items: center;
