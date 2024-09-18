@@ -1,6 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
-import Fuse from 'fuse.js';
+import { getStorage, ref, getDownloadURL, uploadString } from "firebase/storage";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAFayRb90ywbg82EcLOnH5iBDm3qnZx9TU",
@@ -12,7 +11,16 @@ const firebaseConfig = {
     measurementId: "G-86DQSH17PT"
 };
 
-const app = initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
+
+// ! GLOBAL
+var email = document.getElementById('email');
+var password = document.getElementById('password');
+var emailtext
+var passwordtext
+var username
+var status = "";
+var userCrds
 
 async function getRef_json(refItem) {
     const url = await getDownloadURL(refItem);
@@ -31,18 +39,18 @@ async function getRef_text(refItem) {
 }
 
 function getUsername(email) {
+    // todo validate email inputs
     return email.split('@gmail.com')[0];
 }
 
 function isUser(email) {
-    var test;
     let username = getUsername(email);
-    try {
-        test = credsArr[username];
-        return true;
-    }
-    catch {
-        return (test != undefined) ? true : false;
+    return credsArr[username] != undefined;
+}
+
+function removeErrorBorder(elementsArr) {
+    for (let i = 0; i < elementsArr.length; i++) {
+        document.getElementById(elementsArr[i]).classList.remove('errorBorder');
     }
 }
 
@@ -52,56 +60,39 @@ function errorInput(elementsArr) {
     }
 
     setTimeout(() => {
-        for (let i = 0; i < elementsArr.length; i++) {
-            document.getElementById(elementsArr[i]).classList.remove('errorBorder');
-        }
+        removeErrorBorder(elementsArr);
     }, 3000);
 }
 
 const storage = getStorage(); // ! global
+const userCreds = ref(storage, 'userCreds.json');
 var credsArr; // ! global
 
 async function loadInfo() {
-    const soundsRef = ref(storage, 'userCreds.json');
 
-    credsArr = await Promise.resolve(getRef_json(soundsRef));
+    credsArr = await Promise.resolve(getRef_json(userCreds));
     console.log(credsArr);
+    console.log('READ FROM THE DATABASE');
 }
 
 loadInfo();
 
-let signInButton = document.getElementById('SignInButton');
-
-// ! GLOBAL
-var status = "";
-var email = document.getElementById('email');
-var password = document.getElementById('password');
+var signInButton = document.getElementById('SignInButton');
 
 email.addEventListener('click', () => {
-    email.classList.toggle('errorBorder');
+    removeErrorBorder(['email']);
 });
 
 password.addEventListener('click', () => {
-    password.classList.toggle('errorBorder');
+    removeErrorBorder(['password']);
 });
 
 
-signInButton.addEventListener('click', () => {
-    var emailtext = email.value;
-    var passwordtext = password.value;
-    var username = getUsername(emailtext);
-    var userCrds = credsArr[username];
+function displayStatus(status) {
+    document.getElementById('statusText').innerHTML = status;
+}
 
-    if (emailtext != "" && passwordtext != "") {
-        if (emailtext != userCrds.email || passwordtext != userCrds.password) {
-            status = 'incorrect username or password'
-        }
-
-        if (emailtext == userCrds.email && passwordtext == userCrds.password) {
-            status = `${username} has logged in successfully`;
-        }
-    }
-
+function inputValidation(emailtext, passwordtext) {
     if (emailtext == "" && passwordtext == "") {
         status = 'Please enter email and password'
     }
@@ -111,14 +102,72 @@ signInButton.addEventListener('click', () => {
     else if (emailtext == "" && passwordtext != "") {
         status = 'Please enter email'
     }
-    else if (!isUser(emailtext)) {
+    else if (isUser(emailtext) == false) {
         status = `no account associated with ${emailtext}`;
     }
 
     if (status != '') {
+        errorInput(['email', 'password']);
         var errorContainer = document.getElementById('errorContainer');
         errorContainer.style.display = "block";
-        errorInput(['email', 'password']);
-        document.getElementById('statusText').innerHTML = status;
+
+        displayStatus(status);
+    }
+}
+
+signInButton.addEventListener('click', () => {
+    emailtext = email.value;
+    passwordtext = password.value;
+    console.log('email: ', emailtext)
+
+    username = getUsername(emailtext);
+    userCrds = credsArr[username];
+
+    if (userCrds == undefined) {
+        inputValidation(emailtext, passwordtext);
+    }
+    else {
+        if (emailtext != userCrds.email || passwordtext != userCrds.password) {
+            status = 'incorrect username or password'
+        }
+
+        if (emailtext == userCrds.email && passwordtext == userCrds.password) {
+            status = `${username} has logged in successfully`;
+        }
     }
 });
+
+var createAccount = document.getElementById('createAccount');
+createAccount.addEventListener('click', () => {
+    signInButton.innerHTML = '<h3>Create Account<h3>';
+    createAccount.style.display = 'none';
+
+    emailtext = email.value;
+    passwordtext = password.value;
+
+
+    let newUser = {
+        'email': emailtext,
+        'password': passwordtext
+    }
+
+    credsArr[`${username}`] = newUser;
+    inputValidation(emailtext, passwordtext);
+
+    status = 'New user created';
+    displayStatus(status);
+    console.log(userCrds)
+
+    // todo upload updated JSON to firebase
+    uploadString(userCreds, JSON.stringify(credsArr)).then((snapshot) => {
+        console.log('Uploaded a blob or file!');
+    });
+})
+
+function testInput() {
+    email.value = 'user4@gmail.com'
+    password.value = 'user4_password!'
+    console.log('inputs set')
+}
+
+testInput();

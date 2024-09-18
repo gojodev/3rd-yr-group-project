@@ -13,9 +13,18 @@ let credsArr = {
     }
 };
 
-console.log(credsArr["user1"].email);
+let username = 'user4';
+let email = 'user4@gmail.com'
+let password = 'user4_password!'
 
-// let email = 'test@gmail.com';
-// email = email.split('@gmail.com')[0];
+let newUser = {
+    'email': email,
+    'password': password
+}
 
-// console.log(email);
+credsArr[`${username}`] = newUser;
+
+console.log(credsArr)
+
+// console.log(newUser['user4'])
+

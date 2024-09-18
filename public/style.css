@@ -34,18 +34,18 @@ body {
     transform: scale(1.05);
 }
 
-#SignInButton {
+.buttonStyle {
     color: white;
     background-color: black;
     border-radius: 20px;
     transition: 0.2s;
 }
 
-#SignInButton:hover {
+.buttonStyle:hover {
     transform: scale(1.05);
 }
 
-#SignInButton:active {
+.buttonStyle:active {
     color: aqua;
 }
 
@@ -67,4 +67,11 @@ body {
 
 .errorBorder {
     border: 3px solid red;
+}
+
+#createAccount {
+    display: block;
+    font-size: 1.1rem;
+    margin: auto;
+    margin-top: 20px;
 }
