@@ -1,19 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap');
+
 body {
     font-family: Arial, sans-serif;
     background-color: #333;
-    color: #3A3335;
-    justify-content: center;
-}
 
-h3 {
-    color: #8A84E2;
-}
 
-a {
-    text-decoration: none;
-    color: #F8F1FF;
+}
+#cashlock{
+    font-family: 'Unbounded', sans-serif;
+    font-style:normal;
+    font-size: 4.5rem;
+    margin-top: 1rem;
+    margin-bottom:0;
+
 }
 p{
+    color:#F8F1FF;
     align-items: center;
     justify-content: center;
 }
+#Title{
+    display: flex;
+    font:#F8F1FF;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin: 0;
+}
+nav{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+a{
+    margin-left:1rem;
+    text-decoration: none;
+    color: #F8F1FF;
+}
+h3 {
+    background: #9C95FF;
+    background: linear-gradient( to bottom right, #9C95FF 60%, #2DFF0C 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-top: 0;
+    
+
+
+}
+

@@ -8,16 +8,26 @@
     <script type = "text/javascript"
         src = "{{ url_for('static', filename = '/hello.js') }}" ></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" />
+    
 </head>
 <body>
-    <input type="button" onClick = "test()" value = "test" />
-    <form action = "/setsession" method="POST">
-        <p><h3> Enter Password</h3></p>
-        <p><input type="text" name="nm" placeholder="Password"/></p>
-        <p><input type ="submit" value="Login" ></p>
-    </form>
-    <h4><a>Support</a></h4>
-    <h4><a>Review</a></h4>
+    <nav>
+        <h4><a href="{{ url_for('support') }}">Support</a></h4>
+        <h4><a href="{{ url_for('review') }}">Review</a></h4>
+    </nav>
+    <div id="Title">
+        <p id="cashlock">Cashlock<p>
+        <h3>Secure your assets.</h3>
+    </div>
+    <div id="password-form">
+        <form action = "/about" method="POST">
+            <p><h3> Enter Password</h3></p>
+            <p><input type="text" name="nm" placeholder="Password"/></p>
+            <p><input type ="submit" value="Login" ></p>
+        </form>
+    </div>
+
+
 
 </body>
 </html>
