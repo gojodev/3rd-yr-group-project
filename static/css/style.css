@@ -14,6 +14,12 @@ body {
     margin-bottom:0;
 
 }
+#password-form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
 p{
     color:#F8F1FF;
     align-items: center;
@@ -27,6 +33,11 @@ p{
     flex-direction: column;
     margin: 0;
 }
+input{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 nav{
     display: flex;
     align-items: center;
@@ -39,13 +50,16 @@ a{
     color: #F8F1FF;
 }
 h3 {
+    display: flex;
+    align-items: center;
     background: #9C95FF;
     background: linear-gradient( to bottom right, #9C95FF 60%, #2DFF0C 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-top: 0;
-    
+    flex-direction: column;
 
 
 }
+
 
