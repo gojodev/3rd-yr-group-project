@@ -11,7 +11,7 @@ body {
 }
 
 #loginContainer {
-    width: 70%;
+    width: 50%;
     height: auto;
     justify-content: center;
     text-align: center;
@@ -36,9 +36,12 @@ body {
 
 .buttonStyle {
     color: white;
-    background-color: black;
+    background-color: grey;
+    border-radius: 5px solid black;
     border-radius: 20px;
     transition: 0.2s;
+    height: 50px;
+    text-align: center;
 }
 
 .buttonStyle:hover {
@@ -53,7 +56,6 @@ body {
     background-color: grey;
     color: white;
     border: 3px solid black;
-    width: 70%;
     margin: 15px auto auto auto;
     padding: 10px;
     border-radius: 20px;
@@ -70,8 +72,19 @@ body {
 }
 
 #createAccount {
-    display: block;
-    font-size: 1.1rem;
+    margin: 10px;
+    width: 150px;
+}
+
+#SignInButton {
+    margin: 10px;
+    width: 150px;
+}
+
+#buttonContainers {
     margin: auto;
-    margin-top: 20px;
+}
+
+#label {
+    font-size: 1.2rem;
 }

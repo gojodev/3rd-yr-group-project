@@ -72,7 +72,6 @@ async function loadInfo() {
 
     credsArr = await Promise.resolve(getRef_json(userCreds));
     console.log(credsArr);
-    console.log('READ FROM THE DATABASE');
 }
 
 loadInfo();
@@ -139,8 +138,8 @@ signInButton.addEventListener('click', () => {
 
 var createAccount = document.getElementById('createAccount');
 createAccount.addEventListener('click', () => {
-    signInButton.innerHTML = '<h3>Create Account<h3>';
-    createAccount.style.display = 'none';
+    username = getUsername(emailtext);
+    userCrds = credsArr[username];
 
     emailtext = email.value;
     passwordtext = password.value;
@@ -159,8 +158,8 @@ createAccount.addEventListener('click', () => {
     console.log(userCrds)
 
     // todo upload updated JSON to firebase
-    uploadString(userCreds, JSON.stringify(credsArr)).then((snapshot) => {
-        console.log('Uploaded a blob or file!');
+    uploadString(userCreds, JSON.stringify(credsArr)).then(() => {
+        console.log(`update database with ${newUser}`);
     });
 })
 
