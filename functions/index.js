@@ -1,7 +1,6 @@
 // The Cloud Functions for Firebase SDK to create Cloud Functions and triggers.
 const { logger } = require("firebase-functions");
 const { onRequest } = require("firebase-functions/v2/https");
-const { onDocumentCreated } = require("firebase-functions/v2/firestore");
 
 // The Firebase Admin SDK to access Firestore.
 const { initializeApp } = require("firebase/app");
@@ -58,3 +57,44 @@ exports.showDB = onRequest(async (req, res) => {
     log(db);
     console.log(db)
 });
+
+
+// i am trying to get the username from the url so it should be 'verifyUser/user1'
+// http://127.0.0.1:5001/rd-year-project-1f41d/us-central1/verifyUser
+// could you try using req.params? idk if that works in firebase functions tho i never tried it
+exports.verifyUser = onRequest(async (req, res) => {
+    const username = req.params.text;
+
+    console.log('username: ', username);
+
+    const db = await loadInfo();
+
+    let user = db[username];
+
+    res.json({ 'username': username }) // ! checking that the username is read
+});
+
+//also bro have u tried printing out what does it say hmmmm
+// it said 'undefined' thats prob cause i didnt properly fetch the info or something 
+async ()=> {
+    
+}
+
+// async function getUserCredentials(username) {
+//     try {
+//         const url = `https://rd-year-project-1f41d.cloudfunctions.net/verifyUser?text=${username}`;
+//         const response = await fetch(url);
+//         if (!response.ok) {
+//             throw new Error(`HTTP error! status: ${response.status}`);
+//         }
+//         const data = await response.json();
+//         console.log('User credentials:', data);
+//         return data;
+//     } catch (error) {
+//         console.error('Error fetching user credentials:', error);
+//         return null;
+//     }
+// }
+
+// // Usage example:
+// getUserCredentials('user1');

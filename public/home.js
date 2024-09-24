@@ -121,7 +121,7 @@ signInButton.addEventListener('click', () => {
 
     username = getUsername(emailtext);
     userCrds = credsArr[username];
-
+    console.log(credsArr)
     if (userCrds == undefined) {
         inputValidation(emailtext, passwordtext);
     }
@@ -129,7 +129,6 @@ signInButton.addEventListener('click', () => {
         if (emailtext != userCrds.email || passwordtext != userCrds.password) {
             status = 'incorrect username or password'
         }
-
         if (emailtext == userCrds.email && passwordtext == userCrds.password) {
             status = `${username} has logged in successfully`;
         }
@@ -170,3 +169,23 @@ function testInput() {
 }
 
 testInput();
+
+// todo use the "showDB" command from firebase function on client side
+async function getUserCredentials(username) {
+    try {
+        const url = `https://rd-year-project-1f41d.cloudfunctions.net/verifyUser?text=${username}`;
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log('User credentials:', data);
+        return data;
+    } catch (error) {
+        console.error('Error fetching user credentials:', error);
+        return null;
+    }
+}
+
+// Usage example:
+getUserCredentials('user1');
