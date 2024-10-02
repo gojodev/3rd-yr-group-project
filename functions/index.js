@@ -1,9 +1,14 @@
 // The Cloud Functions for Firebase SDK to create Cloud Functions and triggers.
 const { logger } = require("firebase-functions");
 const { onRequest } = require("firebase-functions/v2/https");
+const { onDocumentCreated } = require("firebase-functions/v2/firestore");
 
 // The Firebase Admin SDK to access Firestore.
 const { initializeApp } = require("firebase/app");
+
+const functions = require('firebase-functions');
+const express = require('express');
+const app = express();
 
 const firebaseConfig = {
     apiKey: "AIzaSyAFayRb90ywbg82EcLOnH5iBDm3qnZx9TU",
@@ -48,53 +53,43 @@ function isUser(email) {
 // https://youtu.be/2u6Zb36OQjM?si=AFUnR5pPw9IQPzoG&t=511
 
 
-exports.showDB = onRequest(async (req, res) => {
-    // Grab the text parameter
-    const original = req.query.text;
+// ? you have to make a request to the database in all firebase functions and you cant have it as a global variable sadly
+exports.showDB = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+    try {
+        let db = await loadInfo();
+        res.json(db);
 
-    const db = JSON.stringify(await loadInfo());
-    res.json({ result: `${db}` });
-    log(db);
-    console.log(db)
+    }
+    catch (error) {
+        console.log('Couldnt access the database: ', error)
+        res.status(500).json({ error: "Interal server error" })
+    }
 });
 
+exports.verifyUser = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+    try {
+        if (req.method !== "POST") {
+            res.status(405).json({ error: "Method Not Allowed" });
+        }
 
-// i am trying to get the username from the url so it should be 'verifyUser/user1'
-// http://127.0.0.1:5001/rd-year-project-1f41d/us-central1/verifyUser
-// could you try using req.params? idk if that works in firebase functions tho i never tried it
-exports.verifyUser = onRequest(async (req, res) => {
-    const username = req.params.text;
+        const { username } = req.body;
 
-    console.log('username: ', username);
+        if (!username) {
+            res.status(400).json({ error: "Username is required in the JSON body" });
+        }
 
-    const db = await loadInfo();
+        const db = await loadInfo();
 
-    let user = db[username];
+        const userInfo = db[username];
 
-    res.json({ 'username': username }) // ! checking that the username is read
+        if (!userInfo) {
+            res.status(404).json({ error: "User not found" });
+        }
+
+        console.log(userInfo);
+        res.status(200).json(userInfo);
+    } catch (error) {
+        console.error("Error verifying user:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
 });
-
-//also bro have u tried printing out what does it say hmmmm
-// it said 'undefined' thats prob cause i didnt properly fetch the info or something 
-async ()=> {
-    
-}
-
-// async function getUserCredentials(username) {
-//     try {
-//         const url = `https://rd-year-project-1f41d.cloudfunctions.net/verifyUser?text=${username}`;
-//         const response = await fetch(url);
-//         if (!response.ok) {
-//             throw new Error(`HTTP error! status: ${response.status}`);
-//         }
-//         const data = await response.json();
-//         console.log('User credentials:', data);
-//         return data;
-//     } catch (error) {
-//         console.error('Error fetching user credentials:', error);
-//         return null;
-//     }
-// }
-
-// // Usage example:
-// getUserCredentials('user1');

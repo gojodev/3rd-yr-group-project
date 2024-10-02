@@ -170,22 +170,26 @@ function testInput() {
 
 testInput();
 
-// todo use the "showDB" command from firebase function on client side
-async function getUserCredentials(username) {
+// ! SUCCESS
+async function verifyUser() {
     try {
-        const url = `https://rd-year-project-1f41d.cloudfunctions.net/verifyUser?text=${username}`;
-        const response = await fetch(url);
+        const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyUser', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: 'user2', // Replace 'user2' with the desired username variable
+            }),
+        });
+
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        const data = await response.json();
-        console.log('User credentials:', data);
-        return data;
+
+        const userData = await response.json();
+        console.log('User Credentials:', userData); // Log the user data returned from the server
     } catch (error) {
-        console.error('Error fetching user credentials:', error);
-        return null;
+        console.error('Error fetching user data:', error);
     }
 }
-
-// Usage example:
-getUserCredentials('user1');

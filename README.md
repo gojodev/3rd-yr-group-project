@@ -12,14 +12,11 @@ A trading bot to invest in tech stocks and crpto for companies
 ├─ eslint.config.js
 ├─ firebase.json
 ├─ functions
+│  ├─ firebase-debug.log
 │  ├─ index.js
 │  ├─ package-lock.json
 │  ├─ package.json
 │  └─ ui-debug.log
-├─ group-project
-│  ├─ index.js
-│  ├─ package-lock.json
-│  └─ package.json
 ├─ package-lock.json
 ├─ package.json
 ├─ public
@@ -31,8 +28,8 @@ A trading bot to invest in tech stocks and crpto for companies
 │  └─ style.css
 ├─ README.md
 ├─ storage.rules
-├─ test.js
 ├─ test.py
+├─ ui-debug.log
 └─ userCreds.json
 
 ```

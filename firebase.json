@@ -20,23 +20,15 @@
     },
     "storage": {
       "port": 9199
+    },
+    "tasks": {
+      "port": 9499
     }
   },
   "functions": [
     {
       "source": "functions",
       "codebase": "default",
-      "ignore": [
-        "node_modules",
-        ".git",
-        "firebase-debug.log",
-        "firebase-debug.*.log",
-        "*.local"
-      ]
-    },
-    {
-      "source": "group-project",
-      "codebase": "group-project",
       "ignore": [
         "node_modules",
         ".git",
