@@ -1,4 +1,5 @@
-const esbuild = require("esbuild");
+import esbuild from 'esbuild';
+// const esbuild = require("esbuild");
 esbuild.build({
     entryPoints: ["./public/home.js"],
     outfile: "./public/bundle.js",

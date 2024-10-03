@@ -22,8 +22,7 @@ const firebaseConfig = {
 
 initializeApp(firebaseConfig);
 
-const { getStorage, ref, getDownloadURL, uploadString } = require("firebase/storage");
-const { log } = require("firebase-functions/logger");
+const { getStorage, ref, getDownloadURL, uploadString, connectStorageEmulator } = require("firebase/storage");
 
 async function getRef_json(refItem) {
     const url = await getDownloadURL(refItem);

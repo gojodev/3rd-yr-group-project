@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { getStorage, ref, getDownloadURL, uploadString } from "firebase/storage";
+import { getStorage, ref, getDownloadURL, uploadString, connectStorageEmulator } from "firebase/storage";
+
 
 const firebaseConfig = {
     apiKey: "AIzaSyAFayRb90ywbg82EcLOnH5iBDm3qnZx9TU",
@@ -21,6 +22,7 @@ var passwordtext
 var username
 var status = "";
 var userCrds
+
 
 async function getRef_json(refItem) {
     const url = await getDownloadURL(refItem);
@@ -68,8 +70,12 @@ const storage = getStorage(); // ! global
 const userCreds = ref(storage, 'userCreds.json');
 var credsArr; // ! global
 
-async function loadInfo() {
+if (location.hostname == "127.0.0.1") {
+    connectStorageEmulator(storage, "127.0.0.1", 9199)
+    console.log("USING EMULATORS DATABASE")
+}
 
+async function loadInfo() {
     credsArr = await Promise.resolve(getRef_json(userCreds));
     console.log(credsArr);
 }
@@ -142,6 +148,13 @@ createAccount.addEventListener('click', () => {
 
     emailtext = email.value;
     passwordtext = password.value;
+    let email_hash;
+    let password_hash;
+
+
+    bcrypt.hash(password2, saltRounds, (err, hash) => {
+        console.log("password2 : ", hash);
+    })
 
 
     let newUser = {
