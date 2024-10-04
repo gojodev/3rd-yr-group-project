@@ -6,7 +6,9 @@ async function verifyUser() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                username: 'user2', // Replace 'user2' with the desired username variable
+                username: 'user1',
+                email: "user1@gmail.com",
+                password: "user1_password!"
             }),
         });
 
@@ -15,7 +17,7 @@ async function verifyUser() {
         }
 
         const userData = await response.json(); // todo hash the password (use npm's bcyrpt)
-        console.log('User Credentials:', userData); // Log the user data returned from the server
+        console.log('User Credentials:', userData);
     } catch (error) {
         console.error('Error fetching user data:', error);
     }
