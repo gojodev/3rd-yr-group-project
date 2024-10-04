@@ -1,7 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getStorage, ref, getDownloadURL, uploadString, connectStorageEmulator } from "firebase/storage";
 
-
 const firebaseConfig = {
     apiKey: "AIzaSyAFayRb90ywbg82EcLOnH5iBDm3qnZx9TU",
     authDomain: "rd-year-project-1f41d.firebaseapp.com",
@@ -41,7 +40,6 @@ async function getRef_text(refItem) {
 }
 
 function getUsername(email) {
-    // todo validate email inputs
     return email.split('@gmail.com')[0];
 }
 

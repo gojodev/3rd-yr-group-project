@@ -1,14 +1,6 @@
-// The Cloud Functions for Firebase SDK to create Cloud Functions and triggers.
-const { logger } = require("firebase-functions");
 const { onRequest } = require("firebase-functions/v2/https");
-const { onDocumentCreated } = require("firebase-functions/v2/firestore");
-
-// The Firebase Admin SDK to access Firestore.
 const { initializeApp } = require("firebase/app");
-
-const functions = require('firebase-functions');
-const express = require('express');
-const app = express();
+const bcrypt = require('bcrypt');
 
 const firebaseConfig = {
     apiKey: "AIzaSyAFayRb90ywbg82EcLOnH5iBDm3qnZx9TU",
@@ -23,6 +15,7 @@ const firebaseConfig = {
 initializeApp(firebaseConfig);
 
 const { getStorage, ref, getDownloadURL, uploadString, connectStorageEmulator } = require("firebase/storage");
+const { onVelocityAlertPublished } = require("firebase-functions/alerts/crashlytics");
 
 async function getRef_json(refItem) {
     const url = await getDownloadURL(refItem);
@@ -36,23 +29,10 @@ async function getRef_json(refItem) {
 const storage = getStorage();
 const userCreds = ref(storage, 'userCreds.json');
 
-var credsArr;
-
 async function loadInfo() {
-
     return await Promise.resolve(getRef_json(userCreds));
 }
 
-function isUser(email) {
-    let username = getUsername(email);
-    return credsArr[username] != undefined;
-}
-
-
-// https://youtu.be/2u6Zb36OQjM?si=AFUnR5pPw9IQPzoG&t=511
-
-
-// ? you have to make a request to the database in all firebase functions and you cant have it as a global variable sadly
 exports.showDB = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     try {
         let db = await loadInfo();
@@ -71,7 +51,7 @@ exports.verifyUser = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
             res.status(405).json({ error: "Method Not Allowed" });
         }
 
-        const { username } = req.body;
+        const username = req.body.username;
 
         if (!username) {
             res.status(400).json({ error: "Username is required in the JSON body" });
@@ -92,3 +72,59 @@ exports.verifyUser = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
         res.status(500).json({ error: "Internal server error" });
     }
 });
+
+exports.hashCreds = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+    try {
+        if (req.method != 'POST') {
+            res.status(405).json({ error: "Method not allowed" })
+        }
+
+        const username = req.body.username;
+        const email = req.body.email;
+        const password = req.body.password;
+
+        const db = await loadInfo();
+        const userInfo = db[username];
+
+        const correct_email = userInfo.email;
+        const correct_password = userInfo.password;
+
+        if (!email || !password) {
+            res.status(400).json({ error: "Email and password is required in the JSON body" });
+        }
+
+        let email_hash = ""
+        let password_hash = ""
+
+        // basically the cost factor the higher this factor the more hashing is done and the longer it take to hasn
+        const saltRounds = 10;
+
+        bcrypt.hash(email, saltRounds, (error, hash) => {
+            email_hash = hash;
+        })
+
+        bcrypt.hash(password, saltRounds, (error, hash) => {
+            password_hash = hash;
+        })
+
+        let correctEmail = await bcrypt.compare(correct_email, email_hash);
+        let correctPassword = await bcrypt.compare(correct_password, password_hash);
+        let verdict = correctEmail && correctPassword;
+
+        res.status(200).json({ 'login': verdict });
+    }
+    catch (error) {
+        console.log("Couldnt has string: ", error)
+        res.status(500).json({ error: "Interal server error" })
+    }
+});
+
+// exports.hashString = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+
+// });
+
+/* 
+http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/showDB
+http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyUser
+http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/hashCreds
+*/
