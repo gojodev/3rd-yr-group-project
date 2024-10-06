@@ -93,25 +93,28 @@ exports.hashCreds = onRequest({ 'region': 'europe-west2' }, async (req, res) => 
             res.status(400).json({ error: "Email and password is required in the JSON body" });
         }
 
-        let email_hash = ""
-        let password_hash = ""
-
         // basically the cost factor the higher this factor the more hashing is done and the longer it take to hasn
         const saltRounds = 10;
 
-        bcrypt.hash(email, saltRounds, (error, hash) => {
-            email_hash = hash;
+        bcrypt.hash(email, saltRounds, async (email_error, email_hash) => {
+            bcrypt.hash(password, saltRounds, async (password_error, password_hash) => {
+
+                let correctEmail = await bcrypt.compare(correct_email, email_hash);
+                let correctPassword = await bcrypt.compare(correct_password, password_hash);
+                let verdict = correctEmail && correctPassword;
+
+                res.status(200).json({
+                    'correctEmail': correctEmail,
+                    'correctPassword': correctPassword,
+
+                    'correct_email': correct_email,
+                    'correct_password': correct_password,
+
+                    'given_email': email,
+                    'given_password': password,
+                });
+            })
         })
-
-        bcrypt.hash(password, saltRounds, (error, hash) => {
-            password_hash = hash;
-        })
-
-        let correctEmail = await bcrypt.compare(correct_email, email_hash);
-        let correctPassword = await bcrypt.compare(correct_password, password_hash);
-        let verdict = correctEmail && correctPassword;
-
-        res.status(200).json({ 'login': verdict });
     }
     catch (error) {
         console.log("Couldnt has string: ", error)

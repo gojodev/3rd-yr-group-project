@@ -18,26 +18,26 @@ var userCreds = {
     }
 };
 
-var email_hash = "";
-var password_hash = "";
 for (key in userCreds) {
     let email = userCreds[key].email;
     let password = userCreds[key].password;
 
-    bcrypt.hash(email, saltRounds, (err, hash) => {
-        userCreds[key].email = hash;
-    })
 
-    bcrypt.hash(password, saltRounds, (err, hash) => {
-        userCreds[key].password = hash;
-    })
+    bcrypt.hash(email, saltRounds, (err, email_hash) => {
+        bcrypt.hash(password, saltRounds, (err, password_hash) => {
+            console.log(email, email_hash)
 
-    userCreds[key].email = email_hash;
-    userCreds[key].password = password_hash
+            console.log(password, password_hash)
+            bcrypt.compare(email, email_hash, (err, email_res) => {
+                bcrypt.compare(password, password_hash, (err, password_res) => {
+                    console.log(email_res, password_res)
+                })
+            })
+            console.log("\n")
+
+        })
+    })
 }
-
-
-console.log(userCreds);
 
 // const password1 = 'mypass'
 // const password2 = 'otherMyPass'
