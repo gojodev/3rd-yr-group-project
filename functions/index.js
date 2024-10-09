@@ -15,7 +15,6 @@ const firebaseConfig = {
 initializeApp(firebaseConfig);
 
 const { getStorage, ref, getDownloadURL, uploadString, connectStorageEmulator } = require("firebase/storage");
-const { onVelocityAlertPublished } = require("firebase-functions/alerts/crashlytics");
 
 async function getRef_json(refItem) {
     const url = await getDownloadURL(refItem);
@@ -73,56 +72,50 @@ exports.verifyUser = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
     }
 });
 
+// todo change this to verifyUser
 exports.hashCreds = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     try {
         if (req.method != 'POST') {
             res.status(405).json({ error: "Method not allowed" })
         }
 
-        const username = req.body.username;
-        const email = req.body.email;
-        const password = req.body.password;
+        const client_username = req.body.username;
+        const client_email = req.body.email;
+        const client_password = req.body.password;
+        const db_username = '';
 
         const db = await loadInfo();
-        const userInfo = db[username];
 
-        const correct_email = userInfo.email;
-        const correct_password = userInfo.password;
+        for (var key in userCreds) {
+            db_username = bcrypt.compareSync(client_username, key)
+            if (db_username) break
+        }
+        const userInfo = db[db_username];
 
-        if (!email || !password) {
+        const db_email = userInfo.email;
+        const db_password = userInfo.password;
+
+        if (!client_email || !client_password) {
             res.status(400).json({ error: "Email and password is required in the JSON body" });
         }
 
-        // basically the cost factor the higher this factor the more hashing is done and the longer it take to hasn
-        const saltRounds = 10;
 
-        bcrypt.hash(email, saltRounds, async (email_error, email_hash) => {
-            bcrypt.hash(password, saltRounds, async (password_error, password_hash) => {
+        let correctEmail = bcrypt.compareSync(client_email, db_email);
+        let correctPassword = bcrypt.compareSync(client_password, db_password);
+        let verdict = correctEmail && correctPassword;
 
-                let correctEmail = await bcrypt.compare(correct_email, email_hash);
-                let correctPassword = await bcrypt.compare(correct_password, password_hash);
-                let verdict = correctEmail && correctPassword;
-
-                res.status(200).json({
-                    'correctEmail': correctEmail,
-                    'correctPassword': correctPassword,
-
-                    'correct_email': correct_email,
-                    'correct_password': correct_password,
-
-                    'given_email': email,
-                    'given_password': password,
-                });
-            })
-        })
+        res.status(200).json({
+            'verdict': verdict,
+        });
     }
+
     catch (error) {
         console.log("Couldnt has string: ", error)
         res.status(500).json({ error: "Interal server error" })
     }
 });
 
-// exports.hashString = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+// exports.addUser = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
 
 // });
 
