@@ -16,7 +16,7 @@ async function verifyUser() {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        const userData = await response.json(); // todo hash the password (use npm's bcyrpt)
+        const userData = await response.json();
         console.log('User Credentials:', userData);
     } catch (error) {
         console.error('Error fetching user data:', error);
@@ -26,8 +26,3 @@ async function verifyUser() {
 
 
 verifyUser()
-
-/*
-? NOTES: new hashes are being created each time so old reords of hashs dont matter
-you have to find a way for hashes to always be the sae when given the proper seed
-*/

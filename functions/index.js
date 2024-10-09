@@ -14,7 +14,7 @@ const firebaseConfig = {
 
 initializeApp(firebaseConfig);
 
-const { getStorage, ref, getDownloadURL, uploadString, connectStorageEmulator } = require("firebase/storage");
+const { getStorage, ref, getDownloadURL, uploadString } = require("firebase/storage");
 
 async function getRef_json(refItem) {
     const url = await getDownloadURL(refItem);
@@ -82,13 +82,16 @@ exports.hashCreds = onRequest({ 'region': 'europe-west2' }, async (req, res) => 
         const client_username = req.body.username;
         const client_email = req.body.email;
         const client_password = req.body.password;
-        const db_username = '';
+        let db_username = '';
 
         const db = await loadInfo();
 
-        for (var key in userCreds) {
+        for (var key in db) {
             db_username = bcrypt.compareSync(client_username, key)
-            if (db_username) break
+            if (db_username) {
+                db_username = key
+                break
+            }
         }
         const userInfo = db[db_username];
 

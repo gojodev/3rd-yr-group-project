@@ -1,27 +1,47 @@
-// import bcrypt from 'bcrypt';
+const { onRequest } = require("firebase-functions/v2/https");
+const { initializeApp } = require("firebase/app");
 const bcrypt = require('bcrypt');
 
-var userCreds = {
-    "$2b$10$jP.JE.3Mr1TIzWzwdXzsSuD9gbBk7aQ/ojq3cxyPhy/7L31J.lQkW": {
-        "email": "$2b$10$4Ve8ynoiv7V7tfwdcwPtF.EiOxGwumRbXOYdYrtfjjDkl78VvZJYm",
-        "password": "$2b$10$pXeT04LdC34Yh4rBg58HPeRbfML3Xyj96I41pIHP385SLamOgZlZ6"
-    },
-    "$2b$10$xrAAbCTxr1EDkk8Et4W1ueBCZ5tFNuFXwDZEQ603iPfPbZXlde1yO": {
-        "email": "$2b$10$a.6SYekbpwhsl7W3uQqUMOhKuDBB90mO.4ZkY95o..ftvGB.WZ9CO",
-        "password": "$2b$10$i5J96dxCXTQ7eebhl0Epl.NoD/qp97SA2VVj9LWaQBNzZaLWHOqg2"
-    },
-    "$2b$10$M3Q1B4ijUJmUffm0.aksU.wMp7SEzXyQsX56NvFwSuYDq9..ZpjC.": {
-        "email": "$2b$10$pKDs4WT8QLmhniL.7JK0nu4gM.38xYzD5XhUOmY/sl3P/91CeuF0a",
-        "password": "$2b$10$PGo7J9BSPfTfii75m.1lf.j5pWDMarqpEJx9/3dlJaWcGuGPXwudm"
-    }
+const firebaseConfig = {
+    apiKey: "AIzaSyAFayRb90ywbg82EcLOnH5iBDm3qnZx9TU",
+    authDomain: "rd-year-project-1f41d.firebaseapp.com",
+    projectId: "rd-year-project-1f41d",
+    storageBucket: "rd-year-project-1f41d.appspot.com",
+    messagingSenderId: "823208675027",
+    appId: "1:823208675027:web:040ff96eac0fc89b0e3626",
+    measurementId: "G-86DQSH17PT"
 };
 
-let client_username = 'user2'
+initializeApp(firebaseConfig);
 
-for (var key in userCreds) {
-    let db_username = bcrypt.compareSync(client_username, key)
+const { getStorage, ref, getDownloadURL, uploadString } = require("firebase/storage");
 
-    if (db_username) {
-        console.log(client_username, key)
-    }
+const storage = getStorage();
+const userCreds = ref(storage, 'userCreds.json');
+
+async function getRef_json(refItem) {
+    const url = await getDownloadURL(refItem);
+    const response = await fetch(url, { mode: 'cors' });
+    let data = await response.text();
+    data = JSON.parse(data);
+    return data;
 }
+
+async function loadInfo() {
+    return await Promise.resolve(getRef_json(userCreds));
+}
+
+async function test() {
+    const db = await loadInfo();
+
+    console.log(db)
+
+    for (var key in userCreds) {
+        db_username = bcrypt.compareSync(client_username, key)
+        if (db_username) break
+    }
+    const userInfo = db[db_username];
+
+}
+
+test()
