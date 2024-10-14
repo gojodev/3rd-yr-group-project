@@ -86,7 +86,7 @@ exports.verifyUser = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
 
         else {
             res.status(200).json({
-                'error': `User with email ${client_email} is not on record`,
+                'verdict': false,
             });
         }
     }
@@ -116,7 +116,7 @@ async function verifyUser_client(username, email, password) {
         }
 
         const userData = await response.json();
-        return userData;
+        return userData.verdict;
     } catch (error) {
         console.error('Error fetching user data:', error);
     }
@@ -128,46 +128,41 @@ exports.addUser = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
             res.status(405).json({ error: "Method not allowed" })
         }
 
-        // const client_username = req.body.username;
-        // const client_email = req.body.email;
-        // const client_password = req.body.password;
+        const client_username = req.body.username;
+        const client_email = req.body.email;
+        const client_password = req.body.password;
 
-        // let isExistingUser = await verifyUser_client(client_username, client_email, client_password)
+        let isExistingUser = await verifyUser_client(client_username, client_email, client_password)
 
-        // res.status(200).json({ 'test': 'hello world' });
+        if (isExistingUser) {
+            res.status(200).json({ error: `Account with email ${client_email} already exists` });
+        }
 
+        else {
+            const saltRounds = 10;
+            const username_hash = bcrypt.hashSync(client_username, saltRounds)
+            const email_hash = bcrypt.hashSync(client_email, saltRounds)
+            const password_hash = bcrypt.hashSync(client_password, saltRounds)
 
-        // if (isExistingUser.verdict) {
-        //     res.status(200).json({ error: `Account with email ${client_email} already exists` });
-        // }
-        // else {
-        //     console.log('information for a new account')
-        //     const saltRounds = 10;
-        //     const username_hash = bcrypt.hashSync(client_username, saltRounds)
-        //     const email_hash = bcrypt.hashSync(client_email, saltRounds)
-        //     const password_hash = bcrypt.hashSync(client_password, saltRounds)
-
-        //     let newUser = {
-        //         [username_hash]:
-        //         {
-        //             email: email_hash,
-        //             password: password_hash
-        //         }
-        //     }
+            let newUser = {
+                [username_hash]:
+                {
+                    email: email_hash,
+                    password: password_hash
+                }
+            }
 
 
-        //     const db = await loadInfo();
+            const db = await loadInfo();
 
-        //     Object.assign(db, newUser)
+            Object.assign(db, newUser)
 
-        //     // uploadString(userCreds, JSON.stringify(credsArr)).then(() => {
-        //     //     console.log(`New user ${client_username} has been created`);
-        //     // });
-
-        //     res.status(200).json({
-        //         'verdict': `New user ${client_username} has been created`,
-        //     });
-        // }
+            uploadString(userCreds, JSON.stringify(db)).then(() => {
+                res.status(200).json({
+                    'verdict': `New user ${client_username} has been created`,
+                });
+            });
+        }
     }
 
     catch (error) {
