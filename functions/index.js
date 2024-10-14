@@ -46,35 +46,6 @@ exports.showDB = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
 
 exports.verifyUser = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     try {
-        if (req.method !== "POST") {
-            res.status(405).json({ error: "Method Not Allowed" });
-        }
-
-        const username = req.body.username;
-
-        if (!username) {
-            res.status(400).json({ error: "Username is required in the JSON body" });
-        }
-
-        const db = await loadInfo();
-
-        const userInfo = db[username];
-
-        if (!userInfo) {
-            res.status(404).json({ error: "User not found" });
-        }
-
-        console.log(userInfo);
-        res.status(200).json(userInfo);
-    } catch (error) {
-        console.error("Error verifying user:", error);
-        res.status(500).json({ error: "Internal server error" });
-    }
-});
-
-// todo change this to verifyUser
-exports.hashCreds = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
-    try {
         if (req.method != 'POST') {
             res.status(405).json({ error: "Method not allowed" })
         }
@@ -95,21 +66,29 @@ exports.hashCreds = onRequest({ 'region': 'europe-west2' }, async (req, res) => 
         }
         const userInfo = db[db_username];
 
-        const db_email = userInfo.email;
-        const db_password = userInfo.password;
+        if (userInfo != undefined) {
+            const db_email = userInfo.email;
+            const db_password = userInfo.password;
 
-        if (!client_email || !client_password) {
-            res.status(400).json({ error: "Email and password is required in the JSON body" });
+            if (!client_email || !client_password) {
+                res.status(400).json({ error: "Email and password is required in the JSON body" });
+            }
+
+
+            let correctEmail = bcrypt.compareSync(client_email, db_email);
+            let correctPassword = bcrypt.compareSync(client_password, db_password);
+            let verdict = correctEmail && correctPassword;
+
+            res.status(200).json({
+                'verdict': verdict,
+            });
         }
 
-
-        let correctEmail = bcrypt.compareSync(client_email, db_email);
-        let correctPassword = bcrypt.compareSync(client_password, db_password);
-        let verdict = correctEmail && correctPassword;
-
-        res.status(200).json({
-            'verdict': verdict,
-        });
+        else {
+            res.status(200).json({
+                'error': `User with email ${client_email} is not on record`,
+            });
+        }
     }
 
     catch (error) {
@@ -118,12 +97,91 @@ exports.hashCreds = onRequest({ 'region': 'europe-west2' }, async (req, res) => 
     }
 });
 
-// exports.addUser = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+async function verifyUser_client(username, email, password) {
+    try {
+        const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyUser', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                email: email,
+                password: password
+            }),
+        });
 
-// });
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const userData = await response.json();
+        return userData;
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+    }
+}
+
+exports.addUser = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+    try {
+        if (req.method != 'POST') {
+            res.status(405).json({ error: "Method not allowed" })
+        }
+
+        // const client_username = req.body.username;
+        // const client_email = req.body.email;
+        // const client_password = req.body.password;
+
+        // let isExistingUser = await verifyUser_client(client_username, client_email, client_password)
+
+        // res.status(200).json({ 'test': 'hello world' });
+
+
+        // if (isExistingUser.verdict) {
+        //     res.status(200).json({ error: `Account with email ${client_email} already exists` });
+        // }
+        // else {
+        //     console.log('information for a new account')
+        //     const saltRounds = 10;
+        //     const username_hash = bcrypt.hashSync(client_username, saltRounds)
+        //     const email_hash = bcrypt.hashSync(client_email, saltRounds)
+        //     const password_hash = bcrypt.hashSync(client_password, saltRounds)
+
+        //     let newUser = {
+        //         [username_hash]:
+        //         {
+        //             email: email_hash,
+        //             password: password_hash
+        //         }
+        //     }
+
+
+        //     const db = await loadInfo();
+
+        //     Object.assign(db, newUser)
+
+        //     // uploadString(userCreds, JSON.stringify(credsArr)).then(() => {
+        //     //     console.log(`New user ${client_username} has been created`);
+        //     // });
+
+        //     res.status(200).json({
+        //         'verdict': `New user ${client_username} has been created`,
+        //     });
+        // }
+    }
+
+    catch (error) {
+        console.log("Couldnt add new user: ", error)
+        res.status(500).json({ error: "Interal server error" })
+    }
+});
 
 /* 
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/showDB
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyUser
-http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/hashCreds
+http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/addUser
+*/
+
+/*
+? to start the backend server run "npm run start" or "firebase eumlators:start" in "functions" folder
 */
