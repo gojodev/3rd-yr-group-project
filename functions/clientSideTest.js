@@ -8,7 +8,8 @@ async function verifyUser_client(username, email, password) {
             body: JSON.stringify({
                 username: username,
                 email: email,
-                password: password
+                password: password,
+                isFundManager: true
             }),
         });
 
@@ -17,7 +18,7 @@ async function verifyUser_client(username, email, password) {
         }
 
         const userData = await response.json();
-        return userData.verdict;
+        return userData;
     } catch (error) {
         console.error('Error fetching user data:', error);
     }

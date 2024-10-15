@@ -53,6 +53,7 @@ exports.verifyUser = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
         const client_username = req.body.username;
         const client_email = req.body.email;
         const client_password = req.body.password;
+        const isFundManager = req.body.isFundManager;
         let db_username = '';
 
         const db = await loadInfo();
@@ -70,10 +71,9 @@ exports.verifyUser = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
             const db_email = userInfo.email;
             const db_password = userInfo.password;
 
-            if (!client_email || !client_password) {
-                res.status(400).json({ error: "Email and password is required in the JSON body" });
+            if (!client_email || !client_password || !client_username || isFundManager == undefined) {
+                res.status(400).json({ error: "All Information is required in the JSON body" });
             }
-
 
             let correctEmail = bcrypt.compareSync(client_email, db_email);
             let correctPassword = bcrypt.compareSync(client_password, db_password);
@@ -81,12 +81,14 @@ exports.verifyUser = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
 
             res.status(200).json({
                 'verdict': verdict,
+                "isFundManager": isFundManager
             });
         }
 
         else {
             res.status(200).json({
                 'verdict': false,
+                "isFundManager": isFundManager
             });
         }
     }
@@ -97,7 +99,7 @@ exports.verifyUser = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
     }
 });
 
-async function verifyUser_client(username, email, password) {
+async function verifyUser_client(username, email, password, isFundManager) {
     try {
         const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyUser', {
             method: 'POST',
@@ -107,7 +109,8 @@ async function verifyUser_client(username, email, password) {
             body: JSON.stringify({
                 username: username,
                 email: email,
-                password: password
+                password: password,
+                isFundManager: isFundManager
             }),
         });
 
@@ -131,6 +134,7 @@ exports.addUser = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
         const client_username = req.body.username;
         const client_email = req.body.email;
         const client_password = req.body.password;
+        const isFundManager = req.body.isFundManager;
 
         let isExistingUser = await verifyUser_client(client_username, client_email, client_password)
 
@@ -160,6 +164,7 @@ exports.addUser = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
             uploadString(userCreds, JSON.stringify(db)).then(() => {
                 res.status(200).json({
                     'verdict': `New user ${client_username} has been created`,
+                    "isFundManager": isFundManager
                 });
             });
         }
