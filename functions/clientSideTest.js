@@ -9,7 +9,6 @@ async function verifyUser_client(username, email, password) {
                 username: username,
                 email: email,
                 password: password,
-                isFundManager: true
             }),
         });
 
@@ -32,3 +31,9 @@ async function verifyUser_test() {
 
 verifyUser_test()
 
+
+/*
+Fund manager - manages clients
+clients - cant make their own trades but can view the trades that the fund manager makes for them
+fund admin - can make their own trades (like a client but with more power)
+*/

@@ -54,6 +54,8 @@ exports.verifyUser = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
         const client_email = req.body.email;
         const client_password = req.body.password;
         const isFundManager = req.body.isFundManager;
+        const clients = [];
+
         let db_username = '';
 
         const db = await loadInfo();
@@ -65,6 +67,7 @@ exports.verifyUser = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
                 break
             }
         }
+
         const userInfo = db[db_username];
 
         if (userInfo != undefined) {
@@ -81,14 +84,16 @@ exports.verifyUser = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
 
             res.status(200).json({
                 'verdict': verdict,
-                "isFundManager": isFundManager
+                "isFundManager": isFundManager,
+                clients: []
             });
         }
 
         else {
             res.status(200).json({
                 'verdict': false,
-                "isFundManager": isFundManager
+                "isFundManager": isFundManager,
+                clients: []
             });
         }
     }
@@ -110,7 +115,8 @@ async function verifyUser_client(username, email, password, isFundManager) {
                 username: username,
                 email: email,
                 password: password,
-                isFundManager: isFundManager
+                isFundManager: isFundManager,
+                clients: []
             }),
         });
 
@@ -135,6 +141,7 @@ exports.addUser = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
         const client_email = req.body.email;
         const client_password = req.body.password;
         const isFundManager = req.body.isFundManager;
+        const clients = req.body.clients;
 
         let isExistingUser = await verifyUser_client(client_username, client_email, client_password)
 
@@ -164,7 +171,8 @@ exports.addUser = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
             uploadString(userCreds, JSON.stringify(db)).then(() => {
                 res.status(200).json({
                     'verdict': `New user ${client_username} has been created`,
-                    "isFundManager": isFundManager
+                    "isFundManager": isFundManager,
+                    "clients": clients
                 });
             });
         }
