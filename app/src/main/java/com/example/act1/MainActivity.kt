@@ -1,5 +1,6 @@
 package com.example.act1
 
+import android.icu.util.Calendar
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -23,6 +24,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.ThumbUp
+import androidx.compose.ui.text.style.TextAlign
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -35,6 +37,11 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import android.app.DatePickerDialog
+import android.widget.DatePicker
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+import java.util.*
 
 @Serializable
 data class UserRequest(val username: String, val email: String, val password: String)
@@ -42,7 +49,6 @@ data class UserRequest(val username: String, val email: String, val password: St
 @Serializable
 data class UserResponse(val message: String, val userData: Map<String, Any>?)
 
-// Function to verify user
 suspend fun verifyUserClient(username: String, email: String, password: String): UserResponse? {
     val client = HttpClient(CIO) {
         install(ContentNegotiation) {
@@ -53,7 +59,6 @@ suspend fun verifyUserClient(username: String, email: String, password: String):
             })
         }
     }
-
     return try {
         val response: UserResponse = client.post("http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyUser") {
             contentType(ContentType.Application.Json)
@@ -67,8 +72,6 @@ suspend fun verifyUserClient(username: String, email: String, password: String):
         client.close()
     }
 }
-
-// MainActivity
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,6 +79,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             ACT1Theme {
                 var isDarkTheme by remember { mutableStateOf(false) }
+                var showBottomBar by remember { mutableStateOf(true) }
+
                 val backgroundColor = if (isDarkTheme) {
                     Brush.horizontalGradient(
                         listOf(
@@ -95,39 +100,49 @@ class MainActivity : ComponentActivity() {
                 }
                 val navController = rememberNavController()
                 var selectedIndex by remember { mutableStateOf(0) }
-
+                LaunchedEffect(navController) {
+                    navController.addOnDestinationChangedListener() { _, destination, _ ->
+                        showBottomBar = destination.route !in listOf(Screen.Signup.route, Screen.Login.route)
+                    }
+                }
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
-                        BottomAppBar(
-                            containerColor = Color(36, 35, 49)
-                        ) {
-                            NavigationBar(
+                        if (showBottomBar) {
+                            BottomAppBar(
                                 containerColor = Color(36, 35, 49)
                             ) {
-                                navItemList.forEachIndexed { index, item ->
-                                    NavigationBarItem(
-                                        icon = {
-                                            Icon(
-                                                item.icon,
-                                                contentDescription = null,
-                                                tint = Color.White
-                                            )
-                                        },
-                                        label = { Text(item.label, color = Color.White) },
-                                        selected = selectedIndex == index,
-                                        onClick = {
-                                            selectedIndex = index
-                                            if (navController.currentDestination?.route != item.screen.route) {
-                                                navController.navigate(item.screen.route) {
-                                                    launchSingleTop = true
-                                                    restoreState = true
+                                NavigationBar(
+                                    containerColor = Color(36, 35, 49)
+                                ) {
+                                    navItemList.forEachIndexed { index, item ->
+                                        NavigationBarItem(
+                                            icon = {
+                                                Icon(
+                                                    item.icon,
+                                                    contentDescription = null,
+                                                    tint = Color.White
+                                                )
+                                            },
+                                            label = { Text(item.label, color = Color.White) },
+                                            selected = selectedIndex == index,
+                                            onClick = {
+                                                selectedIndex = index
+                                                if (navController.currentDestination?.route != item.screen.route) {
+                                                    navController.navigate(item.screen.route) {
+                                                        launchSingleTop = true
+                                                        restoreState = true
+                                                    }
                                                 }
+
                                             }
-                                        }
-                                    )
+                                        )
+                                    }
+
+
                                 }
                             }
+
                         }
                     }
                 ) { paddingValues ->
@@ -141,7 +156,8 @@ class MainActivity : ComponentActivity() {
                             navController = navController,
                             startDestination = Screen.Signup.route,
                             modifier = Modifier
-                        ) {
+                        )
+                        {
                             composable(Screen.Home.route) { HomeScreen(navController, backgroundColor) }
                             composable(Screen.Premium.route) { PremiumScreen(navController, backgroundColor) }
                             composable(Screen.Support.route) { SupportScreen(navController, backgroundColor) }
@@ -150,19 +166,40 @@ class MainActivity : ComponentActivity() {
                             composable(Screen.Login.route) { LoginScreen(navController, backgroundColor) }
                         }
                     }
-
-                    Button(
-                        onClick = { isDarkTheme = !isDarkTheme },
-                        modifier = Modifier
-                            .padding(16.dp)
-                    ) {
-                        Text(text = "SWITCH THEME")
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) { Button(
+                            onClick = { isDarkTheme = !isDarkTheme },
+                            modifier = Modifier.padding(16.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(36, 35, 49),
+                                contentColor = Color.White
+                            )
+                        ){
+                            Text(text = "THEME")
+                        }
+                        Spacer(modifier = Modifier.weight(1f))
+                        Button(
+                            onClick = { navController.navigate(Screen.Login.route) },
+                            modifier = Modifier.padding(16.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(36, 35, 49),
+                                contentColor = Color.White
+                            )
+                        ){
+                            Text("LOGIN")
+                        }
                     }
+
+
                 }
             }
         }
+
     }
 }
+
 
 sealed class Screen(val route: String) {
     object Home : Screen("Home")
@@ -171,17 +208,15 @@ sealed class Screen(val route: String) {
     object Rate : Screen("Rate Us")
     object Signup : Screen("Sign Up")
     object Login : Screen("Login")
+    object Assets: Screen("Assets")
 }
-
 data class NavItem(val label: String, val icon: androidx.compose.ui.graphics.vector.ImageVector, val screen: Screen)
-
 val navItemList = listOf(
     NavItem("Home", Icons.Default.Home, Screen.Home),
     NavItem("Premium", Icons.Default.Star, Screen.Premium),
     NavItem("Support", Icons.Default.Person, Screen.Support),
     NavItem("Rate Us", Icons.Default.ThumbUp, Screen.Rate)
 )
-
 @Composable
 fun HomeScreen(navController: NavHostController, backgroundColor: Brush) {
     Box(
@@ -203,23 +238,20 @@ fun HomeScreen(navController: NavHostController, backgroundColor: Brush) {
 fun PremiumScreen(navController: NavHostController, backgroundColor: Brush) {
     ScreenContent(title = "Premium", navController = navController, backgroundColor)
 }
-
 @Composable
 fun SupportScreen(navController: NavHostController, backgroundColor: Brush) {
     ScreenContent(title = "Support", navController = navController, backgroundColor)
 }
-
 @Composable
 fun RateScreen(navController: NavHostController, backgroundColor: Brush) {
     ScreenContent(title = "Rate Us", navController = navController, backgroundColor)
 }
-
 @Composable
 fun LoginScreen(navController: NavHostController, backgroundColor: Brush) {
-    // State variables to hold user input
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var errorMessage by remember { mutableStateOf("") } // Optional: To display any error messages
+    var username by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier
@@ -243,36 +275,53 @@ fun LoginScreen(navController: NavHostController, backgroundColor: Brush) {
                 )
             }
             item {
-                OutlinedTextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    label = { Text("Email") },
-                    singleLine = true,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp)
-                )
+                Column(){
+                    Text(text="Email", color= Color.White)
+                    OutlinedTextField(
+                        value = email,
+                        onValueChange = { email = it },
+                        label = { Text("Email") },
+                        singleLine = true,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp)
+                    )
+                }
             }
             item {
-                OutlinedTextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    label = { Text("Password") },
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                Column {
+                    Text(text="Username", color= Color.White)
+                    OutlinedTextField(
+                        value = username,
+                        onValueChange = { username = it },
+                        label = { Text("Username") },
+                        singleLine = true,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp)
+                    )
+                }
+            }
+            item {
+                Column {
+                    Text(text="Password", color= Color.White)
+                    OutlinedTextField(
+                        value = password,
+                        onValueChange = { password = it },
+                        label = { Text("Password") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
             item {
                 Button(
                     onClick = {
-                        // Launch a coroutine to call the verifyUserClient function
                         CoroutineScope(Dispatchers.Main).launch {
-                            val response = verifyUserClient("user1", email, password)
+                            val response = verifyUserClient(username, email, password)
                             if (response != null && response.message == "success") {
-                                // Navigate to Home screen upon successful login
                                 navController.navigate(Screen.Home.route)
                             } else {
-                                // Update the error message if verification fails
                                 errorMessage = "Login failed. Please check your credentials."
                             }
                         }
@@ -288,8 +337,7 @@ fun LoginScreen(navController: NavHostController, backgroundColor: Brush) {
                     Text(text = "Login", color = Color.White)
                 }
             }
-
-            // Optional: Show error message if login fails
+            // if an error occurs
             if (errorMessage.isNotEmpty()) {
                 item {
                     Text(
@@ -305,7 +353,136 @@ fun LoginScreen(navController: NavHostController, backgroundColor: Brush) {
 
 @Composable
 fun SignUpScreen(navController: NavHostController, backgroundColor: Brush) {
-    ScreenContent(title = "Sign Up", navController = navController, backgroundColor)
+    var username by remember { mutableStateOf("") }
+    var email by remember  { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var dob by remember { mutableStateOf("") }
+    var errorMessage by remember{ mutableStateOf("") }
+
+    val calendar = Calendar.getInstance()
+    val year = calendar.get(Calendar.YEAR)
+    val month = calendar.get(Calendar.MONTH)
+    val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+    val context = LocalContext.current
+    val datePickerDialog = DatePickerDialog(
+        context,
+        { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
+            dob = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+        }, year, month, day
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(backgroundColor),
+        contentAlignment = Alignment.Center
+    ) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            item {
+                Text(
+                    text = "Fund Management Starts Here.",
+                    style = MaterialTheme.typography.displayMedium,
+                    color = Color.White,
+                    modifier = Modifier.padding(bottom = 32.dp)
+                )
+
+            }
+            item {
+                Column {
+                    Text(text = "Email", color= Color.White)
+                    OutlinedTextField(
+                        value = email,
+                        onValueChange = { email = it },
+                        label = { Text("Email") },
+                        singleLine = true,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp)
+                    )
+                }
+            }
+            item {
+                Column {
+                    Text(text = "Username", color= Color.White)
+                    OutlinedTextField(
+                        value = username,
+                        onValueChange = { username = it },
+                        label = { Text("Username") },
+                        singleLine = true,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp)
+                    )
+                }
+            }
+            item {
+                Column {
+                    Text(text = "Password", color = Color.White)
+                    OutlinedTextField(
+                        value = password,
+                        onValueChange = { password = it },
+                        label = { Text("Password") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+            item {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.Start,
+                ) {
+                    Text(text = "Date of Birth: $dob", color = Color.White)
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(onClick = { datePickerDialog.show() },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(36, 35, 49),
+                            contentColor = Color.White
+                        )) {
+                        Text(text = "Select Date")
+                    }
+                }
+            }
+            item {
+                Button(
+                    onClick = {
+                        when {
+                            username.isEmpty() || dob.isEmpty() || password.isEmpty() || email.isEmpty() -> {
+                                errorMessage = "Please fill all input fields."
+                            }
+                            else ->{
+                                navController.navigate(Screen.Home.route)
+                            }
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(36, 35, 49),
+                        contentColor = Color.White
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = "Sign Up")
+                }
+            }
+            // if sign up fails
+            if (errorMessage.isNotEmpty()) {
+                item {
+                    Text(
+                        text = errorMessage,
+                        color = Color.Red,
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Composable
@@ -327,4 +504,3 @@ fun ScreenContent(title: String, navController: NavHostController, backgroundCol
         }
     }
 }
-
