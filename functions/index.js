@@ -61,6 +61,8 @@ function missingInfoWarning(arr) {
     return missingItems
 }
 
+
+
 exports.verifyAdmin = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     try {
         if (req.method != 'POST') {
@@ -129,6 +131,33 @@ exports.verifyAdmin = onRequest({ 'region': 'europe-west2' }, async (req, res) =
     }
 });
 
+async function verifyAdmin(username, name, email, password, id) {
+    try {
+        const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyAdmin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                name: name,
+                email: email,
+                password: password,
+                id: id
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const userData = await response.json();
+        return userData;
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+    }
+}
+
 
 exports.addAdmin = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     try {
@@ -177,6 +206,10 @@ exports.addAdmin = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
         console.log("Couldnt add new user: ", error)
         res.status(500).json({ error: "Interal server error" })
     }
+});
+
+exports.verifyManager = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+    res.status(500).json({ res: "GojoDev was here" })
 });
 
 /* 
