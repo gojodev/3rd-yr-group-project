@@ -54,7 +54,7 @@ async function verifyManager_test() {
 
     clientList = JSON.stringify(clientList)
 
-    let verdict = await verifyManager('m_user1', 'Mfirst1 Mlast1', 'm_user1@gmail.com', 'm_user1_password!', '081 143 3473', 'M_$2b$05$Yf64wGoRjk8zPFlDCefsiuHnAM3RI61J8VoDn.Y8Iro7cP2r5ZXC6', clientList)
+    let verdict = await verifyManager('m_user1', 'Mfirst1 Mlast1', 'm_user1@gmail.com', 'm_user1_password!', '081 143 3473', 'M_$2b$05$eX5qSeIsfQZtAR2RAFxYiuK/owcXv.TNPQOE5s3v7PgKqziXCSxoy', clientList)
     console.log(verdict)
 }
 

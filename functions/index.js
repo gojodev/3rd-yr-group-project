@@ -318,9 +318,8 @@ exports.verifyManager = onRequest({ 'region': 'europe-west2' }, async (req, res)
             let correctContact = bcrypt.compareSync(client_contact, db_contact);
 
             let correctID = client_managerID == db_ID;
-            let correctManagerID = client_contact == db_contact
 
-            let verdict = correctUsername && correctName && correctEmail && correctPassword && correctContact && correctID && correctManagerID;
+            let verdict = correctUsername && correctName && correctEmail && correctPassword && correctContact && correctID;
 
             res.status(200).json({
                 'verdict': verdict,
@@ -343,15 +342,11 @@ exports.verifyManager = onRequest({ 'region': 'europe-west2' }, async (req, res)
 });
 
 /* 
+? to start the backend server run "firebase eumlators:start" in "functions" folder
+
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/showDB
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyAdmin
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/addAdmin
-*/
-
-/*
-? to start the backend server run "firebase eumlators:start" in "functions" folder
-
-Fund manager - manages clients
-clients - cant make their own trades but can view the trades that the fund manager makes for them
-fund admin - can make their own trades (like a client but with more power)
+http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyClient
+http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyManager
 */
