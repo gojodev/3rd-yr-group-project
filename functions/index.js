@@ -15,6 +15,8 @@ const firebaseConfig = {
 initializeApp(firebaseConfig);
 
 const { getStorage, ref, getDownloadURL, uploadString } = require("firebase/storage");
+const client = require("firebase-tools");
+const { UserInfo } = require("firebase-admin/auth");
 
 async function getRef_json(refItem) {
     const url = await getDownloadURL(refItem);
@@ -38,18 +40,6 @@ function genId(type, name, email) {
     return `${type}_${bcrypt.hashSync(`${type}_${name}_${email}`, 5)}`
 }
 
-exports.showDB = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
-    try {
-        let db = await loadInfo(A_userCreds);
-        res.json(db);
-
-    }
-    catch (error) {
-        console.log('Couldnt access the database: ', error)
-        res.status(500).json({ error: "Interal server error" })
-    }
-});
-
 function missingInfoWarning(arr) {
     let missingItems = [];
     for (var item in arr) {
@@ -61,6 +51,17 @@ function missingInfoWarning(arr) {
     return missingItems
 }
 
+exports.showDB = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+    try {
+        let db = await loadInfo(M_userCreds);
+        res.json(db);
+
+    }
+    catch (error) {
+        console.log('Couldnt access the database: ', error)
+        res.status(500).json({ error: "Interal server error" })
+    }
+});
 
 
 exports.verifyAdmin = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
@@ -126,7 +127,7 @@ exports.verifyAdmin = onRequest({ 'region': 'europe-west2' }, async (req, res) =
     }
 
     catch (error) {
-        console.log("Couldnt has string: ", error)
+        console.log("Something ewent wrong: ", error)
         res.status(500).json({ error: "Interal server error" })
     }
 });
@@ -157,7 +158,6 @@ async function verifyAdmin(username, name, email, password, id) {
         console.error('Error fetching user data:', error);
     }
 }
-
 
 exports.addAdmin = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     try {
@@ -208,8 +208,143 @@ exports.addAdmin = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     }
 });
 
+exports.verifyClient = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+    try {
+        if (req.method != 'POST') {
+            res.status(405).json({ error: "Method not allowed" })
+        }
+
+        const client_username = req.body.username;
+        const client_name = req.body.name;
+        const client_ID = req.body.id;
+        const client_managerID = req.body.managerID;
+        const client_contact = req.body.contact;
+
+        const db = await loadInfo(C_userCreds)
+
+        var db_username = "";
+        for (const key in db) {
+            let valid_username = bcrypt.compareSync(client_username, key)
+            if (valid_username) {
+                db_username = key
+                break
+            }
+        }
+
+        if (db_username != '') {
+            const userInfo = db[db_username];
+            const db_name = userInfo.name;
+            const db_ID = userInfo.id;
+            const db_managerID = userInfo.managerID;
+            const db_contact = userInfo.contact
+
+            let clientData = [client_username, client_name, client_ID, client_managerID, client_contact];
+            let missingItems = missingInfoWarning(clientData);
+
+            if (missingItems == []) {
+                res.status(200).json({ error: `${missingItems} is required in the JSON body` })
+            }
+
+            let correctName = bcrypt.compareSync(client_name, db_name);
+            let correctID = client_ID == db_ID;
+            let correctManagerID = client_managerID == db_managerID
+            let correctContact = bcrypt.compareSync(client_contact, db_contact);
+
+            let verdict = correctName && correctID && correctManagerID && correctContact;
+
+            res.status(200).json({
+                'verdict': verdict,
+                'correctName': correctName,
+                'correctID': correctID,
+                'correctManagerID': correctManagerID,
+                'correctContact': correctContact
+            });
+        }
+
+        else {
+            res.status(200).json({
+                'verdict': false,
+                'reason': `${client_username} does not exist`
+            });
+        }
+    }
+
+    catch (error) {
+        console.log("Something went wrong: ", error)
+        res.status(500).json({ error: "Interal server error" })
+    }
+});
+
 exports.verifyManager = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
-    res.status(500).json({ res: "GojoDev was here" })
+    try {
+        if (req.method != 'POST') {
+            res.status(405).json({ error: "Method not allowed" })
+        }
+
+        const client_username = req.body.username;
+        const client_name = req.body.name;
+        const client_email = req.body.email;
+        const client_password = req.body.password;
+        const client_contact = req.body.contact;
+        const client_managerID = req.body.id;
+
+        let clientData = [client_username, client_name, client_email, client_password, client_contact, client_managerID];
+
+        let missingItems = missingInfoWarning(clientData);
+
+        if (missingItems == []) {
+            res.status(200).json({ error: `${missingItems} is required in the JSON body` })
+        }
+
+        const db = await loadInfo(M_userCreds)
+
+        var db_username = "";
+        for (const key in db) {
+            let valid_username = bcrypt.compareSync(client_username, key)
+            if (valid_username) {
+                db_username = key
+                break
+            }
+        }
+
+        if (db_username != '') {
+            const managerInfo = db[db_username];
+
+            const db_name = managerInfo.name;
+            const db_email = managerInfo.email;
+            const db_password = managerInfo.password
+            const db_contact = managerInfo.contact
+            const db_ID = managerInfo.id;
+
+            let correctUsername = bcrypt.compareSync(client_username, db_username);
+            let correctName = bcrypt.compareSync(client_name, db_name);
+            let correctEmail = bcrypt.compareSync(client_email, db_email);
+            let correctPassword = bcrypt.compareSync(client_password, db_password);
+            let correctContact = bcrypt.compareSync(client_contact, db_contact);
+
+            let correctID = client_managerID == db_ID;
+            let correctManagerID = client_contact == db_contact
+
+            let verdict = correctUsername && correctName && correctEmail && correctPassword && correctContact && correctID && correctManagerID;
+
+            res.status(200).json({
+                'verdict': verdict,
+                'managerInfo': managerInfo
+            });
+        }
+
+        else {
+            res.status(200).json({
+                'verdict': false,
+                'reason': `${client_username} does not exist`
+            });
+        }
+    }
+
+    catch (error) {
+        console.log("Something went wrong: ", error)
+        res.status(500).json({ error: "Interal server error" })
+    }
 });
 
 /* 

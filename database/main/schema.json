@@ -9,7 +9,7 @@
         "name": "first last",
         "email": "user2@gmail.com",
         "password": "user2_password!",
-        "contact": "089-343 3473",
+        "contact": "089 343 3473",
         "id": "M_",
         "clients": [
             {
@@ -20,7 +20,7 @@
     "user3": {
         "name": "first last",
         "id": "C_",
-        "manager": "M_",
-        "contact": "089-343 3473"
+        "managerID": "M_",
+        "contact": "089 343 3473"
     }
 }
