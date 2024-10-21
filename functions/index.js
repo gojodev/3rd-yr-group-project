@@ -15,8 +15,6 @@ const firebaseConfig = {
 initializeApp(firebaseConfig);
 
 const { getStorage, ref, getDownloadURL, uploadString } = require("firebase/storage");
-const client = require("firebase-tools");
-const { UserInfo } = require("firebase-admin/auth");
 
 async function getRef_json(refItem) {
     const url = await getDownloadURL(refItem);
@@ -254,10 +252,7 @@ exports.verifyClient = onRequest({ 'region': 'europe-west2' }, async (req, res) 
 
             res.status(200).json({
                 'verdict': verdict,
-                'correctName': correctName,
-                'correctID': correctID,
-                'correctManagerID': correctManagerID,
-                'correctContact': correctContact
+                'userInfo': userInfo
             });
         }
 
@@ -329,7 +324,7 @@ exports.verifyManager = onRequest({ 'region': 'europe-west2' }, async (req, res)
 
             res.status(200).json({
                 'verdict': verdict,
-                'managerInfo': managerInfo
+                'managerInfo': managerInfo,
             });
         }
 

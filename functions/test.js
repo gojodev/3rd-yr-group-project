@@ -6,5 +6,5 @@ function genId(type, name, email) {
 
 // console.log(genId('M', 'Mfirst2 Mlast2', ''))
 
-let hash = bcrypt.hashSync('081 343 3473', 5)
+let hash = bcrypt.hashSync('m_user3', 5)
 console.log(hash)
