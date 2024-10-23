@@ -214,9 +214,9 @@ exports.verifyClient = onRequest({ 'region': 'europe-west2' }, async (req, res) 
 
         const client_username = req.body.username;
         const client_name = req.body.name;
-        const client_ID = req.body.id;
-        const client_managerID = req.body.managerID;
         const client_contact = req.body.contact;
+        // const client_ID = req.body.id;
+        // const client_managerID = req.body.managerID;
 
         const db = await loadInfo(C_userCreds)
 
@@ -232,11 +232,11 @@ exports.verifyClient = onRequest({ 'region': 'europe-west2' }, async (req, res) 
         if (db_username != '') {
             const userInfo = db[db_username];
             const db_name = userInfo.name;
-            const db_ID = userInfo.id;
-            const db_managerID = userInfo.managerID;
             const db_contact = userInfo.contact
+            // const db_ID = userInfo.id;
+            // const db_managerID = userInfo.managerID;
 
-            let clientData = [client_username, client_name, client_ID, client_managerID, client_contact];
+            let clientData = [client_name, client_contact];
             let missingItems = missingInfoWarning(clientData);
 
             if (missingItems == []) {
@@ -244,11 +244,11 @@ exports.verifyClient = onRequest({ 'region': 'europe-west2' }, async (req, res) 
             }
 
             let correctName = bcrypt.compareSync(client_name, db_name);
-            let correctID = client_ID == db_ID;
-            let correctManagerID = client_managerID == db_managerID
             let correctContact = bcrypt.compareSync(client_contact, db_contact);
+            // let correctID = client_ID == db_ID;
+            // let correctManagerID = client_managerID == db_managerID
 
-            let verdict = correctName && correctID && correctManagerID && correctContact;
+            let verdict = correctName && correctContact;
 
             res.status(200).json({
                 'verdict': verdict,
@@ -276,14 +276,14 @@ exports.verifyManager = onRequest({ 'region': 'europe-west2' }, async (req, res)
             res.status(405).json({ error: "Method not allowed" })
         }
 
-        const client_username = req.body.username;
-        const client_name = req.body.name;
         const client_email = req.body.email;
         const client_password = req.body.password;
-        const client_contact = req.body.contact;
-        const client_managerID = req.body.id;
+        // const client_name = req.body.name;
+        // const client_username = req.body.username;
+        // const client_contact = req.body.contact;
+        // const client_managerID = req.body.id;
 
-        let clientData = [client_username, client_name, client_email, client_password, client_contact, client_managerID];
+        let clientData = [client_email, client_password];
 
         let missingItems = missingInfoWarning(clientData);
 
@@ -305,21 +305,21 @@ exports.verifyManager = onRequest({ 'region': 'europe-west2' }, async (req, res)
         if (db_username != '') {
             const managerInfo = db[db_username];
 
-            const db_name = managerInfo.name;
             const db_email = managerInfo.email;
             const db_password = managerInfo.password
-            const db_contact = managerInfo.contact
-            const db_ID = managerInfo.id;
+            // const db_name = managerInfo.name;
+            // const db_contact = managerInfo.contact
+            // const db_ID = managerInfo.id;
 
-            let correctUsername = bcrypt.compareSync(client_username, db_username);
-            let correctName = bcrypt.compareSync(client_name, db_name);
-            let correctEmail = bcrypt.compareSync(client_email, db_email);
-            let correctPassword = bcrypt.compareSync(client_password, db_password);
-            let correctContact = bcrypt.compareSync(client_contact, db_contact);
+            // let correctUsername = bcrypt.compareSync(client_username, db_username);
+            // let correctName = bcrypt.compareSync(client_name, db_name);
+            const correctEmail = bcrypt.compareSync(client_email, db_email);
+            const correctPassword = bcrypt.compareSync(client_password, db_password);
+            // let correctContact = bcrypt.compareSync(client_contact, db_contact);
 
-            let correctID = client_managerID == db_ID;
+            // let correctID = client_managerID == db_ID;
 
-            let verdict = correctUsername && correctName && correctEmail && correctPassword && correctContact && correctID;
+            let verdict = correctEmail && correctPassword;
 
             res.status(200).json({
                 'verdict': verdict,
