@@ -1,8 +1,8 @@
 const DarkReader = require('darkreader');
 
-async function verifyManager(username, email, password) {
+async function addManager(username, email, password) {
     try {
-        const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyManager', {
+        const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/addManager', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -33,11 +33,17 @@ loginButton.addEventListener('click', async (event) => {
 
     let username = document.getElementById("username").value
     let email = document.getElementById("email").value
+    let name = document.getElementById("name").value
     let password = document.getElementById("password").value
 
 
     let response = await verifyManager(username, email, password)
-    console.log(response)
+    if (!response.verdict) {
+        console.log(response)
+    }
+    else {
+        console.log(`${username} already exists`)
+    }
 })
 
 DarkReader.auto({
