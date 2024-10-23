@@ -33,13 +33,13 @@ A trading bot to invest in tech stocks and crpto for companies
 │  ├─ 404.html
 │  ├─ clientadder.html
 │  ├─ clients.html
-│  ├─ homepage.html
+│  ├─ index.html
 │  ├─ images
 │  │  └─ .DS_Store
 │  ├─ index.html
 │  ├─ javascripts
 │  │  └─ mobilemenu.js
-│  ├─ loggedinhomepage.html
+│  ├─ loggedinindex.html
 │  ├─ login.html
 │  ├─ predict.html
 │  ├─ pricealerts.html

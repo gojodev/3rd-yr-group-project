@@ -171,7 +171,7 @@ exports.addAdmin = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
         let isExistingUser = await verifyAdmin(client_username, client_email, client_password, client_id)
 
         if (isExistingUser) {
-            res.status(200).json({ error: `Account with email ${client_email} already exists` });
+            res.status(200).json({ verdict: `Account with username ${client_username} already exists` });
         }
 
         else {
@@ -214,8 +214,6 @@ exports.verifyClient = onRequest({ 'region': 'europe-west2' }, async (req, res) 
 
         const client_username = req.body.username;
         const client_name = req.body.name;
-        const client_ID = req.body.id;
-        const client_managerID = req.body.managerID;
         const client_contact = req.body.contact;
 
         const db = await loadInfo(C_userCreds)
@@ -232,11 +230,9 @@ exports.verifyClient = onRequest({ 'region': 'europe-west2' }, async (req, res) 
         if (db_username != '') {
             const userInfo = db[db_username];
             const db_name = userInfo.name;
-            const db_ID = userInfo.id;
-            const db_managerID = userInfo.managerID;
             const db_contact = userInfo.contact
 
-            let clientData = [client_username, client_name, client_ID, client_managerID, client_contact];
+            let clientData = [client_name, client_contact];
             let missingItems = missingInfoWarning(clientData);
 
             if (missingItems == []) {
@@ -244,11 +240,9 @@ exports.verifyClient = onRequest({ 'region': 'europe-west2' }, async (req, res) 
             }
 
             let correctName = bcrypt.compareSync(client_name, db_name);
-            let correctID = client_ID == db_ID;
-            let correctManagerID = client_managerID == db_managerID
             let correctContact = bcrypt.compareSync(client_contact, db_contact);
 
-            let verdict = correctName && correctID && correctManagerID && correctContact;
+            let verdict = correctName && correctContact;
 
             res.status(200).json({
                 'verdict': verdict,
@@ -277,13 +271,10 @@ exports.verifyManager = onRequest({ 'region': 'europe-west2' }, async (req, res)
         }
 
         const client_username = req.body.username;
-        const client_name = req.body.name;
         const client_email = req.body.email;
         const client_password = req.body.password;
-        const client_contact = req.body.contact;
-        const client_managerID = req.body.id;
 
-        let clientData = [client_username, client_name, client_email, client_password, client_contact, client_managerID];
+        let clientData = [client_email, client_password];
 
         let missingItems = missingInfoWarning(clientData);
 
@@ -305,21 +296,12 @@ exports.verifyManager = onRequest({ 'region': 'europe-west2' }, async (req, res)
         if (db_username != '') {
             const managerInfo = db[db_username];
 
-            const db_name = managerInfo.name;
             const db_email = managerInfo.email;
             const db_password = managerInfo.password
-            const db_contact = managerInfo.contact
-            const db_ID = managerInfo.id;
+            const correctEmail = bcrypt.compareSync(client_email, db_email);
+            const correctPassword = bcrypt.compareSync(client_password, db_password);
 
-            let correctUsername = bcrypt.compareSync(client_username, db_username);
-            let correctName = bcrypt.compareSync(client_name, db_name);
-            let correctEmail = bcrypt.compareSync(client_email, db_email);
-            let correctPassword = bcrypt.compareSync(client_password, db_password);
-            let correctContact = bcrypt.compareSync(client_contact, db_contact);
-
-            let correctID = client_managerID == db_ID;
-
-            let verdict = correctUsername && correctName && correctEmail && correctPassword && correctContact && correctID;
+            let verdict = correctEmail && correctPassword;
 
             res.status(200).json({
                 'verdict': verdict,
@@ -341,6 +323,85 @@ exports.verifyManager = onRequest({ 'region': 'europe-west2' }, async (req, res)
     }
 });
 
+
+async function verifyManager(username, name, email, password) {
+    try {
+        const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyManager', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                name: name,
+                email: email,
+                password: password,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const userData = await response.json();
+        return userData.verdict;
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+    }
+}
+
+exports.addManager = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+    try {
+        if (req.method != 'POST') {
+            res.status(405).json({ error: "Method not allowed" })
+        }
+
+        const client_username = req.body.username;
+        const client_name = req.body.name;
+        const client_email = req.body.email;
+        const client_password = req.body.password;
+
+        let isExistingUser = await verifyManager(client_username, client_name, client_email, client_password)
+
+        if (isExistingUser) {
+            res.status(200).json({ verdict: `Account with username ${client_username} already exists` });
+        }
+
+        else {
+            const saltRounds = 5;
+            const username_hash = bcrypt.hashSync(client_username, saltRounds)
+            const email_hash = bcrypt.hashSync(client_email, saltRounds)
+            const password_hash = bcrypt.hashSync(client_password, saltRounds)
+            const name_hash = bcrypt.hashSync(client_name, saltRounds)
+
+            let newUser = {
+                [username_hash]:
+                {
+                    name: name_hash,
+                    email: email_hash,
+                    password: password_hash
+                }
+            }
+
+            const db = await loadInfo(M_userCreds)
+
+            Object.assign(db, newUser)
+
+            uploadString(M_userCreds, JSON.stringify(db)).then(() => {
+                res.status(200).json({
+                    verdict: `New user ${client_username} has been created`,
+                    newUser: newUser
+                });
+            });
+        }
+    }
+
+    catch (error) {
+        console.log("Couldnt add new user: ", error)
+        res.status(500).json({ error: "Interal server error" })
+    }
+});
+
 /* 
 ? to start the backend server run "firebase eumlators:start" in "functions" folder
 
@@ -349,4 +410,5 @@ http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyAdmin
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/addAdmin
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyClient
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyManager
+http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/addManager
 */

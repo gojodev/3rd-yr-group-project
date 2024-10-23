@@ -1,3 +1,5 @@
+const DarkReader = require('darkreader');
+
 async function addManager(username, name, email, password) {
     try {
         const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/addManager', {
@@ -24,9 +26,24 @@ async function addManager(username, name, email, password) {
     }
 }
 
-async function addManager_test() {
-    let res = await addManager('m_user4', 'Mfirst4 Mlast4', 'm_user4@gmail.com', 'm_user4_password!')
-    console.log(res)
-}
+let signUpButton = document.getElementById('signUpButton')
+signUpButton.addEventListener('click', async (event) => {
 
-addManager_test()
+    // Prevent the form from refreshing the page
+    event.preventDefault();
+
+    let username = document.getElementById("username").value
+    let email = document.getElementById("email").value
+    let name = document.getElementById("name").value
+    let password = document.getElementById("password").value
+
+
+    let response = await addManager(username, name, email, password)
+    console.log(response)
+})
+
+DarkReader.auto({
+    brightness: 100,
+    contrast: 100,
+    darkSchemeTextColor: 'white',
+});
