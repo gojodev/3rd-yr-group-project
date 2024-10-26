@@ -1,0 +1,123 @@
+{
+    "stocks": {
+        "AAPL": {
+            "name": "Apple Inc.",
+            "currentPrice": 231.41,
+            "marketCap": 3518380900352,
+            "volume": 37918358,
+            "52WeekHigh": 237.49,
+            "52WeekLow": 164.08,
+            "dividendYield": 0.0043
+        },
+        "MSFT": {
+            "name": "Microsoft Corporation",
+            "currentPrice": 428.15,
+            "marketCap": 3182455947264,
+            "volume": 17007704,
+            "52WeekHigh": 468.35,
+            "52WeekLow": 331.83,
+            "dividendYield": 0.0078
+        },
+        "GOOGL": {
+            "name": "Alphabet Inc.",
+            "currentPrice": 165.27,
+            "marketCap": 2013319135232,
+            "volume": 19202678,
+            "52WeekHigh": 191.75,
+            "52WeekLow": 122.69,
+            "dividendYield": 0.0049
+        },
+        "AMZN": {
+            "name": "Amazon.com, Inc.",
+            "currentPrice": 187.83,
+            "marketCap": 1971388547072,
+            "volume": 28807294,
+            "52WeekHigh": 201.2,
+            "52WeekLow": 128.56,
+            "dividendYield": null
+        },
+        "TSLA": {
+            "name": "Tesla, Inc.",
+            "currentPrice": 269.19,
+            "marketCap": 864116080640,
+            "volume": 160034757,
+            "52WeekHigh": 271.0,
+            "52WeekLow": 138.8,
+            "dividendYield": null
+        },
+        "NVDA": {
+            "name": "NVIDIA Corporation",
+            "currentPrice": 141.54,
+            "marketCap": 3471975907328,
+            "volume": 203385650,
+            "52WeekHigh": 144.42,
+            "52WeekLow": 39.23,
+            "dividendYield": 0.00029999999
+        },
+        "META": {
+            "name": "Meta Platforms, Inc.",
+            "currentPrice": 573.25,
+            "marketCap": 1426033999872,
+            "volume": 11285408,
+            "52WeekHigh": 602.95,
+            "52WeekLow": 296.86,
+            "dividendYield": 0.0034999999
+        },
+        "JPM": {
+            "name": "JP Morgan Chase & Co.",
+            "currentPrice": 222.31,
+            "marketCap": 628966162432,
+            "volume": 6323086,
+            "52WeekHigh": 225.92,
+            "52WeekLow": 136.04,
+            "dividendYield": 0.0222
+        },
+        "V": {
+            "name": "Visa Inc.",
+            "currentPrice": 281.73,
+            "marketCap": 552162689024,
+            "volume": 4463504,
+            "52WeekHigh": 293.07,
+            "52WeekLow": 230.03,
+            "dividendYield": 0.0073
+        },
+        "UNH": {
+            "name": "UnitedHealth Group Incorporated",
+            "currentPrice": 564.56,
+            "marketCap": 521398812672,
+            "volume": 1920296,
+            "52WeekHigh": 608.63,
+            "52WeekLow": 436.38,
+            "dividendYield": 0.015
+        }
+    },
+    "cryptos": {
+        "BTC-USD": {
+            "name": "Bitcoin USD",
+            "currentPrice": "N/A",
+            "marketCap": 1315317743616,
+            "volume": 42585522176,
+            "52WeekHigh": 73750.07,
+            "52WeekLow": 33874.805,
+            "dividendYield": null
+        },
+        "ETH-USD": {
+            "name": "Ethereum USD",
+            "currentPrice": "N/A",
+            "marketCap": 293455659008,
+            "volume": 23760635904,
+            "52WeekHigh": 4092.2842,
+            "52WeekLow": 1766.053,
+            "dividendYield": null
+        },
+        "DOGE-USD": {
+            "name": "Dogecoin USD",
+            "currentPrice": "N/A",
+            "marketCap": 19313817600,
+            "volume": 1514513152,
+            "52WeekHigh": 0.226581,
+            "52WeekLow": 0.066129,
+            "dividendYield": null
+        }
+    }
+}

@@ -2,6 +2,10 @@ const { onRequest } = require("firebase-functions/v2/https");
 const { initializeApp } = require("firebase/app");
 const bcrypt = require('bcrypt');
 
+const axios = require("axios");
+
+const HUGGINGFACE_API_KEY = "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";
+
 const firebaseConfig = {
     apiKey: "AIzaSyAFayRb90ywbg82EcLOnH5iBDm3qnZx9TU",
     authDomain: "rd-year-project-1f41d.firebaseapp.com",
@@ -399,6 +403,34 @@ exports.addManager = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
     catch (error) {
         console.log("Couldnt add new user: ", error)
         res.status(500).json({ error: "Interal server error" })
+    }
+});
+
+exports.aiGen = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+    try {
+        if (req.method != 'POST') {
+            res.status(405).json({ error: "Method not allowed" })
+        }
+
+        const prompt = req.body.prompt;
+
+
+        const response = await axios.post(
+            "https://api-inference.huggingface.co/models/gpt2", 
+            { inputs: prompt },
+            {
+                headers: { Authorization: `Bearer ${HUGGINGFACE_API_KEY}` }
+            }
+        );
+
+        if (response.status === 200) {
+            res.status(200).send(response.data[0].generated_text);
+        } else {
+            res.status(response.status).send("Error generating response");
+        }
+    } catch (error) {
+        console.error("Error calling Hugging Face API:", error);
+        res.status(500).send("Server Error");
     }
 });
 
