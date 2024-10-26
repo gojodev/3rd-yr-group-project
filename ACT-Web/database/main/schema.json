@@ -1,0 +1,26 @@
+{
+    "user1": {
+        "name": "first last",
+        "email": "user1@gmail.com",
+        "password": "user1_password!",
+        "id": "A_"
+    },
+    "user2": {
+        "name": "first last",
+        "email": "user2@gmail.com",
+        "password": "user2_password!",
+        "contact": "089 343 3473",
+        "id": "M_",
+        "clients": [
+            {
+                "id": "C_"
+            }
+        ]
+    },
+    "user3": {
+        "name": "first last",
+        "id": "C_",
+        "managerID": "M_",
+        "contact": "089 343 3473"
+    }
+}
