@@ -1,8 +1,9 @@
 
 A trading bot to invest in tech stocks and crpto for companies
 
+
 ```
-3rd-yr-group-project
+ACT-Web
 ├─ .firebase
 │  └─ hosting.cHVibGlj.cache
 ├─ .firebaserc
@@ -27,6 +28,7 @@ A trading bot to invest in tech stocks and crpto for companies
 │  ├─ 3rd year Project Report and Deliverables 2024.pdf
 │  └─ SDH3-CS3-SD3-Project-2024.pdf
 ├─ esbuild.config.js
+├─ eslint.config.mjs
 ├─ firebase-debug.log
 ├─ firebase.json
 ├─ functions
@@ -34,7 +36,6 @@ A trading bot to invest in tech stocks and crpto for companies
 │  ├─ clientSideTest_AIengine.js
 │  ├─ clientSideTest_client.js
 │  ├─ clientSideTest_manager.js
-│  ├─ firebase-debug.log
 │  ├─ index.js
 │  ├─ package-lock.json
 │  ├─ package.json

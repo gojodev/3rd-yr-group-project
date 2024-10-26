@@ -443,4 +443,5 @@ http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/addAdmin
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyClient
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyManager
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/addManager
+http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/aiGen
 */

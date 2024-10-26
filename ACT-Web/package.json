@@ -21,9 +21,13 @@
     "firebase-functions": "^6.0.1",
     "firebase-tools": "^13.22.0",
     "fs": "^0.0.1-security",
-    "fuse.js": "^7.0.0"
+    "fuse.js": "^7.0.0",
+    "init": "^0.1.2"
   },
   "devDependencies": {
-    "globals": "^15.9.0"
+    "@eslint/eslintrc": "^3.1.0",
+    "@eslint/js": "^9.13.0",
+    "eslint": "^9.13.0",
+    "globals": "^15.11.0"
   }
 }
