@@ -9,9 +9,6 @@ ACT-Web
 ├─ .firebaserc
 ├─ .vscode
 │  └─ settings.json
-├─ act-ai
-│  ├─ financial_data.json
-│  └─ scraper.py
 ├─ cors.json
 ├─ database
 │  ├─ main
@@ -40,6 +37,15 @@ ACT-Web
 │  ├─ package-lock.json
 │  ├─ package.json
 │  ├─ test.js
+│  └─ ui-debug.log
+├─ functions-python
+│  ├─ financial_data.json
+│  ├─ firebase-debug.log
+│  ├─ main.py
+│  ├─ requirements.txt
+│  ├─ scraper.py
+│  ├─ serviceAccountKey.json
+│  ├─ test.py
 │  └─ ui-debug.log
 ├─ package-lock.json
 ├─ package.json

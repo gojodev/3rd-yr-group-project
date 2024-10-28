@@ -1,6 +1,8 @@
 import yfinance as yf
 import json
 
+# todo use "long-polling"
+
 # (Yahoo Finance format)
 stock_tickers = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "NVDA", "META", "DELL", "AMD", "NVDA"]
 crypto_tickers = ["BTC-USD", "ETH-USD", "DOGE-USD"]

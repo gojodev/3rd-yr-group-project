@@ -1,84 +1,127 @@
-[debug] [2024-10-26T21:56:42.398Z] ----------------------------------------------------------------------
-[debug] [2024-10-26T21:56:42.400Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\GojoDev\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init functions
-[debug] [2024-10-26T21:56:42.400Z] CLI Version:   13.23.0
-[debug] [2024-10-26T21:56:42.400Z] Platform:      win32
-[debug] [2024-10-26T21:56:42.400Z] Node Version:  v20.13.1
-[debug] [2024-10-26T21:56:42.400Z] Time:          Sat Oct 26 2024 22:56:42 GMT+0100 (Irish Standard Time)
-[debug] [2024-10-26T21:56:42.400Z] ----------------------------------------------------------------------
+[debug] [2024-10-28T17:01:53.553Z] ----------------------------------------------------------------------
+[debug] [2024-10-28T17:01:53.555Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\GojoDev\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions
+[debug] [2024-10-28T17:01:53.556Z] CLI Version:   13.23.0
+[debug] [2024-10-28T17:01:53.556Z] Platform:      win32
+[debug] [2024-10-28T17:01:53.556Z] Node Version:  v20.13.1
+[debug] [2024-10-28T17:01:53.556Z] Time:          Mon Oct 28 2024 17:01:53 GMT+0000 (Greenwich Mean Time)
+[debug] [2024-10-28T17:01:53.556Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2024-10-26T21:56:42.445Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2024-10-26T21:56:42.445Z] > authorizing via signed-in user (eakoledoye@gmail.com)
+[debug] [2024-10-28T17:01:53.601Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-10-28T17:01:53.601Z] > authorizing via signed-in user (eakoledoye@gmail.com)
+[debug] [2024-10-28T17:01:53.601Z] [iam] checking project rd-year-project-1f41d for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2024-10-28T17:01:53.602Z] Checked if tokens are valid: false, expires at: 1730132084186
+[debug] [2024-10-28T17:01:53.602Z] Checked if tokens are valid: false, expires at: 1730132084186
+[debug] [2024-10-28T17:01:53.602Z] > refreshing access token with scopes: []
+[debug] [2024-10-28T17:01:53.603Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2024-10-28T17:01:53.603Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2024-10-28T17:01:53.786Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2024-10-28T17:01:53.786Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2024-10-28T17:01:53.792Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d:testIamPermissions [none]
+[debug] [2024-10-28T17:01:53.792Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d:testIamPermissions x-goog-quota-user=projects/rd-year-project-1f41d
+[debug] [2024-10-28T17:01:53.792Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2024-10-28T17:01:54.589Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d:testIamPermissions 200
+[debug] [2024-10-28T17:01:54.589Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2024-10-28T17:01:54.589Z] Checked if tokens are valid: true, expires at: 1730138512786
+[debug] [2024-10-28T17:01:54.589Z] Checked if tokens are valid: true, expires at: 1730138512786
+[debug] [2024-10-28T17:01:54.589Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/rd-year-project-1f41d/serviceAccounts/rd-year-project-1f41d@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2024-10-28T17:01:54.589Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/rd-year-project-1f41d/serviceAccounts/rd-year-project-1f41d@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2024-10-28T17:01:55.271Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/rd-year-project-1f41d/serviceAccounts/rd-year-project-1f41d@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2024-10-28T17:01:55.271Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/rd-year-project-1f41d/serviceAccounts/rd-year-project-1f41d@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
 [info] 
-     ######## #### ########  ######## ########     ###     ######  ########
-     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
-     ######    ##  ########  ######   ########  #########  ######  ######
-     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
-     ##       #### ##     ## ######## ########  ##     ##  ######  ########
-
-You're about to initialize a Firebase project in this directory:
-
-  C:\Users\GojoDev\Desktop\Emmanuel K\college stuff\year 3\3rd-yr-group-project\ACT-Web
-
-Before we get started, keep in mind:
-
-  * You are initializing within an existing Firebase project directory
-
+[info] === Deploying to 'rd-year-project-1f41d'...
 [info] 
-=== Project Setup
-[info] 
-[info] First, let's associate this project directory with a Firebase project.
-[info] You can create multiple project aliases by running firebase use --add, 
-[info] but for now we'll just set up a default project.
-[info] 
-[debug] [2024-10-26T21:56:44.592Z] Using project from CLI flag: rd-year-project-1f41d
-[debug] [2024-10-26T21:56:44.593Z] Checked if tokens are valid: true, expires at: 1729983281043
-[debug] [2024-10-26T21:56:44.593Z] Checked if tokens are valid: true, expires at: 1729983281043
-[debug] [2024-10-26T21:56:44.594Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d [none]
-[debug] [2024-10-26T21:56:44.885Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d 200
-[debug] [2024-10-26T21:56:44.885Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d {"projectId":"rd-year-project-1f41d","projectNumber":"823208675027","displayName":"3rd year project","name":"projects/rd-year-project-1f41d","resources":{"hostingSite":"rd-year-project-1f41d","storageBucket":"rd-year-project-1f41d.appspot.com","locationId":"europe-west2"},"state":"ACTIVE","etag":"1_ebe102b0-cdb5-43f1-8723-6be182a85851"}
-[info] i  Using project rd-year-project-1f41d (3rd year project) 
-[info] 
-=== Functions Setup
-[debug] [2024-10-26T21:56:44.890Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2024-10-26T21:56:44.890Z] > authorizing via signed-in user (eakoledoye@gmail.com)
-[debug] [2024-10-26T21:56:44.890Z] [iam] checking project rd-year-project-1f41d for permissions ["firebase.projects.get"]
-[debug] [2024-10-26T21:56:44.890Z] Checked if tokens are valid: true, expires at: 1729983281043
-[debug] [2024-10-26T21:56:44.890Z] Checked if tokens are valid: true, expires at: 1729983281043
-[debug] [2024-10-26T21:56:44.890Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d:testIamPermissions [none]
-[debug] [2024-10-26T21:56:44.891Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d:testIamPermissions x-goog-quota-user=projects/rd-year-project-1f41d
-[debug] [2024-10-26T21:56:44.891Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d:testIamPermissions {"permissions":["firebase.projects.get"]}
-[debug] [2024-10-26T21:56:45.513Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d:testIamPermissions 200
-[debug] [2024-10-26T21:56:45.513Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d:testIamPermissions {"permissions":["firebase.projects.get"]}
-[debug] [2024-10-26T21:56:45.514Z] Checked if tokens are valid: true, expires at: 1729983281043
-[debug] [2024-10-26T21:56:45.514Z] Checked if tokens are valid: true, expires at: 1729983281043
-[debug] [2024-10-26T21:56:45.514Z] Checked if tokens are valid: true, expires at: 1729983281043
-[debug] [2024-10-26T21:56:45.514Z] Checked if tokens are valid: true, expires at: 1729983281043
-[debug] [2024-10-26T21:56:45.514Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/cloudfunctions.googleapis.com [none]
-[debug] [2024-10-26T21:56:45.514Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/rd-year-project-1f41d
-[debug] [2024-10-26T21:56:45.515Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/runtimeconfig.googleapis.com [none]
-[debug] [2024-10-26T21:56:45.515Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/rd-year-project-1f41d
-[debug] [2024-10-26T21:56:46.333Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/runtimeconfig.googleapis.com 200
-[debug] [2024-10-26T21:56:46.333Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/runtimeconfig.googleapis.com [omitted]
-[debug] [2024-10-26T21:56:46.335Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/cloudfunctions.googleapis.com 200
-[debug] [2024-10-26T21:56:46.335Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/cloudfunctions.googleapis.com [omitted]
-[info] 
-Detected existing codebase(s): default
+[info] i  deploying functions 
+[debug] [2024-10-28T17:01:55.273Z] Checked if tokens are valid: true, expires at: 1730138512786
+[debug] [2024-10-28T17:01:55.273Z] Checked if tokens are valid: true, expires at: 1730138512786
+[debug] [2024-10-28T17:01:55.273Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d [none]
+[debug] [2024-10-28T17:01:55.574Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d 200
+[debug] [2024-10-28T17:01:55.574Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d {"projectId":"rd-year-project-1f41d","projectNumber":"823208675027","displayName":"3rd year project","name":"projects/rd-year-project-1f41d","resources":{"hostingSite":"rd-year-project-1f41d","storageBucket":"rd-year-project-1f41d.appspot.com","locationId":"europe-west2"},"state":"ACTIVE","etag":"1_ebe102b0-cdb5-43f1-8723-6be182a85851"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: preparing codebase python-functions for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[debug] [2024-10-28T17:01:55.575Z] Checked if tokens are valid: true, expires at: 1730138512786
+[debug] [2024-10-28T17:01:55.575Z] Checked if tokens are valid: true, expires at: 1730138512786
+[debug] [2024-10-28T17:01:55.575Z] Checked if tokens are valid: true, expires at: 1730138512786
+[debug] [2024-10-28T17:01:55.575Z] Checked if tokens are valid: true, expires at: 1730138512786
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[debug] [2024-10-28T17:01:55.575Z] Checked if tokens are valid: true, expires at: 1730138512786
+[debug] [2024-10-28T17:01:55.576Z] Checked if tokens are valid: true, expires at: 1730138512786
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2024-10-28T17:01:55.576Z] Checked if tokens are valid: true, expires at: 1730138512786
+[debug] [2024-10-28T17:01:55.576Z] Checked if tokens are valid: true, expires at: 1730138512786
+[debug] [2024-10-28T17:01:55.576Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/cloudfunctions.googleapis.com [none]
+[debug] [2024-10-28T17:01:55.576Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/rd-year-project-1f41d
+[debug] [2024-10-28T17:01:55.577Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/runtimeconfig.googleapis.com [none]
+[debug] [2024-10-28T17:01:55.577Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/rd-year-project-1f41d
+[debug] [2024-10-28T17:01:55.577Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/cloudbuild.googleapis.com [none]
+[debug] [2024-10-28T17:01:55.578Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/cloudbuild.googleapis.com x-goog-quota-user=projects/rd-year-project-1f41d
+[debug] [2024-10-28T17:01:55.578Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/artifactregistry.googleapis.com [none]
+[debug] [2024-10-28T17:01:55.578Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/artifactregistry.googleapis.com x-goog-quota-user=projects/rd-year-project-1f41d
+[debug] [2024-10-28T17:01:56.422Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/cloudfunctions.googleapis.com 200
+[debug] [2024-10-28T17:01:56.422Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/cloudfunctions.googleapis.com [omitted]
+[info] +  functions: required API cloudfunctions.googleapis.com is enabled 
+[debug] [2024-10-28T17:01:56.435Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/artifactregistry.googleapis.com 200
+[debug] [2024-10-28T17:01:56.436Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/artifactregistry.googleapis.com [omitted]
+[info] +  artifactregistry: required API artifactregistry.googleapis.com is enabled 
+[debug] [2024-10-28T17:01:56.443Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/cloudbuild.googleapis.com 200
+[debug] [2024-10-28T17:01:56.443Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/cloudbuild.googleapis.com [omitted]
+[info] +  functions: required API cloudbuild.googleapis.com is enabled 
+[debug] [2024-10-28T17:01:56.470Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/runtimeconfig.googleapis.com 200
+[debug] [2024-10-28T17:01:56.470Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/runtimeconfig.googleapis.com [omitted]
+[debug] [2024-10-28T17:01:56.470Z] Checked if tokens are valid: true, expires at: 1730138512786
+[debug] [2024-10-28T17:01:56.470Z] Checked if tokens are valid: true, expires at: 1730138512786
+[debug] [2024-10-28T17:01:56.470Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d/adminSdkConfig [none]
+[debug] [2024-10-28T17:01:56.976Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d/adminSdkConfig 200
+[debug] [2024-10-28T17:01:56.976Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d/adminSdkConfig {"projectId":"rd-year-project-1f41d","storageBucket":"rd-year-project-1f41d.appspot.com","locationId":"europe-west2"}
+[debug] [2024-10-28T17:01:56.976Z] Checked if tokens are valid: true, expires at: 1730138512786
+[debug] [2024-10-28T17:01:56.976Z] Checked if tokens are valid: true, expires at: 1730138512786
+[debug] [2024-10-28T17:01:56.976Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/rd-year-project-1f41d/configs [none]
+[debug] [2024-10-28T17:01:57.311Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/rd-year-project-1f41d/configs 200
+[debug] [2024-10-28T17:01:57.311Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/rd-year-project-1f41d/configs {}
+[debug] [2024-10-28T17:01:57.312Z] Validating nodejs source
+[warn] !  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2024-10-28T17:01:58.088Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "shell": "firebase functions:shell",
+    "start": "firebase emulators:start",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "20"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "bcrypt": "^5.1.1",
+    "firebase": "^10.14.1",
+    "firebase-admin": "^12.6.0",
+    "firebase-functions": "^6.0.1",
+    "firebase-tools": "^1.2.0"
+  },
+  "devDependencies": {
+    "firebase-functions-test": "^3.1.0"
+  },
+  "private": true
+}
+[debug] [2024-10-28T17:01:58.088Z] Building nodejs source
+[info] i  functions: Loading and analyzing source code for codebase default to determine what to deploy 
+[debug] [2024-10-28T17:01:58.089Z] Could not find functions.yaml. Must use http discovery
+[debug] [2024-10-28T17:01:58.094Z] Found firebase-functions binary at 'C:\Users\GojoDev\Desktop\Emmanuel K\college stuff\year 3\3rd-yr-group-project\ACT-Web\functions\node_modules\.bin\firebase-functions'
+[info] Serving at port 8677
 
-[info] Let's create a new codebase for your functions.
-[info] A directory corresponding to the codebase will be created in your project
-[info] with sample code pre-configured.
+[debug] [2024-10-28T17:01:58.525Z] Got response from /__/functions.yaml {"endpoints":{"showDB":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west2"],"labels":{},"httpsTrigger":{},"entryPoint":"showDB"},"verifyAdmin":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west2"],"labels":{},"httpsTrigger":{},"entryPoint":"verifyAdmin"},"addAdmin":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west2"],"labels":{},"httpsTrigger":{},"entryPoint":"addAdmin"},"verifyClient":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west2"],"labels":{},"httpsTrigger":{},"entryPoint":"verifyClient"},"verifyManager":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west2"],"labels":{},"httpsTrigger":{},"entryPoint":"verifyManager"},"addManager":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west2"],"labels":{},"httpsTrigger":{},"entryPoint":"addManager"},"aiGen":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west2"],"labels":{},"httpsTrigger":{},"entryPoint":"aiGen"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
+[debug] [2024-10-28T17:02:03.548Z] Customer code is not Node
+[debug] [2024-10-28T17:02:03.549Z] Validating python source
+[debug] [2024-10-28T17:02:03.549Z] Building python source
+[info] i  functions: Loading and analyzing source code for codebase python-functions to determine what to deploy 
+[debug] [2024-10-28T17:02:03.550Z] Could not find functions.yaml. Must use http discovery
+[debug] [2024-10-28T17:02:03.554Z] Running command with virtualenv: command="C:\Users\GojoDev\Desktop\Emmanuel K\college stuff\year 3\3rd-yr-group-project\ACT-Web\functions-python\venv\Scripts\activate.bat", args=["","&&","python.exe","-c","\"import firebase_functions; import os; print(os.path.dirname(firebase_functions.__file__))\""]
+[debug] [2024-10-28T17:02:03.570Z] stderr: The system cannot find the path specified.
 
-[info] See https://firebase.google.com/docs/functions/organize-functions for
-[info] more information on organizing your functions using codebases.
-
-[info] Functions can be deployed with firebase deploy.
-
-[error] Invalid codebase name. Codebase must be less than 64 characters and can contain only lowercase letters, numeric characters, underscores, and dashes.
-[info] +  Wrote functions-python/requirements.txt 
-[info] +  Wrote functions-python/.gitignore 
-[info] +  Wrote functions-python/main.py 
-[debug] [2024-10-26T21:57:36.878Z] Running command with virtualenv: command="C:\Users\GojoDev\Desktop\Emmanuel K\college stuff\year 3\3rd-yr-group-project\ACT-Web\functions-python\venv\Scripts\activate.bat", args=["","&&","pip3","install","--upgrade","pip"]
-[debug] [2024-10-26T21:57:43.236Z] Error: spawn "C:\Users\GojoDev\Desktop\Emmanuel K\college stuff\year 3\3rd-yr-group-project\ACT-Web\functions-python\venv\Scripts\activate.bat" ENOENT
+[debug] [2024-10-28T17:02:03.724Z] Error: spawn "C:\Users\GojoDev\Desktop\Emmanuel K\college stuff\year 3\3rd-yr-group-project\ACT-Web\functions-python\venv\Scripts\activate.bat" ENOENT
     at notFoundError (C:\Users\GojoDev\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\cross-spawn\lib\enoent.js:6:26)
     at verifyENOENT (C:\Users\GojoDev\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\cross-spawn\lib\enoent.js:40:16)
     at cp.emit (C:\Users\GojoDev\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\cross-spawn\lib\enoent.js:27:25)
