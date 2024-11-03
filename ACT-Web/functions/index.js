@@ -3,6 +3,7 @@ const { initializeApp } = require("firebase/app");
 const bcrypt = require('bcrypt');
 
 const axios = require("axios");
+const yahooFinance = require('yahoo-finance2').default;
 
 const HUGGINGFACE_API_KEY = "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";
 
@@ -33,6 +34,8 @@ const storage = getStorage();
 const A_userCreds = ref(storage, 'A_userCreds.json'); // admin
 const M_userCreds = ref(storage, 'M_userCreds.json'); // manager
 const C_userCreds = ref(storage, 'C_userCreds.json'); // client
+
+const financialData = ref(storage, 'financialData.json'); // scraped data from market
 
 async function loadInfo(data) {
     return await Promise.resolve(getRef_json(data));
@@ -77,6 +80,13 @@ exports.verifyAdmin = onRequest({ 'region': 'europe-west2' }, async (req, res) =
         const client_email = req.body.email;
         const client_password = req.body.password;
         const client_ID = req.body.id;
+
+        const clientData = [client_name, client_username, client_email, client_password, client_ID]
+        const missingItems = missingInfoWarning(clientData);
+
+        if (missingItems == []) {
+            res.status(200).json({ error: `${missingItems} is required in the JSON body` })
+        }
 
 
         const db = await loadInfo(A_userCreds)
@@ -219,6 +229,13 @@ exports.verifyClient = onRequest({ 'region': 'europe-west2' }, async (req, res) 
         const client_username = req.body.username;
         const client_name = req.body.name;
         const client_contact = req.body.contact;
+
+        const clientData = [client_username, client_name, client_contact]
+        const missingItems = missingInfoWarning(clientData);
+
+        if (missingItems == []) {
+            res.status(200).json({ error: `${missingItems} is required in the JSON body` })
+        }
 
         const db = await loadInfo(C_userCreds)
 
@@ -414,9 +431,12 @@ exports.aiGen = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
 
         const prompt = req.body.prompt;
 
+        if (!prompt) {
+            res.status(200).json({ error: `${missingItems} is required in the JSON body` })
+        }
 
         const response = await axios.post(
-            "https://api-inference.huggingface.co/models/gpt2", 
+            "https://api-inference.huggingface.co/models/gpt2",
             { inputs: prompt },
             {
                 headers: { Authorization: `Bearer ${HUGGINGFACE_API_KEY}` }
@@ -434,6 +454,60 @@ exports.aiGen = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     }
 });
 
+const stockTickers = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "NVDA", "META", "DELL", "AMD", "NVDA"];
+const cryptoTickers = ["BTC-USD", "ETH-USD", "DOGE-USD"];
+
+async function fetchData(tickers, isCrypto = false) {
+    const data = {};
+
+    for (const ticker of tickers) {
+        try {
+            const info = await yahooFinance.quoteSummary(ticker, { modules: ['price', 'summaryDetail', 'recommendationTrend', 'earningsTrend'] });
+            data[ticker] = {
+                name: info.price.shortName || "N/A",
+                currentPrice: info.price.regularMarketPrice || "N/A",
+                marketCap: info.price.marketCap || "N/A",
+                volume: info.price.regularMarketVolume || "N/A",
+                "52WeekHigh": info.summaryDetail.fiftyTwoWeekHigh || "N/A",
+                "52WeekLow": info.summaryDetail.fiftyTwoWeekLow || "N/A"
+            };
+
+            if (!isCrypto) {
+                data[ticker]["eps_trend"] = info.earningsTrend ? JSON.stringify(info.earningsTrend.trend) : "N/A";
+                data[ticker]["recommendations"] = info.recommendationTrend ? JSON.stringify(info.recommendationTrend.trend) : "N/A";
+            }
+        } catch (error) {
+            console.error(`Error fetching data for ${ticker}:`, error);
+            data[ticker] = { error: "Failed to retrieve data" };
+        }
+    }
+
+    return data;
+}
+
+exports.scraper = onRequest({ region: 'europe-west2' }, async (req, res) => {
+    try {
+        const stocksData = await fetchData(stockTickers, false);
+        const cryptosData = await fetchData(cryptoTickers, true);
+
+        const allData = {
+            stocks: stocksData,
+            cryptos: cryptosData
+        };
+
+        uploadString(financialData, JSON.stringify(allData)).then(() => {
+            res.status(200).json({
+                verdict: "Financial data saved to Firestore successfully"
+            });
+        });
+
+        res.status(200).json({ message: 'Financial data saved to Firestore successfully', data: allData });
+    } catch (error) {
+        console.error("Error saving financial data:", error);
+        res.status(500).json({ error: "Failed to save financial data" });
+    }
+});
+
 /* 
 ? to start the backend server run "firebase eumlators:start" in "functions" folder
 
@@ -444,4 +518,5 @@ http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyClient
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyManager
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/addManager
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/aiGen
+http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/scraper
 */
