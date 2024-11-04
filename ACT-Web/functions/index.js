@@ -508,6 +508,87 @@ exports.scraper = onRequest({ region: 'europe-west2' }, async (req, res) => {
     }
 });
 
+exports.updateDetails = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+    try {
+        if (req.method != 'POST') {
+            res.status(405).json({ error: "Method not allowed" })
+        }
+
+        const client_username = req.body.username;
+
+        const new_email = req.body.new_email;
+        const new_name = req.body.new_name;
+        const new_password = req.body.new_password;
+
+        const clientData = [new_email, new_name, new_password]
+        const missingItems = missingInfoWarning(clientData);
+
+        if (missingItems == []) {
+            res.status(200).json({ error: `${missingItems} is required in the JSON body` })
+        }
+
+        var db_username = '';
+
+        let db = await loadInfo();
+
+        for (var key in db) {
+            db_username = bcrypt.compareSync(client_username, key)
+            if (db_username) {
+                db_username = key
+                break
+            }
+        }
+
+        if (db_username == false) {
+            res.status(200).json({
+                verdict: `No data for: ${client_username} was found on file`
+            });
+        }
+
+        else {
+            const dbInfo = db[db_username];
+
+            console.log("db dbInfo: ", dbInfo)
+
+            const db_email = dbInfo.email;
+            const db_name = dbInfo.name;
+            const db_password = dbInfo.password;
+
+            var userInfo = {
+
+            }
+
+            userInfo.email = bcrypt.hashSync(new_email, 5);
+
+            if (!bcrypt.compareSync(new_email, db_email)) {
+                userInfo.email = bcrypt.hashSync(new_email, 5);
+            }
+
+            if (!bcrypt.compareSync(new_name, db_name)) {
+                userInfo.name = bcrypt.hashSync(new_name, 5);
+            }
+
+            if (!bcrypt.compareSync(new_password, db_password)) {
+                userInfo.password = bcrypt.hashSync(new_password, 5);
+            }
+
+            db[db_username] = userInfo;
+
+            uploadString(userCreds, JSON.stringify(db)).then(() => {
+                res.status(200).json({
+                    'verdict': `Updated ${client_username}'s details successfully`,
+                    'newDetails': userInfo
+                });
+            });
+        }
+    }
+
+    catch (error) {
+        console.log("Couldnt add new user: ", error)
+        res.status(500).json({ error: "Interal server error" })
+    }
+});
+
 /* 
 ? to start the backend server run "firebase eumlators:start" in "functions" folder
 
@@ -519,4 +600,5 @@ http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyManager
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/addManager
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/aiGen
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/scraper
+http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/updateDetails
 */

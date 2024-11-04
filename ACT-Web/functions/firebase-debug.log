@@ -854,3 +854,25 @@ Issues? Report them at https://github.com/firebase/firebase-tools/issues and att
 [debug] [2024-11-03T20:15:26.047Z] defaultcredentials: writing to file C:\Users\GojoDev\AppData\Roaming\firebase\eakoledoye_gmail_com_application_default_credentials.json
 [debug] [2024-11-03T20:15:26.047Z] Setting GAC to C:\Users\GojoDev\AppData\Roaming\firebase\eakoledoye_gmail_com_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to C:\\Users\\GojoDev\\AppData\\Roaming\\firebase\\eakoledoye_gmail_com_application_default_credentials.json"}}
 [info] +  functions: Loaded functions definitions from source: showDB, verifyAdmin, addAdmin, verifyClient, verifyManager, addManager, aiGen, scraper. {"metadata":{"emulator":{"name":"functions"},"message":"Loaded functions definitions from source: showDB, verifyAdmin, addAdmin, verifyClient, verifyManager, addManager, aiGen, scraper."}}
+[debug] [2024-11-04T10:14:31.796Z] ----------------------------------------------------------------------
+[debug] [2024-11-04T10:14:31.797Z] Command:       C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2024-11-04T10:14:31.798Z] CLI Version:   13.22.1
+[debug] [2024-11-04T10:14:31.798Z] Platform:      win32
+[debug] [2024-11-04T10:14:31.798Z] Node Version:  v18.17.1
+[debug] [2024-11-04T10:14:31.799Z] Time:          Mon Nov 04 2024 10:14:31 GMT+0000 (Greenwich Mean Time)
+[debug] [2024-11-04T10:14:31.799Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-11-04T10:14:31.853Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-11-04T10:14:31.853Z] > authorizing via signed-in user (eakoledoye@gmail.com)
+[debug] [2024-11-04T10:14:31.854Z] [iam] checking project rd-year-project-1f41d for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]
+[debug] [2024-11-04T10:14:31.855Z] Checked if tokens are valid: true, expires at: 1730718868300
+[debug] [2024-11-04T10:14:31.855Z] Checked if tokens are valid: true, expires at: 1730718868300
+[debug] [2024-11-04T10:14:31.856Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d:testIamPermissions [none]
+[debug] [2024-11-04T10:14:31.856Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d:testIamPermissions x-goog-quota-user=projects/rd-year-project-1f41d
+[debug] [2024-11-04T10:14:31.856Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]}
+[debug] [2024-11-04T10:14:32.565Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d:testIamPermissions 200
+[debug] [2024-11-04T10:14:32.565Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]}
+[debug] [2024-11-04T10:14:32.565Z] Checked if tokens are valid: true, expires at: 1730718868300
+[debug] [2024-11-04T10:14:32.565Z] Checked if tokens are valid: true, expires at: 1730718868300
+[debug] [2024-11-04T10:14:32.565Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/rd-year-project-1f41d/serviceAccounts/rd-year-project-1f41d@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2024-11-04T10:14:32.565Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/rd-year-project-1f41d/serviceAccounts/rd-year-project-1f41d@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
