@@ -1,13 +1,12 @@
 import yfinance as yf
 import json
 
-# todo use "long-polling"
-
 # (Yahoo Finance format)
 stock_tickers = ["AAPL", "MSFT", "GOOGL", "AMZN",
                  "TSLA", "NVDA", "META", "DELL", "AMD", "NVDA"]
 crypto_tickers = ["BTC-USD", "ETH-USD", "DOGE-USD"]
 
+# todo use "long-polling"
 
 def fetch_data(tickers, isCrypto):
     main_data = {}
@@ -51,7 +50,6 @@ def history_data(tickers, period):
         asset = yf.Ticker(ticker)
         info = asset.info
 
-
         raw_data = asset.history(period=period)
 
         ohlcv_data = raw_data[["Open", "High", "Low", "Close", "Volume"]]
@@ -76,7 +74,6 @@ def history_data(tickers, period):
     return historical_data
 
 
-
 period = "1y"
 stocks_data = history_data(stock_tickers, period)
 cryptos_data = history_data(crypto_tickers, period)
@@ -88,7 +85,7 @@ all_data = {
 }
 
 all_data_json = json.dumps(all_data, indent=4)
-with open("history.json", "w") as f:
+with open("historicalData.json", "w") as f:
     f.write(all_data_json)
 
-print("History data saved to history.json")
+print("History data saved to historicalData.json")

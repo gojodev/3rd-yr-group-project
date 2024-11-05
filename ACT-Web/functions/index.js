@@ -36,6 +36,7 @@ const M_userCreds = ref(storage, 'M_userCreds.json'); // manager
 const C_userCreds = ref(storage, 'C_userCreds.json'); // client
 
 const financialData = ref(storage, 'financialData.json'); // scraped data from market
+const historicalData = ref(storage, 'historicalData.json'); // scraped data from market
 
 async function loadInfo(data) {
     return await Promise.resolve(getRef_json(data));
@@ -456,37 +457,38 @@ exports.aiGen = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
 
 const stockTickers = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "NVDA", "META", "DELL", "AMD", "NVDA"];
 const cryptoTickers = ["BTC-USD", "ETH-USD", "DOGE-USD"];
+const period = "1y"
 
-async function fetchData(tickers, isCrypto = false) {
-    const data = {};
-
-    for (const ticker of tickers) {
-        try {
-            const info = await yahooFinance.quoteSummary(ticker, { modules: ['price', 'summaryDetail', 'recommendationTrend', 'earningsTrend'] });
-            data[ticker] = {
-                name: info.price.shortName || "N/A",
-                currentPrice: info.price.regularMarketPrice || "N/A",
-                marketCap: info.price.marketCap || "N/A",
-                volume: info.price.regularMarketVolume || "N/A",
-                "52WeekHigh": info.summaryDetail.fiftyTwoWeekHigh || "N/A",
-                "52WeekLow": info.summaryDetail.fiftyTwoWeekLow || "N/A"
-            };
-
-            if (!isCrypto) {
-                data[ticker]["eps_trend"] = info.earningsTrend ? JSON.stringify(info.earningsTrend.trend) : "N/A";
-                data[ticker]["recommendations"] = info.recommendationTrend ? JSON.stringify(info.recommendationTrend.trend) : "N/A";
-            }
-        } catch (error) {
-            console.error(`Error fetching data for ${ticker}:`, error);
-            data[ticker] = { error: "Failed to retrieve data" };
-        }
-    }
-
-    return data;
-}
 
 exports.scraper = onRequest({ region: 'europe-west2' }, async (req, res) => {
     try {
+        async function fetchData(tickers, isCrypto = false) {
+            const data = {};
+
+            for (const ticker of tickers) {
+                try {
+                    const info = await yahooFinance.quoteSummary(ticker, { modules: ['price', 'summaryDetail', 'recommendationTrend', 'earningsTrend'] });
+                    data[ticker] = {
+                        name: info.price.shortName || "N/A",
+                        currentPrice: info.price.regularMarketPrice || "N/A",
+                        marketCap: info.price.marketCap || "N/A",
+                        volume: info.price.regularMarketVolume || "N/A",
+                        "52WeekHigh": info.summaryDetail.fiftyTwoWeekHigh || "N/A",
+                        "52WeekLow": info.summaryDetail.fiftyTwoWeekLow || "N/A"
+                    };
+
+                    if (!isCrypto) {
+                        data[ticker]["eps_trend"] = info.earningsTrend ? JSON.stringify(info.earningsTrend.trend) : "N/A";
+                        data[ticker]["recommendations"] = info.recommendationTrend ? JSON.stringify(info.recommendationTrend.trend) : "N/A";
+                    }
+                } catch (error) {
+                    console.error(`Error fetching data for ${ticker}:`, error);
+                    data[ticker] = { error: "Failed to retrieve data" };
+                }
+            }
+            return data;
+        }
+
         const stocksData = await fetchData(stockTickers, false);
         const cryptosData = await fetchData(cryptoTickers, true);
 
@@ -497,16 +499,91 @@ exports.scraper = onRequest({ region: 'europe-west2' }, async (req, res) => {
 
         uploadString(financialData, JSON.stringify(allData)).then(() => {
             res.status(200).json({
-                verdict: "Financial data saved to Firestore successfully"
+                verdict: "Financial data saved to Firebase successfully"
             });
         });
 
-        res.status(200).json({ message: 'Financial data saved to Firestore successfully', data: allData });
+        res.status(200).json({ message: 'Financial data saved to Firebase successfully', data: allData });
     } catch (error) {
         console.error("Error saving financial data:", error);
         res.status(500).json({ error: "Failed to save financial data" });
     }
 });
+
+exports.history = onRequest({ region: 'europe-west2' }, async (req, res) => {
+    const stockTickers = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "NVDA", "META", "DELL", "AMD", "NVDA"];
+    const cryptoTickers = ["BTC-USD", "ETH-USD", "DOGE-USD"];
+    const period = "1y";  // Equivalent to the Python period
+
+    // Calculate period1 (start time) as one year ago and period2 (end time) as now
+    const period2 = Math.floor(new Date().getTime() / 1000); // Current time in Unix timestamp
+    const period1 = Math.floor(new Date(new Date().setFullYear(new Date().getFullYear() - 1)).getTime() / 1000); // 1 year ago
+
+    // Function to fetch historical data for a set of tickers
+    async function fetchHistoryData(tickers) {
+        const historicalData = {};
+
+        for (const ticker of tickers) {
+            try {
+                const assetInfo = await yahooFinance.quoteSummary(ticker, { modules: ["price"] });
+                const assetName = assetInfo.price.shortName || "N/A";
+
+                // Fetch historical OHLCV data using `chart`
+                const raw_data = await yahooFinance.chart(ticker, {
+                    period1,
+                    period2,
+                    interval: "1d"
+                });
+
+                // Format each entry as specified
+                const histData = raw_data.quotes.map(entry => ({
+                    Date: new Date(entry.date).toUTCString(),
+                    Open: entry.open,
+                    High: entry.high,
+                    Low: entry.low,
+                    Close: entry.close,
+                    Volume: entry.volume
+                }));
+
+                historicalData[ticker] = {
+                    name: assetName,
+                    history: histData
+                };
+
+            } catch (error) {
+                console.error(`Error fetching data for ${ticker}:`, error.message);
+            }
+        }
+
+        return historicalData;
+    }
+
+
+    try {
+        // Fetch data for stocks and cryptocurrencies
+        const stocksData = await fetchHistoryData(stockTickers);
+        const cryptosData = await fetchHistoryData(cryptoTickers);
+
+        // Combine results
+        const allData = {
+            stocks_history: stocksData,
+            cryptos_history: cryptosData
+        };
+
+        uploadString(historicalData, JSON.stringify(allData)).then(() => {
+            res.status(200).json({
+                verdict: "historical data saved to Firebase successfully"
+            });
+        });
+
+        res.status(200).json({ message: 'historical data saved to Firebase successfully', data: allData });
+
+    } catch (error) {
+        console.error("Error fetching historical data:", error.message);
+        res.status(500).json({ error: "Failed to fetch historical data" });
+    }
+});
+
 
 exports.updateDetails = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     try {

@@ -9,13 +9,13 @@
         "MSFT": {
             "name": "Microsoft Corporation",
             "currentPrice": 408.46,
-            "marketCap": 3036850946048,
+            "marketCap": 3051053121536,
             "recommendations": "{\"period\":{\"0\":\"0m\",\"1\":\"-1m\",\"2\":\"-2m\",\"3\":\"-3m\"},\"strongBuy\":{\"0\":14,\"1\":21,\"2\":21,\"3\":20},\"buy\":{\"0\":13,\"1\":35,\"2\":34,\"3\":27},\"hold\":{\"0\":6,\"1\":2,\"2\":2,\"3\":6},\"sell\":{\"0\":0,\"1\":0,\"2\":0,\"3\":0},\"strongSell\":{\"0\":1,\"1\":0,\"2\":0,\"3\":0}}"
         },
         "GOOGL": {
             "name": "Alphabet Inc.",
             "currentPrice": 169.24,
-            "marketCap": 2079096569856,
+            "marketCap": 2104161075200,
             "recommendations": "{\"period\":{\"0\":\"0m\",\"1\":\"-1m\",\"2\":\"-2m\",\"3\":\"-3m\"},\"strongBuy\":{\"0\":13,\"1\":15,\"2\":15,\"3\":15},\"buy\":{\"0\":25,\"1\":30,\"2\":29,\"3\":29},\"hold\":{\"0\":5,\"1\":12,\"2\":10,\"3\":10},\"sell\":{\"0\":0,\"1\":0,\"2\":0,\"3\":0},\"strongSell\":{\"0\":0,\"1\":0,\"2\":0,\"3\":0}}"
         },
         "AMZN": {
@@ -59,17 +59,17 @@
         "BTC-USD": {
             "name": "Bitcoin USD",
             "currentPrice": "N/A",
-            "marketCap": 1341576314880
+            "marketCap": 1345364295680
         },
         "ETH-USD": {
             "name": "Ethereum USD",
             "currentPrice": "N/A",
-            "marketCap": 289059307520
+            "marketCap": 289530773504
         },
         "DOGE-USD": {
             "name": "Dogecoin USD",
             "currentPrice": "N/A",
-            "marketCap": 23116355584
+            "marketCap": 23860520960
         }
     }
 }
