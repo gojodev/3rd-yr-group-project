@@ -38,6 +38,8 @@ const C_userCreds = ref(storage, 'C_userCreds.json'); // client
 const financialData = ref(storage, 'financialData.json'); // scraped data from market
 const historicalData = ref(storage, 'historicalData.json'); // scraped data from market
 
+const currentUser = ref(storage, 'currentUser.json'); // current user data from a login or sign up
+
 async function loadInfo(data) {
     return await Promise.resolve(getRef_json(data));
 }
@@ -606,7 +608,7 @@ exports.updateDetails = onRequest({ 'region': 'europe-west2' }, async (req, res)
 
         var db_username = '';
 
-        let db = await loadInfo();
+        let db = await loadInfo(M_userCreds);
 
         for (var key in db) {
             db_username = bcrypt.compareSync(client_username, key)
@@ -666,6 +668,54 @@ exports.updateDetails = onRequest({ 'region': 'europe-west2' }, async (req, res)
     }
 });
 
+exports.currentUser = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+    try {
+
+        if (req.method == 'POST') {
+
+            const username = req.body.username;
+            const data = req.body.data;
+
+            const clientData = [username, data]
+            const missingItems = missingInfoWarning(clientData);
+
+            if (missingItems == []) {
+                res.status(200).json({ error: `${missingItems} is required in the JSON body` })
+            }
+
+            if (bcrypt.compareSync(username, Object.keys(data)[0])) {
+                uploadString(currentUser, JSON.stringify(data)).then(() => {
+                    res.status(200).json({
+                        verdict: 'Current User data has been uploaded',
+                        data: data
+                    });
+                });
+
+                res.status(200).json({ data })
+            }
+            else {
+                res.status(200).json({
+                    warning: `Username: ${username}  does not match user data`,
+                })
+            }
+        }
+
+        if (req.method == 'GET') {
+            const db = await loadInfo(currentUser)
+            res.status(200).json({ db })
+        }
+
+        else {
+            res.status(200).json({ error: "Method must be a GET or POST request" })
+        }
+    }
+
+    catch (error) {
+        console.log("Couldnt add new user: ", error)
+        res.status(500).json({ error: "Interal server error" })
+    }
+})
+
 /* 
 ? to start the backend server run "firebase eumlators:start" in "functions" folder
 
@@ -678,4 +728,5 @@ http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/addManager
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/aiGen
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/scraper
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/updateDetails
+http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/currentUser
 */

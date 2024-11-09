@@ -42,6 +42,15 @@ signUpButton.addEventListener('click', async (event) => {
     console.log(response)
 })
 
+function autofill() {
+    document.getElementById("username").value = "user4"
+    document.getElementById("name").value = "first4 last4"
+    document.getElementById("email").value = "user4@gmail.com"
+    document.getElementById("password").value = "user4_password!"
+}
+
+autofill()
+
 DarkReader.auto({
     brightness: 100,
     contrast: 100,

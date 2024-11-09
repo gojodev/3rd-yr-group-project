@@ -1,6 +1,4 @@
-const bcrypt = require('bcrypt')
-
-const data = {
+{
     "$2b$05$PSz14z6GK/7MEhMblOi3buMpdzzOEXI25OydbwoV6zqTQnaJzKLem": {
         "name": "$2b$05$bOTsmereH90vfIqoojj/NuoQOMaVES5N9xCZHWjRXV6djuUfjIzrC",
         "email": "$2b$05$zznYv.7BQMLXHdgJELKaI.iBbuFjt1.5YiRyhhs3zI0nlUQq0kfAu",
@@ -19,8 +17,3 @@ const data = {
         ]
     }
 }
-
-const username = 'm_user1';
-const username_hash = bcrypt.hashSync(username, 5)
-
-console.log(bcrypt.compareSync(username, Object.keys(data)[0]))
