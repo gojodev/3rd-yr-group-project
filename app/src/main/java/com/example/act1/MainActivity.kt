@@ -36,22 +36,23 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.json.JSONObject
 
 
-@Serializable
-data class ResponseData(
-    val stocks: Map<String, Stock>,
-    val cryptos: Map<String, Crypto>
-)
+//@Serializable
+//data class ResponseData(
+//    val stocks: Map<String, Stock>,
+//    val cryptos: Map<String, Crypto>
+//)
 
 @Serializable
 data class UserRequest(val username: String, val name: String, val email: String, val password: String)
 
 @Serializable
-data class UserResponse(val message: String, val userData: Map<String, Any>?)
+data class UserResponse(val message: String, val userData: Map<String, @Contextual Any>?)
 
 
 suspend fun verifyUserClient(username: String, name: String, email: String, password: String): UserResponse? {
@@ -77,11 +78,11 @@ suspend fun verifyUserClient(username: String, name: String, email: String, pass
     }
 }
 
-fun loadFinancialData(context: Context): JSONObject {
-    val jsonString: String = context.assets.open("financial_data.json").bufferedReader().use { it.readText() }
-    val obj: JSONObject = JSONObject(jsonString)
-    return obj
-}
+//fun loadFinancialData(context: Context): JSONObject {
+//    val jsonString: String = context.assets.open("financial_data.json").bufferedReader().use { it.readText() }
+//    val obj: JSONObject = JSONObject(jsonString)
+//    return obj
+//}
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -201,31 +202,53 @@ val navItemList = listOf(
 )
 
 // Data Classes for Stock and Crypto
+@Serializable
 data class Stock(
-    val name: String,
-    val currentPrice: Double,
+//    val fiftyTwoWeekHigh: Float,
+//    val fiftyTwoWeekLow: Float,
+    val currentPrice: Float,
     val marketCap: Long,
-    val volume: Long,
-    val fiftyTwoWeekHigh: Double,
-    val fiftyTwoWeekLow: Double,
-
+    val name: String,
+    val volume: Long
 )
 
-data class Crypto(
-    val name: String,
-    val currentPrice: Double,
-    val marketCap: Long,
-    val volume: Long,
-    val fiftyTwoWeekHigh: Double,
-    val fiftyTwoWeekLow: Double
+//data class Crypto(
+//    val name: String,
+//    val currentPrice: Double,
+//    val marketCap: Long,
+//    val volume: Long,
+//    val fiftyTwoWeekHigh: Double,
+//    val fiftyTwoWeekLow: Double
+//)
+
+@Serializable
+data class StockResult(
+    val stocks: HashMap<String, Stock>
 )
+
+suspend fun getStockInformation(): StockResult {
+    val client = HttpClient()
+
+    val json = Json {
+        ignoreUnknownKeys = true
+    }
+
+    val data = client.get("http://10.0.2.2:5000/stocks")
+    val stockInfo: StockResult = json.decodeFromString(data.body())
+
+    return stockInfo
+}
 
 // Assets Screen Composable
 @Composable
 fun AssetsScreen(navController: NavHostController, background: Brush) {
     // Load financial data
     val context = LocalContext.current
-    val financialData = remember { loadFinancialData(context) }
+    var financialData by remember { mutableStateOf<StockResult?>(null) }
+
+    LaunchedEffect(Unit) {
+        financialData = getStockInformation()
+    }
 
     Box(
         modifier = Modifier
@@ -243,28 +266,27 @@ fun AssetsScreen(navController: NavHostController, background: Brush) {
                 Text(text = "Stocks", style = MaterialTheme.typography.bodySmall, color = Color.White)
             }
 
-            val stocks = financialData.getJSONObject("stocks")
-            stocks.keys().forEach { key ->
-                item {
-                    val stock = stocks.getJSONObject(key)
-                    Text(
-                        text = "${stock.getString("name")} : ${stock.getDouble("currentPrice")}",
-                        color = Color.White
-                    )
-                }
-            }
+//            val stocks = financialData.getJSONObject("stocks")
+//            stocks.keys().forEach { key ->
+//                item {
+//                    val stock = stocks.getJSONObject(key)
+//                    Text(
+//                        text = "${stock.getString("name")} : ${stock.getDouble("currentPrice")}",
+//                        color = Color.White
+//                    )
+//                }
+//            }
 
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(text = "Cryptos", style = MaterialTheme.typography.bodySmall, color = Color.White)
-            }
+//            item {
+//                Spacer(modifier = Modifier.height(16.dp))
+//                Text(text = "Cryptos", style = MaterialTheme.typography.bodySmall, color = Color.White)
+//            }
 
-            val cryptos = financialData.getJSONObject("cryptos")
-            cryptos.keys().forEach { key ->
+//            val cryptos = financialData.getJSONObject("cryptos")
+            financialData?.stocks?.entries?.forEach { (key, info) ->
                 item {
-                    val crypto = cryptos.getJSONObject(key)
                     Text(
-                        text = "${crypto.getString("name")} : ${crypto.getDouble("currentPrice")}",
+                        text = "${key} ${info.name} : ${info.currentPrice}",
                         color = Color.White
                     )
                 }
@@ -272,7 +294,6 @@ fun AssetsScreen(navController: NavHostController, background: Brush) {
         }
     }
 }
-
 
 // Home Screen Composable
 @Composable
