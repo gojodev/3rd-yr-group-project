@@ -25,7 +25,7 @@ async function addManager(username, name, email, password) {
 }
 
 async function addManager_test() {
-    let res = await addManager('m_user4', 'Mfirst4 Mlast4', 'm_user4@gmail.com', 'm_user4_password!')
+    let res = await addManager('m_user1', 'Mfirst1 Mlast1', 'm_user1@gmail.com', 'm_user1_password!')
     console.log(res)
 }
 

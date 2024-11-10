@@ -1,5 +1,6 @@
 A trading bot to invest in tech stocks and crpto for companies
 
+
 ```
 3rd-yr-group-project
 ├─ ACT-Web
@@ -12,6 +13,7 @@ A trading bot to invest in tech stocks and crpto for companies
 │  ├─ database
 │  │  ├─ main
 │  │  │  ├─ A_userCreds.json
+│  │  │  ├─ currentUser.json
 │  │  │  ├─ C_userCreds.json
 │  │  │  ├─ M_userCreds.json
 │  │  │  └─ schema.json
@@ -25,26 +27,20 @@ A trading bot to invest in tech stocks and crpto for companies
 │  │  └─ SDH3-CS3-SD3-Project-2024.pdf
 │  ├─ esbuild.config.js
 │  ├─ eslint.config.mjs
+│  ├─ firebase-debug.log
 │  ├─ firebase.json
 │  ├─ functions
-│  │  ├─ clientSideTest_admin.js
-│  │  ├─ clientSideTest_AIengine.js
-│  │  ├─ clientSideTest_client.js
-│  │  ├─ clientSideTest_manager.js
-│  │  ├─ financial_data.json
-│  │  ├─ firebase-debug.log
 │  │  ├─ index.js
 │  │  ├─ package-lock.json
 │  │  ├─ package.json
-│  │  ├─ test.js
-│  │  └─ ui-debug.log
-│  ├─ functions-python
-│  │  ├─ firebase-debug.log
-│  │  ├─ main.py
-│  │  ├─ requirements.txt
-│  │  ├─ scraper.py
-│  │  ├─ serviceAccountKey.json
-│  │  ├─ test.py
+│  │  ├─ resetToDeafult.js
+│  │  ├─ testing
+│  │  │  ├─ clientSideTest_admin.js
+│  │  │  ├─ clientSideTest_AIengine.js
+│  │  │  ├─ clientSideTest_client.js
+│  │  │  ├─ clientsideTest_currentUser.js
+│  │  │  ├─ clientSideTest_manager.js
+│  │  │  └─ test.js
 │  │  └─ ui-debug.log
 │  ├─ package-lock.json
 │  ├─ package.json
@@ -67,8 +63,13 @@ A trading bot to invest in tech stocks and crpto for companies
 │  │  ├─ pricealerts.html
 │  │  ├─ report.html
 │  │  └─ signup.html
+│  ├─ python
+│  │  ├─ financial_data.json
+│  │  ├─ historicalData.json
+│  │  ├─ sample.json
+│  │  ├─ scraper.py
+│  │  └─ test.py
 │  ├─ storage.rules
-│  ├─ test.py
 │  └─ ui-debug.log
 ├─ package-lock.json
 ├─ package.json

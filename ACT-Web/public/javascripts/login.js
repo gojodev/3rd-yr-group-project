@@ -1,8 +1,16 @@
 const DarkReader = require('darkreader');
 
+const cors = require('cors');
+cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+})
+
+
 async function verifyManager(username, email, password) {
     try {
-        const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyManager', {
+        const response = await fetch('https://verifymanager-ieevug7ulq-nw.a.run.app', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -40,7 +48,7 @@ loginButton.addEventListener('click', async (event) => {
 
     // todo send the current user data to a page for when the user to logged to show their custom data
     try {
-        const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/currentUserData', {
+        const response = await fetch('https://currentuser-ieevug7ulq-nw.a.run.app', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -65,9 +73,9 @@ loginButton.addEventListener('click', async (event) => {
 })
 
 function autofill() {
-    document.getElementById("username").value = "user1"
-    document.getElementById("email").value = "user1@gmail.com"
-    document.getElementById("password").value = "user1_password!"
+    document.getElementById("username").value = "m_user1"
+    document.getElementById("email").value = "m_user1@gmail.com"
+    document.getElementById("password").value = "m_user1_password!"
 }
 
 autofill()

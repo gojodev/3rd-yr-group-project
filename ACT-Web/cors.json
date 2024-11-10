@@ -3,7 +3,11 @@
         "origin": [
             "*"
         ],
-        "allowMethods": [
+        "responseHeader": [
+            "Content-Type",
+            "Authorization"
+        ],
+        "method": [
             "GET",
             "POST",
             "PUT",
