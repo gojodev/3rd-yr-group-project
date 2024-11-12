@@ -25,7 +25,7 @@ const cors = require('cors');
 const corsHandler = cors({
     origin: true,
     methods: ['DELETE', 'PUT', 'GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    // allowedHeaders: ['Content-Type', 'Authorization'],
     maxAge: 3600, // Cache preflight response for 1 hour
 });
 
@@ -76,7 +76,7 @@ exports.showDB = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
         }
         catch (error) {
             console.log('Couldnt access the database: ', error)
-            res.status(500).json({ error: "Interal server error" })
+            return res.status(500).json({ error: "Interal server error" })
         }
     });
 });
@@ -86,7 +86,7 @@ exports.verifyAdmin = onRequest({ 'region': 'europe-west2' }, async (req, res) =
     corsHandler(req, res, async () => {
         try {
             if (req.method != 'POST') {
-                res.status(405).json({ error: "Method not allowed" })
+                return res.status(405).json({ error: "Method not allowed" })
             }
 
             const client_name = req.body.name;
@@ -99,7 +99,7 @@ exports.verifyAdmin = onRequest({ 'region': 'europe-west2' }, async (req, res) =
             const missingItems = missingInfoWarning(clientData);
 
             if (missingItems == []) {
-                res.status(200).json({ error: `${missingItems} is required in the JSON body` })
+                return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
             }
 
 
@@ -126,7 +126,7 @@ exports.verifyAdmin = onRequest({ 'region': 'europe-west2' }, async (req, res) =
                 let missingItems = missingInfoWarning(clientData);
 
                 if (missingItems == []) {
-                    res.status(200).json({ error: `${missingItems} is required in the JSON body` })
+                    return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
                 }
 
                 let correctEmail = bcrypt.compareSync(client_email, db_email);
@@ -135,7 +135,7 @@ exports.verifyAdmin = onRequest({ 'region': 'europe-west2' }, async (req, res) =
                 let correctID = client_ID == db_ID;
                 let verdict = correctEmail && correctPassword && correctName && correctID;
 
-                res.status(200).json({
+                return res.status(200).json({
                     'verdict': verdict,
                     'correctEmail': correctEmail,
                     'correctPassword': correctPassword,
@@ -145,7 +145,7 @@ exports.verifyAdmin = onRequest({ 'region': 'europe-west2' }, async (req, res) =
             }
 
             else {
-                res.status(200).json({
+                return res.status(200).json({
                     'verdict': false,
                     'reason': `${client_username} does not exist`
                 });
@@ -154,7 +154,7 @@ exports.verifyAdmin = onRequest({ 'region': 'europe-west2' }, async (req, res) =
 
         catch (error) {
             console.log("Something ewent wrong: ", error)
-            res.status(500).json({ error: "Interal server error" })
+            return res.status(500).json({ error: "Interal server error" })
         }
     });
 });
@@ -192,7 +192,7 @@ exports.addAdmin = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     corsHandler(req, res, async () => {
         try {
             if (req.method != 'POST') {
-                res.status(405).json({ error: "Method not allowed" })
+                return res.status(405).json({ error: "Method not allowed" })
             }
 
             const client_username = req.body.username;
@@ -203,7 +203,7 @@ exports.addAdmin = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
             let isExistingUser = await verifyAdmin(client_username, client_email, client_password, client_id)
 
             if (isExistingUser) {
-                res.status(200).json({ verdict: `Account with username ${client_username} already exists` });
+                return res.status(200).json({ verdict: `Account with username ${client_username} already exists` });
             }
 
             else {
@@ -225,7 +225,7 @@ exports.addAdmin = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
                 Object.assign(db, newUser)
 
                 uploadString(A_userCreds, JSON.stringify(db)).then(() => {
-                    res.status(200).json({
+                    return res.status(200).json({
                         'verdict': `New user ${client_username} has been created`
                     });
                 });
@@ -234,7 +234,7 @@ exports.addAdmin = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
 
         catch (error) {
             console.log("Couldnt add new user: ", error)
-            res.status(500).json({ error: "Interal server error" })
+            return res.status(500).json({ error: "Interal server error" })
         }
     });
 });
@@ -243,7 +243,7 @@ exports.verifyClient = onRequest({ 'region': 'europe-west2' }, async (req, res) 
     corsHandler(req, res, async () => {
         try {
             if (req.method != 'POST') {
-                res.status(405).json({ error: "Method not allowed" })
+                return res.status(405).json({ error: "Method not allowed" })
             }
 
             const client_username = req.body.username;
@@ -254,7 +254,7 @@ exports.verifyClient = onRequest({ 'region': 'europe-west2' }, async (req, res) 
             const missingItems = missingInfoWarning(clientData);
 
             if (missingItems == []) {
-                res.status(200).json({ error: `${missingItems} is required in the JSON body` })
+                return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
             }
 
             const db = await loadInfo(C_userCreds)
@@ -277,7 +277,7 @@ exports.verifyClient = onRequest({ 'region': 'europe-west2' }, async (req, res) 
                 let missingItems = missingInfoWarning(clientData);
 
                 if (missingItems == []) {
-                    res.status(200).json({ error: `${missingItems} is required in the JSON body` })
+                    return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
                 }
 
                 let correctName = bcrypt.compareSync(client_name, db_name);
@@ -285,14 +285,14 @@ exports.verifyClient = onRequest({ 'region': 'europe-west2' }, async (req, res) 
 
                 let verdict = correctName && correctContact;
 
-                res.status(200).json({
+                return res.status(200).json({
                     'verdict': verdict,
                     'userInfo': userInfo
                 });
             }
 
             else {
-                res.status(200).json({
+                return res.status(200).json({
                     'verdict': false,
                     'reason': `${client_username} does not exist`
                 });
@@ -301,7 +301,7 @@ exports.verifyClient = onRequest({ 'region': 'europe-west2' }, async (req, res) 
 
         catch (error) {
             console.log("Something went wrong: ", error)
-            res.status(500).json({ error: "Interal server error" })
+            return res.status(500).json({ error: "Interal server error" })
         }
     });
 });
@@ -310,7 +310,7 @@ exports.verifyManager = onRequest({ 'region': 'europe-west2' }, async (req, res)
     corsHandler(req, res, async () => {
         try {
             if (req.method != 'POST') {
-                res.status(405).json({ error: "Method not allowed" })
+                return res.status(405).json({ error: "Method not allowed" })
             }
 
             const client_username = req.body.username;
@@ -322,7 +322,7 @@ exports.verifyManager = onRequest({ 'region': 'europe-west2' }, async (req, res)
             let missingItems = missingInfoWarning(clientData);
 
             if (missingItems == []) {
-                res.status(200).json({ error: `${missingItems} is required in the JSON body` })
+                return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
             }
 
             const db = await loadInfo(M_userCreds)
@@ -346,14 +346,14 @@ exports.verifyManager = onRequest({ 'region': 'europe-west2' }, async (req, res)
 
                 let verdict = correctEmail && correctPassword;
 
-                res.status(200).json({
+                return res.status(200).json({
                     'verdict': verdict,
                     'managerInfo': managerInfo,
                 });
             }
 
             else {
-                res.status(200).json({
+                return res.status(200).json({
                     'verdict': false,
                     'reason': `${client_username} does not exist`
                 });
@@ -362,7 +362,7 @@ exports.verifyManager = onRequest({ 'region': 'europe-west2' }, async (req, res)
 
         catch (error) {
             console.log("Something went wrong: ", error)
-            res.status(500).json({ error: "Interal server error" })
+            return res.status(500).json({ error: "Interal server error" })
         }
     });
 });
@@ -398,7 +398,7 @@ exports.addManager = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
     corsHandler(req, res, async () => {
         try {
             if (req.method != 'POST') {
-                res.status(405).json({ error: "Method not allowed" })
+                return res.status(405).json({ error: "Method not allowed" })
             }
 
             const client_username = req.body.username;
@@ -409,7 +409,7 @@ exports.addManager = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
             let isExistingUser = await verifyManager(client_username, client_name, client_email, client_password)
 
             if (isExistingUser) {
-                res.status(200).json({ verdict: `Account with username ${client_username} already exists` });
+                return res.status(200).json({ verdict: `Account with username ${client_username} already exists` });
             }
 
             else {
@@ -433,7 +433,7 @@ exports.addManager = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
                 Object.assign(db, newUser)
 
                 uploadString(M_userCreds, JSON.stringify(db)).then(() => {
-                    res.status(200).json({
+                    return res.status(200).json({
                         verdict: `New user ${client_username} has been created`,
                         newUser: newUser
                     });
@@ -443,7 +443,7 @@ exports.addManager = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
 
         catch (error) {
             console.log("Couldnt add new user: ", error)
-            res.status(500).json({ error: "Interal server error" })
+            return res.status(500).json({ error: "Interal server error" })
         }
     });
 });
@@ -452,13 +452,13 @@ exports.aiGen = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     corsHandler(req, res, async () => {
         try {
             if (req.method != 'POST') {
-                res.status(405).json({ error: "Method not allowed" })
+                return res.status(405).json({ error: "Method not allowed" })
             }
 
             const prompt = req.body.prompt;
 
             if (!prompt) {
-                res.status(200).json({ error: `${missingItems} is required in the JSON body` })
+                return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
             }
 
             const response = await axios.post(
@@ -470,13 +470,13 @@ exports.aiGen = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
             );
 
             if (response.status === 200) {
-                res.status(200).send(response.data[0].generated_text);
+                return res.status(200).send(response.data[0].generated_text);
             } else {
-                res.status(response.status).send("Error generating response");
+                return res.status(response.status).send("Error generating response");
             }
         } catch (error) {
             console.error("Error calling Hugging Face API:", error);
-            res.status(500).send("Server Error");
+            return res.status(500).send("Server Error");
         }
     });
 });
@@ -522,15 +522,15 @@ exports.scraper = onRequest({ region: 'europe-west2' }, async (req, res) => {
             };
 
             uploadString(financialData, JSON.stringify(allData)).then(() => {
-                res.status(200).json({
+                return res.status(200).json({
                     verdict: "Financial data saved to Firebase successfully"
                 });
             });
 
-            res.status(200).json({ message: 'Financial data saved to Firebase successfully', data: allData });
+            return res.status(200).json({ message: 'Financial data saved to Firebase successfully', data: allData });
         } catch (error) {
             console.error("Error saving financial data:", error);
-            res.status(500).json({ error: "Failed to save financial data" });
+            return res.status(500).json({ error: "Failed to save financial data" });
         }
     });
 });
@@ -594,16 +594,16 @@ exports.history = onRequest({ region: 'europe-west2' }, async (req, res) => {
             };
 
             uploadString(historicalData, JSON.stringify(allData)).then(() => {
-                res.status(200).json({
+                return res.status(200).json({
                     verdict: "historical data saved to Firebase successfully"
                 });
             });
 
-            res.status(200).json({ message: 'historical data saved to Firebase successfully', data: allData });
+            return res.status(200).json({ message: 'historical data saved to Firebase successfully', data: allData });
 
         } catch (error) {
             console.error("Error fetching historical data:", error.message);
-            res.status(500).json({ error: "Failed to fetch historical data" });
+            return res.status(500).json({ error: "Failed to fetch historical data" });
         }
     });
 });
@@ -613,7 +613,7 @@ exports.updateDetails = onRequest({ 'region': 'europe-west2' }, async (req, res)
     corsHandler(req, res, async () => {
         try {
             if (req.method != 'POST') {
-                res.status(405).json({ error: "Method not allowed" })
+                return res.status(405).json({ error: "Method not allowed" })
             }
 
             const client_username = req.body.username;
@@ -626,7 +626,7 @@ exports.updateDetails = onRequest({ 'region': 'europe-west2' }, async (req, res)
             const missingItems = missingInfoWarning(clientData);
 
             if (missingItems == []) {
-                res.status(200).json({ error: `${missingItems} is required in the JSON body` })
+                return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
             }
 
             var db_username = '';
@@ -642,7 +642,7 @@ exports.updateDetails = onRequest({ 'region': 'europe-west2' }, async (req, res)
             }
 
             if (db_username == false) {
-                res.status(200).json({
+                return res.status(200).json({
                     verdict: `No data for: ${client_username} was found on file`
                 });
             }
@@ -677,7 +677,7 @@ exports.updateDetails = onRequest({ 'region': 'europe-west2' }, async (req, res)
                 db[db_username] = userInfo;
 
                 uploadString(userCreds, JSON.stringify(db)).then(() => {
-                    res.status(200).json({
+                    return res.status(200).json({
                         'verdict': `Updated ${client_username}'s details successfully`,
                         'newDetails': userInfo
                     });
@@ -687,7 +687,7 @@ exports.updateDetails = onRequest({ 'region': 'europe-west2' }, async (req, res)
 
         catch (error) {
             console.log("Couldnt add new user: ", error)
-            res.status(500).json({ error: "Interal server error" })
+            return res.status(500).json({ error: "Interal server error" })
         }
     });
 
@@ -697,49 +697,35 @@ exports.currentUser = onRequest({ 'region': 'europe-west2' }, async (req, res) =
     corsHandler(req, res, async () => {
         try {
             if (req.method == 'POST') {
-
-                const username = req.body.username;
                 const data = req.body.data;
 
-                const clientData = [username, data]
-                const missingItems = missingInfoWarning(clientData);
-
-                if (missingItems == []) {
-                    res.status(200).json({ error: `${missingItems} is required in the JSON body` })
+                if (!data) {
+                    return res.status(200).json({ error: `Data is required in the JSON body` })
                 }
 
-                if (bcrypt.compareSync(username, Object.keys(data)[0])) {
-                    uploadString(currentUser, JSON.stringify(data)).then(() => {
-                        res.status(200).json({
-                            verdict: 'Current User data has been uploaded',
-                            data: data
-                        });
+                uploadString(currentUser, JSON.stringify(data)).then(() => {
+                    return res.status(200).json({
+                        verdict: 'Current User data has been uploaded',
+                        data: data
                     });
-
-                    res.status(200).json({ data })
-                }
-                else {
-                    res.status(200).json({
-                        warning: `Username: ${username}  does not match user data`,
-                    })
-                }
+                });
             }
 
-            if (req.method == 'GET') {
+            else if (req.method == 'GET') {
                 const db = await loadInfo(currentUser)
-                res.status(200).json({ db })
+                return res.status(200).json({ db })
             }
 
             else {
-                res.status(200).json({ error: "Method must be a GET or POST request" })
+                return res.status(200).json({ error: "Method must be a GET or POST request" })
             }
         }
 
         catch (error) {
-            console.log("Couldnt add new user: ", error)
-            res.status(500).json({ error: "Interal server error" })
+            console.log("Couldn't get current user info: ", error)
+            return res.status(500).json({ error: "Interal server error" })
         }
-    });
+    })
 })
 
 /* 

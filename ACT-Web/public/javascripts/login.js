@@ -7,10 +7,30 @@ cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 })
 
+async function updateInfo(data) {
+    try {
+        const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/currentUser', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                data: data
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+    }
+}
+
 
 async function verifyManager(username, email, password) {
     try {
-        const response = await fetch('https://verifymanager-ieevug7ulq-nw.a.run.app', {
+        const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyManager', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -36,7 +56,6 @@ async function verifyManager(username, email, password) {
 let loginButton = document.getElementById('loginButton')
 loginButton.addEventListener('click', async (event) => {
 
-    // Prevent the form from refreshing the page
     event.preventDefault();
 
     let username = document.getElementById("username").value
@@ -44,32 +63,22 @@ loginButton.addEventListener('click', async (event) => {
     let password = document.getElementById("password").value
 
 
-    let response = await verifyManager(username, email, password)
+    let db_profile = await verifyManager(username, email, password)
 
-    // todo send the current user data to a page for when the user to logged to show their custom data
-    try {
-        const response = await fetch('https://currentuser-ieevug7ulq-nw.a.run.app', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                data: response
-            }),
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const userData = await response.json();
-        return userData;
-    } catch (error) {
-        console.error('Error fetching user data:', error);
+    const data = {
+        username: username,
+        db_profile: db_profile
     }
 
+    console.log(data)
 
-    console.log(response)
+    if (db_profile.verdict) {
+        updateInfo(data)
+        window.location.href = 'http://127.0.0.1:5500/ACT-Web/public/loggedinhomepage.html'
+    }
+    else {
+        console.log('incorrect login details')
+    }
 })
 
 function autofill() {
