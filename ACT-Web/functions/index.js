@@ -272,6 +272,7 @@ exports.verifyClient = onRequest({ 'region': 'europe-west2' }, async (req, res) 
                 const userInfo = db[db_username];
                 const db_name = userInfo.name;
                 const db_contact = userInfo.contact
+                const db_cash = userInfo.cash;
 
                 let clientData = [client_name, client_contact];
                 let missingItems = missingInfoWarning(clientData);
@@ -448,6 +449,53 @@ exports.addManager = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
     });
 });
 
+// todo add clients to the managers
+exports.addClients = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+    corsHandler(req, res, async () => {
+        try {
+            if (req.method != 'POST') {
+                return res.status(405).json({ error: "Method not allowed" })
+            }
+
+            const username = req.body.username
+            const name = req.body.name
+            const managerEmail = req.body.managerEmail
+
+            const max = 30000
+            const min = 30
+            const cash = Math.floor(Math.random() * (max - min + 1) + min);
+
+            // todo check if client exists (not manager)
+            let isExistingUser = await verifyClient(username, name)
+
+            if (isExistingUser) {
+                return res.status(200).json({ verdict: `Account with username ${username} already exists` });
+            }
+
+        }
+
+        catch (error) {
+            console.log("Couldnt add new user: ", error)
+            return res.status(500).json({ error: "Interal server error" })
+        }
+    })
+})
+
+// todo delete client backend
+exports.removeClients = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+
+})
+
+// todo update client Details ( can also edit portfolio)
+exports.updateClientDetails = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+
+})
+
+// todo show client portfolio
+exports.showClientDetails = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+
+})
+
 exports.aiGen = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     corsHandler(req, res, async () => {
         try {
@@ -539,10 +587,9 @@ exports.history = onRequest({ region: 'europe-west2' }, async (req, res) => {
     corsHandler(req, res, async () => {
         const stockTickers = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "NVDA", "META", "DELL", "AMD", "NVDA"];
         const cryptoTickers = ["BTC-USD", "ETH-USD", "DOGE-USD"];
-        const period = "1y";
 
         const period2 = Math.floor(new Date().getTime() / 1000);
-        const period1 = Math.floor(new Date(new Date().setFullYear(new Date().getFullYear() - 1)).getTime() / 1000); // 1 year ago
+        const period1 = Math.floor(new Date(Date.now() - 24 * 60 * 60 * 1000).getTime() / 1000); // 1 day ago
 
         async function fetchHistoryData(tickers) {
             const historicalData = {};
@@ -555,7 +602,7 @@ exports.history = onRequest({ region: 'europe-west2' }, async (req, res) => {
                     const raw_data = await yahooFinance.chart(ticker, {
                         period1,
                         period2,
-                        interval: "1d"
+                        interval: "1s"
                     });
 
 
@@ -609,7 +656,7 @@ exports.history = onRequest({ region: 'europe-west2' }, async (req, res) => {
 });
 
 
-exports.updateDetails = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+exports.updateManagersDetails = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     corsHandler(req, res, async () => {
         try {
             if (req.method != 'POST') {
@@ -732,13 +779,20 @@ exports.currentUser = onRequest({ 'region': 'europe-west2' }, async (req, res) =
 ? to start the backend server run "firebase eumlators:start" in "functions" folder
 
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/showDB
+
+
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyAdmin
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/addAdmin
+http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/addClients
+http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/removeClients
+http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/updateClientDetails
+http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/showClientDetails
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyClient
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyManager
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/addManager
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/aiGen
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/scraper
-http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/updateDetails
+http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/history
+http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/updateManagersDetails
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/currentUser
 */

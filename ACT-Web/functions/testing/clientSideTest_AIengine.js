@@ -11,6 +11,6 @@ async function generateResponse(prompt) {
     return text;
 }
 
-generateResponse("what is 1 + 1?").then(response => {
+generateResponse("how many vowels are in the word 'kevin'?").then(response => {
     console.log(response);
 });
