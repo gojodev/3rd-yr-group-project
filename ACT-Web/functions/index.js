@@ -22,10 +22,11 @@ initializeApp(firebaseConfig);
 const { getStorage, ref, getDownloadURL, uploadString } = require("firebase/storage");
 
 const cors = require('cors');
+const client = require("firebase-tools");
 const corsHandler = cors({
     origin: true,
     methods: ['DELETE', 'PUT', 'GET', 'POST', 'OPTIONS'],
-    // allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     maxAge: 3600, // Cache preflight response for 1 hour
 });
 
@@ -54,6 +55,26 @@ async function loadInfo(data) {
 
 function genId(type, name, email) {
     return `${type}_${bcrypt.hashSync(`${type}_${name}_${email}`, 5)}`
+}
+
+function findUserProfile(db, client_username) {
+    for (const key in db) {
+        let valid_username = bcrypt.compareSync(client_username, key)
+        if (valid_username) {
+            return db[key]
+        }
+    }
+    return undefined
+}
+
+function find_db_username(db, client_username) {
+    for (const key in db) {
+        let valid_username = bcrypt.compareSync(client_username, key)
+        if (valid_username) {
+            return key
+        }
+    }
+    return undefined
 }
 
 function missingInfoWarning(arr) {
@@ -105,18 +126,9 @@ exports.verifyAdmin = onRequest({ 'region': 'europe-west2' }, async (req, res) =
 
             const db = await loadInfo(A_userCreds)
 
-            var db_username = "";
-            for (const key in db) {
-                let valid_username = bcrypt.compareSync(client_username, key)
-                if (valid_username) {
-                    db_username = key
-                    break
-                }
-            }
 
-            if (db_username != '') {
-                const userInfo = db[db_username];
-
+            const userInfo = findUserProfile(db, client_username);
+            if (userInfo != undefined) {
                 const db_email = userInfo.email;
                 const db_password = userInfo.password;
                 const db_name = userInfo.name;
@@ -153,14 +165,14 @@ exports.verifyAdmin = onRequest({ 'region': 'europe-west2' }, async (req, res) =
         }
 
         catch (error) {
-            console.log("Something ewent wrong: ", error)
+            console.log("Couldnt verify Admin: ", error)
             return res.status(500).json({ error: "Interal server error" })
         }
     });
 });
 
 async function verifyAdmin(username, name, email, password, id) {
-    corsHandler(req, res, async () => {
+    corsHandler(async () => {
         try {
             const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyAdmin', {
                 method: 'POST',
@@ -233,7 +245,7 @@ exports.addAdmin = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
         }
 
         catch (error) {
-            console.log("Couldnt add new user: ", error)
+            console.log("Couldnt add new admin: ", error)
             return res.status(500).json({ error: "Interal server error" })
         }
     });
@@ -259,20 +271,10 @@ exports.verifyClient = onRequest({ 'region': 'europe-west2' }, async (req, res) 
 
             const db = await loadInfo(C_userCreds)
 
-            var db_username = "";
-            for (const key in db) {
-                let valid_username = bcrypt.compareSync(client_username, key)
-                if (valid_username) {
-                    db_username = key
-                    break
-                }
-            }
-
-            if (db_username != '') {
-                const userInfo = db[db_username];
+            const userInfo = findUserProfile(db, client_username);
+            if (userInfo != undefined) {
                 const db_name = userInfo.name;
                 const db_contact = userInfo.contact
-                const db_cash = userInfo.cash;
 
                 let clientData = [client_name, client_contact];
                 let missingItems = missingInfoWarning(clientData);
@@ -301,7 +303,7 @@ exports.verifyClient = onRequest({ 'region': 'europe-west2' }, async (req, res) 
         }
 
         catch (error) {
-            console.log("Something went wrong: ", error)
+            console.log("Couldnt verify Client: ", error)
             return res.status(500).json({ error: "Interal server error" })
         }
     });
@@ -328,18 +330,8 @@ exports.verifyManager = onRequest({ 'region': 'europe-west2' }, async (req, res)
 
             const db = await loadInfo(M_userCreds)
 
-            var db_username = "";
-            for (const key in db) {
-                let valid_username = bcrypt.compareSync(client_username, key)
-                if (valid_username) {
-                    db_username = key
-                    break
-                }
-            }
-
-            if (db_username != '') {
-                const managerInfo = db[db_username];
-
+            const managerInfo = findUserProfile(db, client_username);
+            if (managerInfo != undefined) {
                 const db_email = managerInfo.email;
                 const db_password = managerInfo.password
                 const correctEmail = bcrypt.compareSync(client_email, db_email);
@@ -362,12 +354,11 @@ exports.verifyManager = onRequest({ 'region': 'europe-west2' }, async (req, res)
         }
 
         catch (error) {
-            console.log("Something went wrong: ", error)
+            console.log("Couldnt verify Manager: ", error)
             return res.status(500).json({ error: "Interal server error" })
         }
     });
 });
-
 
 async function verifyManager(username, name, email, password) {
     try {
@@ -443,13 +434,37 @@ exports.addManager = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
         }
 
         catch (error) {
-            console.log("Couldnt add new user: ", error)
+            console.log("Couldnt add new Manager: ", error)
             return res.status(500).json({ error: "Interal server error" })
         }
     });
 });
 
-// todo add clients to the managers
+async function verifyClient(username, name, contact) {
+    try {
+        const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyClient', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                name: name,
+                contact: contact
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const userData = await response.json();
+        return userData;
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+    }
+}
+
 exports.addClients = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     corsHandler(req, res, async () => {
         try {
@@ -457,43 +472,172 @@ exports.addClients = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
                 return res.status(405).json({ error: "Method not allowed" })
             }
 
-            const username = req.body.username
+            const client_username = req.body.username
             const name = req.body.name
-            const managerEmail = req.body.managerEmail
+            const contact = req.body.contact
+            const managersUsername = req.body.managersUsername;
 
-            const max = 30000
-            const min = 30
-            const cash = Math.floor(Math.random() * (max - min + 1) + min);
 
-            // todo check if client exists (not manager)
-            let isExistingUser = await verifyClient(username, name)
+            let isExistingUser = await verifyClient(client_username, name, contact).verdict
 
             if (isExistingUser) {
-                return res.status(200).json({ verdict: `Account with username ${username} already exists` });
+                return res.status(200).json({ verdict: `Client with username ${client_username} has been added` });
             }
 
+            else {
+                const max = 30000
+                const min = 30
+                const cash = Math.floor(Math.random() * (max - min + 1) + min);
+
+                const newClient = {
+                    [client_username]: {
+                        name: name,
+                        contact: contact,
+                        cash: cash,
+                        managersUsername: managersUsername,
+                        portfolio: []
+                    }
+                }
+
+                const C_db = await loadInfo(C_userCreds);
+                Object.assign(C_db, newClient)
+
+                uploadString(C_userCreds, JSON.stringify(C_db)).then(() => {
+                    return res.status(200).json({
+                        verdict: `Client with username ${client_username} already exists`
+                    });
+                });
+
+                const M_db = await loadInfo(M_userCreds)
+
+                M_db[find_db_username(M_db, managersUsername)].clients.push(newClient)
+
+                uploadString(M_userCreds, JSON.stringify(M_db)).then(() => {
+                    return res.status(200).json({
+                        verdict: `Updated ${managersUsername}'s client list with ${client_username}'s details`
+                    });
+                });
+            }
         }
 
         catch (error) {
-            console.log("Couldnt add new user: ", error)
+            console.log("Couldnt add new client: ", error)
             return res.status(500).json({ error: "Interal server error" })
         }
     })
 })
 
-// todo delete client backend
 exports.removeClients = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+    corsHandler(req, res, async () => {
+        try {
+            if (req.method != 'POST') {
+                return res.status(405).json({ error: "Method not allowed" })
+            }
 
+            const client_username = req.body.client_username;
+            const managers_username = req.body.managers_username;
+
+            const C_db = loadInfo(C_userCreds)
+
+            delete C_db[find_db_username(C_db, client_username)]
+
+            uploadString(C_userCreds, JSON.stringify(C_db)).then(() => {
+                return res.status(200).json({
+                    verdict: `removed ${client_username}`
+                });
+            });
+
+            const M_db = loadInfo(M_userCreds)
+            const index = M_db[find_db_username(M_db, managers_username)].clients.indexOf(client_username)
+            M_db[find_db_username(M_db, managers_username)].clients.splice(index, 1)
+
+            uploadString(M_userCreds, JSON.stringify(M_db)).then(() => {
+                return res.status(200).json({
+                    verdict: `removed ${client_username}`
+                });
+            });
+        }
+
+        catch (error) {
+            console.log("Couldnt add new client: ", error)
+            return res.status(500).json({ error: "Interal server error" })
+        }
+    })
 })
 
-// todo update client Details ( can also edit portfolio)
+
 exports.updateClientDetails = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+    corsHandler(req, res, async () => {
+        try {
+            if (req.method != 'POST') {
+                return res.status(405).json({ error: "Method not allowed" })
+            }
 
+            const client_username = req.body.client_username
+            const updateData = req.body.updateData
+            const managers_username = req.body.managers_username
+
+            const clientData = [client_username, updateData, managers_username]
+            const missingItems = missingInfoWarning(clientData);
+
+            if (missingItems == []) {
+                return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
+            }
+
+            let isClient = verifyClient(client_username, updateData[client_username].name, updateData[client_username].contact).verdict
+
+            if (isClient) {
+                const C_db = loadInfo(C_userCreds)
+                C_db[find_db_username(C_db, client_username)] = updateData
+
+                uploadString(C_userCreds, JSON.stringify(C_db)).then(() => {
+                    return res.status(200).json({
+                        verdict: `Updated ${client_username}`,
+                        updateData: updateData
+                    });
+                });
+
+                // todo update the clients in the managers db
+                const M_db = loadInfo(M_userCreds);
+                M_db[find_db_username(managers_username)].clients[client_username] = updateData
+                uploadString(M_userCreds, JSON.stringify(M_db)).then(() => {
+                    return res.status(200).json({
+                        verdict: `Updated ${client_username}`,
+                        updateData: updateData
+                    });
+                });
+            }
+        }
+
+        catch (error) {
+            console.log("Couldnt add new client: ", error)
+            return res.status(500).json({ error: "Interal server error" })
+        }
+    })
 })
 
-// todo show client portfolio
-exports.showClientDetails = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
 
+exports.showClientDetails = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+    corsHandler(req, res, async () => {
+        try {
+            const username = req.body.username;
+
+            const C_db = loadInfo(C_userCreds);
+            const data = C_db[find_db_username(username)];
+
+            if (data != undefined) {
+                res.status(200).json({ data })
+            }
+            else {
+                res.status(200).json({ error: `The User ${username} does not exist` })
+            }
+        }
+
+        catch (error) {
+            console.log("Couldnt add new client: ", error)
+            return res.status(500).json({ error: "Interal server error" })
+        }
+    })
 })
 
 exports.aiGen = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
@@ -506,7 +650,7 @@ exports.aiGen = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
             const prompt = req.body.prompt;
 
             if (!prompt) {
-                return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
+                return res.status(200).json({ error: `${prompt} is required in the JSON body` })
             }
 
             const response = await axios.post(
@@ -531,8 +675,6 @@ exports.aiGen = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
 
 const stockTickers = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "NVDA", "META", "DELL", "AMD", "NVDA"];
 const cryptoTickers = ["BTC-USD", "ETH-USD", "DOGE-USD"];
-const period = "1y"
-
 
 exports.scraper = onRequest({ region: 'europe-west2' }, async (req, res) => {
     corsHandler(req, res, async () => {
@@ -678,15 +820,9 @@ exports.updateManagersDetails = onRequest({ 'region': 'europe-west2' }, async (r
 
             var db_username = '';
 
-            let db = await loadInfo(M_userCreds);
+            const db = await loadInfo(M_userCreds);
 
-            for (var key in db) {
-                db_username = bcrypt.compareSync(client_username, key)
-                if (db_username) {
-                    db_username = key
-                    break
-                }
-            }
+            const userInfo = findUserProfile(db, client_username)
 
             if (db_username == false) {
                 return res.status(200).json({
@@ -702,10 +838,6 @@ exports.updateManagersDetails = onRequest({ 'region': 'europe-west2' }, async (r
                 const db_email = dbInfo.email;
                 const db_name = dbInfo.name;
                 const db_password = dbInfo.password;
-
-                var userInfo = {
-
-                }
 
                 userInfo.email = bcrypt.hashSync(new_email, 5);
 
@@ -733,7 +865,7 @@ exports.updateManagersDetails = onRequest({ 'region': 'europe-west2' }, async (r
         }
 
         catch (error) {
-            console.log("Couldnt add new user: ", error)
+            console.log("Couldnt update manager's user creditionals: ", error)
             return res.status(500).json({ error: "Interal server error" })
         }
     });
