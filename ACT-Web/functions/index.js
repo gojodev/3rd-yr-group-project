@@ -7,6 +7,8 @@ const yahooFinance = require('yahoo-finance2').default;
 
 const HUGGINGFACE_API_KEY = "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";
 
+const POLYGON_API_KEY = "zGlBumTMyGo8hIZdI8M2CGdy8ZfFjDnV";
+
 const firebaseConfig = {
     apiKey: "AIzaSyAFayRb90ywbg82EcLOnH5iBDm3qnZx9TU",
     authDomain: "rd-year-project-1f41d.firebaseapp.com",
@@ -22,7 +24,6 @@ initializeApp(firebaseConfig);
 const { getStorage, ref, getDownloadURL, uploadString } = require("firebase/storage");
 
 const cors = require('cors');
-const client = require("firebase-tools");
 const corsHandler = cors({
     origin: true,
     methods: ['DELETE', 'PUT', 'GET', 'POST', 'OPTIONS'],
@@ -548,7 +549,7 @@ exports.removeClients = onRequest({ 'region': 'europe-west2' }, async (req, res)
             });
 
             const M_db = loadInfo(M_userCreds)
-            const index = M_db[find_db_username(M_db, managers_username)].clients.indexOf(client_username)
+            const index = M_db[find_db_username(M_db, managers_username)].clients.indexOf(find_db_username(C_db, client_username))
             M_db[find_db_username(M_db, managers_username)].clients.splice(index, 1)
 
             uploadString(M_userCreds, JSON.stringify(M_db)).then(() => {
@@ -584,10 +585,11 @@ exports.updateClientDetails = onRequest({ 'region': 'europe-west2' }, async (req
                 return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
             }
 
-            let isClient = verifyClient(client_username, updateData[client_username].name, updateData[client_username].contact).verdict
+            const C_db = loadInfo(C_userCreds)
+            const data = updateData[find_db_username(C_db, client_username)]
+            let isClient = verifyClient(client_username, data.name, data.contact).verdict
 
             if (isClient) {
-                const C_db = loadInfo(C_userCreds)
                 C_db[find_db_username(C_db, client_username)] = updateData
 
                 uploadString(C_userCreds, JSON.stringify(C_db)).then(() => {
@@ -599,7 +601,7 @@ exports.updateClientDetails = onRequest({ 'region': 'europe-west2' }, async (req
 
                 // todo update the clients in the managers db
                 const M_db = loadInfo(M_userCreds);
-                M_db[find_db_username(managers_username)].clients[client_username] = updateData
+                M_db[find_db_username(managers_username)].clients[find_db_username(C_db, client_username)] = updateData
                 uploadString(M_userCreds, JSON.stringify(M_db)).then(() => {
                     return res.status(200).json({
                         verdict: `Updated ${client_username}`,
@@ -727,11 +729,43 @@ exports.scraper = onRequest({ region: 'europe-west2' }, async (req, res) => {
 
 exports.history = onRequest({ region: 'europe-west2' }, async (req, res) => {
     corsHandler(req, res, async () => {
-        const stockTickers = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "NVDA", "META", "DELL", "AMD", "NVDA"];
-        const cryptoTickers = ["BTC-USD", "ETH-USD", "DOGE-USD"];
 
-        const period2 = Math.floor(new Date().getTime() / 1000);
-        const period1 = Math.floor(new Date(Date.now() - 24 * 60 * 60 * 1000).getTime() / 1000); // 1 day ago
+        const currentTime = Math.floor(new Date().getTime() / 1000)
+
+        // todo get input to devide which period and intervals to use
+        const allPeriods = {
+            '1D': {
+                period1: Math.floor(new Date(Date.now() - 24 * 60 * 60 * 1000).getTime() / 1000), // 1 day ago
+                period2: currentTime,
+                interval: '1m'
+            },
+            '1W': {
+                period1: Math.floor(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).getTime() / 1000), // 1 week ago
+                period2: currentTime,
+                interval: '5m'
+            },
+            '1M': {
+                period1: Math.floor(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).getTime() / 1000), // 1 month ago
+                period2: currentTime,
+                interval: '15m'
+            },
+            '6M': {
+                period1: Math.floor(new Date(Date.now() - 6 * 30 * 24 * 60 * 60 * 1000).getTime() / 1000), // 6 months ago
+                period2: currentTime,
+                interval: '1h'
+            },
+            '1Y': {
+                period1: Math.floor(new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).getTime() / 1000), // 1 year ago
+                period2: currentTime,
+                interval: '1d'
+            }
+        };
+
+        const unit = allPeriods['1D'];
+        const period1 = unit.period1
+        const period2 = unit.period2
+        const interval = unit.interval
+        
 
         async function fetchHistoryData(tickers) {
             const historicalData = {};
@@ -744,7 +778,7 @@ exports.history = onRequest({ region: 'europe-west2' }, async (req, res) => {
                     const raw_data = await yahooFinance.chart(ticker, {
                         period1,
                         period2,
-                        interval: "1s"
+                        interval: interval
                     });
 
 
@@ -788,7 +822,10 @@ exports.history = onRequest({ region: 'europe-west2' }, async (req, res) => {
                 });
             });
 
-            return res.status(200).json({ message: 'historical data saved to Firebase successfully', data: allData });
+            return res.status(200).json({
+                message: 'historical data saved to Firebase successfully',
+                data: allData
+            });
 
         } catch (error) {
             console.error("Error fetching historical data:", error.message);
