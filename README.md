@@ -1,6 +1,7 @@
 A trading bot to invest in tech stocks and crpto for companies
 
 
+
 ```
 3rd-yr-group-project
 ├─ ACT-Web
@@ -27,9 +28,9 @@ A trading bot to invest in tech stocks and crpto for companies
 │  │  └─ SDH3-CS3-SD3-Project-2024.pdf
 │  ├─ esbuild.config.js
 │  ├─ eslint.config.mjs
-│  ├─ firebase-debug.log
 │  ├─ firebase.json
 │  ├─ functions
+│  │  ├─ firebase-debug.log
 │  │  ├─ index.js
 │  │  ├─ package-lock.json
 │  │  ├─ package.json
@@ -39,7 +40,9 @@ A trading bot to invest in tech stocks and crpto for companies
 │  │  │  ├─ clientSideTest_AIengine.js
 │  │  │  ├─ clientSideTest_client.js
 │  │  │  ├─ clientsideTest_currentUser.js
+│  │  │  ├─ clientSideTest_history.js
 │  │  │  ├─ clientSideTest_manager.js
+│  │  │  ├─ clientSideTest_userOps.js
 │  │  │  └─ test.js
 │  │  └─ ui-debug.log
 │  ├─ package-lock.json
@@ -53,10 +56,13 @@ A trading bot to invest in tech stocks and crpto for companies
 │  │  │  └─ .DS_Store
 │  │  ├─ index.html
 │  │  ├─ javascripts
+│  │  │  ├─ loggedin.js
 │  │  │  ├─ login.js
 │  │  │  ├─ loginBundle.js
+│  │  │  ├─ mobilemenu.js
 │  │  │  ├─ signup.js
-│  │  │  └─ signupBundle.js
+│  │  │  ├─ signupBundle.js
+│  │  │  └─ test.js
 │  │  ├─ loggedinhomepage.html
 │  │  ├─ login.html
 │  │  ├─ predict.html

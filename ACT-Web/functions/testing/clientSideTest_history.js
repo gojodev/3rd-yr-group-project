@@ -1,14 +1,12 @@
-async function verifyClient(username, name, contact) {
+async function backendTest(requestedPeriod) {
     try {
-        const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyClient', {
+        const response = await fetch('https://history-ieevug7ulq-nw.a.run.app', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                username: username,
-                name: name,
-                contact: contact
+                requestedPeriod
             }),
         });
 
@@ -24,7 +22,7 @@ async function verifyClient(username, name, contact) {
 }
 
 async function clientSideTest() {
-    let verdict = await verifyClient('c_user1', 'Cfirst1 Clast1', '081 343 3473')
+    let verdict = await backendTest('1W')
     console.log(verdict)
 }
 
