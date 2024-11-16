@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <script src="https://kit.fontawesome.com/cdbe41a012.js" crossorigin="anonymous"></script>
+    <style>
+        .login {
+            border: 2px solid blue;
+            padding: 8px 18px;
+            border-radius: 5px;
+            transition: background-color 0.5s ease, background-position 0.5s ease;
+        }
+
+        .login:hover {
+            background-color: blue;
+            color: white;
+        }
+
+        .signup {
+            border: 2px solid red;
+            padding: 8px 18px;
+            border-radius: 5px;
+            transition: background-color 0.5s ease, background-position 0.5s ease;
+        }
+
+        .signup:hover {
+            background-color: red;
+            color: white;
+        }
+   
+        body {
+            padding: 0;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(90deg, #b90529, #ed6104, #b90529);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #ececec;
+            color: black;
+        }
+
+        .header-top .name {
+            font-size: 24px;
+            font-weight: bold;
+            width: 90%;
+        }
+
+        .header-top .contact {
+            text-align: right;
+        }
+
+        .header-top .contact p {
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .main {
+            background-color: rgba(0, 0, 0, 0.5);
+            text-align: center;
+            color: white;
+            width: 65%;
+            margin-left: 17.5%;
+            padding: 20px;
+            margin-top: 3%;
+        }
+
+        #dropdown-menu div {
+            width: 35px;
+            height: 3px;
+            background-color: black;
+            margin: 6px 0;
+            transition: 0.4s;
+        }
+
+        .open .dropdown-line1 {
+            -webkit-transform: rotate(-45deg) translate(-6px, 6px);
+            transform: rotate(-45deg) translate(-6px, 6px);
+        }
+
+        .open .dropdown-line2 {
+            opacity: 0;
+        }
+
+        .open .dropdown-line3 {
+            -webkit-transform: rotate(45deg) translate(-6px, -8px);
+            transform: rotate(45deg) translate(-6px, -8px);
+        }
+
+        .open .mobile-menu {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: auto;
+            left: 0;
+            width: 20%;
+            background-color: #ececec;
+            padding: 0;
+            border-right: 5px solid black;
+            border-bottom: 5px solid black;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        .mobile-menu li {
+            text-align: center;
+            margin-left: 25%;
+            width: 50%;
+        }
+
+        .mobile-menu a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .nav1{
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid black;
+        }
+
+        .nav1 {
+            padding-top: 20px;
+        }
+
+        .nav2 {
+            padding-bottom: 20px;
+            padding-top: 20px;
+        }
+
+        .nav3 {
+            padding-bottom: 20px;
+            padding-top: 5px;
+        }
+
+        footer {
+            background-color: #ececec;
+            color: black;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .left, .right {
+            padding: 5px 0;
+            margin: 0;
+            width: 100%;
+            text-align: center;
+        }
+
+        .right ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .right a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .footernav1 {
+            padding-top: 20px;
+            padding-bottom: 10px;
+            border-top: 2px solid black;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-top">
+            <div id="dropdown-menu" onclick="toggleMobileMenu(this)">
+                <div class="dropdown-line1"></div>
+                <div class="dropdown-line2"></div>
+                <div class="dropdown-line3"></div>
+                <ul class="mobile-menu">
+                    <li class="nav1"><a href="index.html">Home</a></li>
+                    <li class="nav2"><a href="login.html" class="login">Login</a></li>
+                    <li class="nav3"><a href="singup.html" class="signup">Sign Up</a></li>
+                </ul>
+            </div>
+            <div class="name">ACT-WEB</div>
+            <div class="darkmode">
+                <i class="fa-solid fa-moon fa-2x" onclick="toggleBackgroundColor()"></i>     
+            </div>
+        </div>
+
+    </header>
+
+    <main>
+        <div class="main">
+            <h1>Hi we are </h1>
+            <h2>Welcome to our ACT-Website</h2>
+            <h2>This is the one stop shop for all fund managers</h2>
+            <h2>Need help managing you trading you have come to the right place</h2>
+            <h2>Login in today to access many features or Sign up today to get started</h2>
+        </div>
+    </main>
+
+    <footer>
+        <div class="left">
+            <h4>Phone: | Email</h4>
+        </div>
+        <div class="right">
+            <ul>
+                <li class="footernav1"><a href="loggedinhomepage.html">Home</a> | <a href="stocks.html">Stocks</a> | <a href="clients.html">Clients</a> | <a href="predict.html">Predict</a> | <a href="report.html">Report</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <script src="javascripts/mobilemenu.js"></script>
+    <script src="javascripts/darkmode.js"></script>
+</body>
+</html>

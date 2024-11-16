@@ -8,10 +8,28 @@
         "clients": [
             {
                 "c_user1": {
-                    "name": "Cfirst1 Clast1",
+                    "name": "John Paul",
                     "id": "C_$2b$05$MRd8CuSOQCSsEwfdZTwEpektVY8rXTxYnnRWngUTYnCXamQinmX5O",
                     "managerID": "M_$2b$05$eX5qSeIsfQZtAR2RAFxYiuK/owcXv.TNPQOE5s3v7PgKqziXCSxoy",
-                    "contact": "081 343 3473"
+                    "contact": "081 343 3473",
+                    "cash": "1200",
+                    "portfolio": []
+                },
+                "c_user2": {
+                    "name": "Mary Johnson",
+                    "id": "C_$2b$05$MRd8CuSOQCSsEwfdZTwEpektVY8rXTxYnnRWngUTYnCXamQinmX5O",
+                    "managerID": "M_$2b$05$eX5qSeIsfQZtAR2RAFxYiuK/owcXv.TNPQOE5s3v7PgKqziXCSxoy",
+                    "contact": "085 366 0163",
+                    "cash": "20000",
+                    "portfolio": []
+                },
+                "c_user3": {
+                    "name": "Ciara Burke",
+                    "id": "C_$2b$05$MRd8CuSOQCSsEwfdZTwEpektVY8rXTxYnnRWngUTYnCXamQinmX5O",
+                    "managerID": "M_$2b$05$eX5qSeIsfQZtAR2RAFxYiuK/owcXv.TNPQOE5s3v7PgKqziXCSxoy",
+                    "contact": "089 447 3778",
+                    "cash": "500",
+                    "portfolio": []
                 }
             }
         ]
