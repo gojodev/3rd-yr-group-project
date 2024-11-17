@@ -279,7 +279,7 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
         const addClients = operation == 'create' && type == 'client'
         const showClientDetails = operation == 'read' && type == 'client' // passed
         const updateClientDetails = operation == 'modify' && type == 'client'
-        const removeClients = operation == 'delete' && type == 'client'
+        const removeClients = operation == 'delete' && type == 'client' // passed
         const verifyClient = operation == 'verify' && type == 'client' // passed
 
         const verifyManager = operation == 'verify' && type == 'manager' // passed
@@ -340,15 +340,13 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
                 const username = req.body.username;
 
                 const C_db = await loadInfo(C_userCreds);
-                console.log(C_db)
-                const data = findUserProfile(C_db, username)
-
+                const data = findUserProfile(C_db, username);
+    
                 if (data != undefined) {
                     res.status(200).json({ data })
                 }
-
                 else {
-                    res.status(200).json({ error: `The User: '${username}' does not exist` })
+                    res.status(200).json({ error: `The User ${username} does not exist` })
                 }
             }
             else if (updateClientDetails) {
@@ -987,7 +985,7 @@ exports.showClientDetails = onRequest({ 'region': 'europe-west2' }, async (req, 
             const username = req.body.username;
 
             const C_db = await loadInfo(C_userCreds);
-            const data = C_db[find_db_username(username)];
+            const data = findUserProfile(C_db, username);
 
             if (data != undefined) {
                 res.status(200).json({ data })
