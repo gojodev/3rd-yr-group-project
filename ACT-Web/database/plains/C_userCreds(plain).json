@@ -1,24 +1,18 @@
 {
     "c_user1": {
         "name": "Cfirst1 Clast1",
-        "id": "C_$2b$05$MRd8CuSOQCSsEwfdZTwEpektVY8rXTxYnnRWngUTYnCXamQinmX5O",
-        "managerID": "M_$2b$05$eX5qSeIsfQZtAR2RAFxYiuK/owcXv.TNPQOE5s3v7PgKqziXCSxoy",
         "contact": "081 343 3473",
         "cash": "",
         "portfolio": []
     },
     "c_user2": {
         "name": "Cfirst2 Clast2",
-        "id": "C_$2b$05$XTqp2OH0DQq012nh7DuKxuT5FEycX7DR.8JgWjffu1xmgmr1hXHwC",
-        "managerID": "M_$2b$05$Yf64wGoRjk8zPFlDCefsiuHnAM3RI61J8VoDn.Y8Iro7cP2r5ZXC6",
         "contact": "082 343 3473",
         "cash": "",
         "portfolio": []
     },
     "c_user3": {
         "name": "Cfirst3 Clast3",
-        "id": "C_$2b$05$jz8sTjt98BQ.Nph3D78qb.S2ib60CXVeOprsS/sY4J0oytBKt0kee",
-        "managerID": "M_$2b$05$sQeu1bLhsrAiiAYkl3Xsy.lnopTsyeGIF696/vPUjSrgapdsFUeOe",
         "contact": "083 343 3473",
         "cash": "",
         "portfolio": []
