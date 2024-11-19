@@ -614,7 +614,6 @@ exports.history = onRequest({ region: 'europe-west2' }, async (req, res) => {
 
         const currentTime = Math.floor(new Date().getTime() / 1000)
 
-        // todo get input to devide which period and intervals to use
         const allPeriods = {
             '1D': {
                 period1: Math.floor(new Date(Date.now() - 24 * 60 * 60 * 1000).getTime() / 1000), // 1 day ago
@@ -680,18 +679,30 @@ exports.history = onRequest({ region: 'europe-west2' }, async (req, res) => {
 
                     const histData = raw_data.quotes.map(entry => ({
                         Date: new Date(entry.date).toUTCString(),
-                        currentPrice: info.price.regularMarketPrice || "N/A", // todo gotta add current price to teh hsitory function
+                        currentPrice: assetInfo.price.regularMarketPrice || "N/A",
                         Open: entry.open,
-                        High: entry.high,
-                        Low: entry.low,
                         Close: entry.close,
                         Volume: entry.volume
                     }));
 
+                    const highest = raw_data.quotes.reduce((max, entry) => (entry.high !== undefined && entry.high > max.high ? entry : max), raw_data.quotes[0]);
+                    const lowest = raw_data.quotes.reduce((min, entry) => (entry.low !== null && entry.low !== undefined && (min.low === null || entry.low < min.low) ? entry : min), { low: null });
+
                     historicalData[ticker] = {
                         name: assetName,
+                        highestPriceOfDay: {
+                            time: new Date(highest.date).toUTCString() || 'N/A',
+                            price: highest.high || 'N/A'
+                        },
+                        lowestPriceOfDay: {
+                            time: new Date(lowest.date).toUTCString() || 'N/A',
+                            price: lowest.low || 'N/A'
+                        },
                         history: histData
                     };
+
+                    console.log('lowest : ', lowest)
+
 
                 } catch (error) {
                     console.error(`Error fetching data for ${ticker}:`, error.message);
@@ -827,10 +838,9 @@ exports.priceAlert = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
         }
 
         const name = historyData.name
+        const currentPrice = historyData.currentPrice
         const open = historyData.history.open
-        console.log(historyData)
-
-
+        console.log(name, currentPrice, open)
     })
 })
 

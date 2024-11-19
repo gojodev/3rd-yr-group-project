@@ -2,6 +2,7 @@ A trading bot to invest in tech stocks and crpto for companies
 
 
 
+
 ```
 3rd-yr-group-project
 ├─ ACT-Web
@@ -30,20 +31,19 @@ A trading bot to invest in tech stocks and crpto for companies
 │  ├─ eslint.config.mjs
 │  ├─ firebase.json
 │  ├─ functions
-│  │  ├─ firebase-debug.log
 │  │  ├─ index.js
 │  │  ├─ package-lock.json
 │  │  ├─ package.json
 │  │  ├─ resetToDeafult.js
 │  │  ├─ testing
-│  │  │  ├─ clientSideTest_admin.js
-│  │  │  ├─ clientSideTest_AIengine.js
-│  │  │  ├─ clientSideTest_client.js
-│  │  │  ├─ clientsideTest_currentUser.js
-│  │  │  ├─ clientSideTest_history.js
-│  │  │  ├─ clientSideTest_manager.js
-│  │  │  ├─ clientSideTest_userOps.js
-│  │  │  └─ test.js
+│  │  │  ├─ admin.js
+│  │  │  ├─ client.js
+│  │  │  ├─ currentUser.js
+│  │  │  ├─ history.js
+│  │  │  ├─ manager.js
+│  │  │  ├─ priceAlert.js
+│  │  │  ├─ test.js
+│  │  │  └─ userOps.js
 │  │  └─ ui-debug.log
 │  ├─ package-lock.json
 │  ├─ package.json
