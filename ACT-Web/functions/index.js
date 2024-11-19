@@ -416,13 +416,12 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
                 }
             }
             else if (verifyAdmin) {
-                const client_name = req.body.name;
-                const client_username = req.body.username;
-                const client_email = req.body.email;
-                const client_password = req.body.password;
-                const client_ID = req.body.id;
+                const name = req.body.name;
+                const username = req.body.username;
+                const email = req.body.email;
+                const password = req.body.password;
 
-                const clientData = [client_name, client_username, client_email, client_password, client_ID]
+                const clientData = [name, username, email, password]
                 const missingItems = missingInfoWarning(clientData);
 
                 if (missingItems == []) {
@@ -433,23 +432,23 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
                 const db = await loadInfo(A_userCreds)
 
 
-                const userInfo = findUserProfile(db, client_username);
+                const userInfo = findUserProfile(db, username);
                 if (userInfo != undefined) {
                     const db_email = userInfo.email;
                     const db_password = userInfo.password;
                     const db_name = userInfo.name;
                     const db_ID = userInfo.id;
 
-                    let clientData = [client_email, client_password, client_username];
+                    let clientData = [email, password, username];
                     let missingItems = missingInfoWarning(clientData);
 
                     if (missingItems == []) {
                         return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
                     }
 
-                    let correctEmail = bcrypt.compareSync(client_email, db_email);
-                    let correctPassword = bcrypt.compareSync(client_password, db_password);
-                    let correctName = bcrypt.compareSync(client_name, db_name);
+                    let correctEmail = bcrypt.compareSync(email, db_email);
+                    let correctPassword = bcrypt.compareSync(password, db_password);
+                    let correctName = bcrypt.compareSync(name, db_name);
                     let correctID = client_ID == db_ID;
                     let verdict = correctEmail && correctPassword && correctName && correctID;
 
@@ -465,7 +464,7 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
                 else {
                     return res.status(200).json({
                         'verdict': false,
-                        'reason': `${client_username} does not exist`
+                        'reason': `${username} does not exist`
                     });
                 }
             }
@@ -681,6 +680,7 @@ exports.history = onRequest({ region: 'europe-west2' }, async (req, res) => {
 
                     const histData = raw_data.quotes.map(entry => ({
                         Date: new Date(entry.date).toUTCString(),
+                        currentPrice: info.price.regularMarketPrice || "N/A", // todo gotta add current price to teh hsitory function
                         Open: entry.open,
                         High: entry.high,
                         Low: entry.low,
@@ -718,13 +718,9 @@ exports.history = onRequest({ region: 'europe-west2' }, async (req, res) => {
 
             uploadString(historicalData, JSON.stringify(allData)).then(() => {
                 return res.status(200).json({
-                    message: `${periodData} was saved to Firebase successfully`
+                    message: `${periodData} was saved to Firebase successfully`,
+                    data: allData
                 });
-            });
-
-            return res.status(200).json({
-                message: `${periodData} was saved to Firebase successfully`,
-                data: JSON.stringify(allData)
             });
 
         } catch (error) {
@@ -811,8 +807,30 @@ async function use_history() {
 
 exports.priceAlert = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     corsHandler(req, res, async () => {
-        const scraper = await use_scraper();
-        console.log(scraper.stocks['AAPL'])
+
+        const requestedAsset = req.body.asset // is a crypto or stock
+
+        const is_Stock = stockTickers.includes(requestedAsset)
+        const is_Crypto = cryptoTickers.includes(requestedAsset)
+
+        if (is_Stock == false && is_Crypto == false) {
+            return res.status(200).json({ error: `'${requestedAsset}' is not a Stock or Crypto` })
+        }
+
+        const scrapedHistory = await use_history();
+        var historyData;
+        if (is_Stock) {
+            historyData = scrapedHistory.data.stocks_history[requestedAsset];
+        }
+        else {
+            historyData = scrapedHistory.data.cryptos_history[requestedAsset];
+        }
+
+        const name = historyData.name
+        const open = historyData.history.open
+        console.log(historyData)
+
+
     })
 })
 

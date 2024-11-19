@@ -6,11 +6,11 @@ async function verifyAdmin(username, name, email, password, id) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                username: username,
-                name: name,
-                email: email,
-                password: password,
-                id: id
+                username,
+                name,
+                email,
+                password,
+                id
             }),
         });
 
