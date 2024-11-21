@@ -71,7 +71,7 @@ function find_db_username(db, client_username) {
 function missingInfoWarning(arr) {
     let missingItems = [];
     for (var item in arr) {
-        if (!item) {
+        if (item == undefined) {
             missingItems.push(item)
         }
     }
@@ -269,7 +269,7 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
                 const clientData = [client_username, updateData, managers_username]
                 const missingItems = missingInfoWarning(clientData);
 
-                if (missingItems == []) {
+                if (missingItems != []) {
                     return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
                 }
 
@@ -342,7 +342,7 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
                 const clientData = [client_username, client_name, client_contact]
                 const missingItems = missingInfoWarning(clientData);
 
-                if (missingItems == []) {
+                if (missingItems != []) {
                     return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
                 }
 
@@ -356,7 +356,7 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
                     let clientData = [client_name, client_contact];
                     let missingItems = missingInfoWarning(clientData);
 
-                    if (missingItems == []) {
+                    if (missingItems != []) {
                         return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
                     }
 
@@ -387,7 +387,7 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
 
                 let missingItems = missingInfoWarning(clientData);
 
-                if (missingItems == []) {
+                if (missingItems != []) {
                     return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
                 }
 
@@ -424,7 +424,7 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
                 const clientData = [name, username, email, password]
                 const missingItems = missingInfoWarning(clientData);
 
-                if (missingItems == []) {
+                if (missingItems != []) {
                     return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
                 }
 
@@ -437,27 +437,24 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
                     const db_email = userInfo.email;
                     const db_password = userInfo.password;
                     const db_name = userInfo.name;
-                    const db_ID = userInfo.id;
 
                     let clientData = [email, password, username];
                     let missingItems = missingInfoWarning(clientData);
 
-                    if (missingItems == []) {
+                    if (missingItems != []) {
                         return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
                     }
 
                     let correctEmail = bcrypt.compareSync(email, db_email);
                     let correctPassword = bcrypt.compareSync(password, db_password);
                     let correctName = bcrypt.compareSync(name, db_name);
-                    let correctID = client_ID == db_ID;
-                    let verdict = correctEmail && correctPassword && correctName && correctID;
+                    let verdict = correctEmail && correctPassword && correctName;
 
                     return res.status(200).json({
                         'verdict': verdict,
                         'correctEmail': correctEmail,
                         'correctPassword': correctPassword,
-                        'correctName': correctName,
-                        'correctID': correctID
+                        'correctName': correctName
                     });
                 }
 
@@ -676,7 +673,7 @@ exports.history = onRequest({ region: 'europe-west2' }, async (req, res) => {
                         interval: interval
                     });
 
-
+                    // ? is it possible to loop through raw_data once for the histData, min and max??
                     const histData = raw_data.quotes.map(entry => ({
                         Date: new Date(entry.date).toUTCString(),
                         currentPrice: assetInfo.price.regularMarketPrice || "N/A",
@@ -685,6 +682,7 @@ exports.history = onRequest({ region: 'europe-west2' }, async (req, res) => {
                         Volume: entry.volume
                     }));
 
+                    // todo loop through this once to save time and simplify the conditions
                     const highest = raw_data.quotes.reduce((max, entry) => (entry.high !== undefined && entry.high > max.high ? entry : max), raw_data.quotes[0]);
                     const lowest = raw_data.quotes.reduce((min, entry) => (entry.low !== null && entry.low !== undefined && (min.low === null || entry.low < min.low) ? entry : min), { low: null });
 
@@ -692,34 +690,29 @@ exports.history = onRequest({ region: 'europe-west2' }, async (req, res) => {
                         name: assetName,
                         highestPriceOfDay: {
                             time: new Date(highest.date).toUTCString() || 'N/A',
-                            price: highest.high || 'N/A'
+                            price: highest.high || 0
                         },
                         lowestPriceOfDay: {
                             time: new Date(lowest.date).toUTCString() || 'N/A',
-                            price: lowest.low || 'N/A'
+                            price: lowest.low || 0
                         },
                         history: histData
                     };
-
-                    console.log('lowest : ', lowest)
-
 
                 } catch (error) {
                     console.error(`Error fetching data for ${ticker}:`, error.message);
                 }
             }
-
             return historicalData;
         }
 
-
         try {
-
             const stocksData = await fetchHistoryData(stockTickers);
             const cryptosData = await fetchHistoryData(cryptoTickers);
 
-
             const allData = {
+                stockTickers: stockTickers,
+                cryptoTickers: cryptoTickers,
                 stocks_history: stocksData,
                 cryptos_history: cryptosData
             };
@@ -819,7 +812,11 @@ async function use_history() {
 exports.priceAlert = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     corsHandler(req, res, async () => {
 
-        const requestedAsset = req.body.asset // is a crypto or stock
+        const requestedAsset = req.body.requestedAsset // is a crypto or stock
+
+        if (requestedAsset == undefined) {
+            return res.status(200).json({ error: `${requestedAsset} is required in the JSON body` })
+        }
 
         const is_Stock = stockTickers.includes(requestedAsset)
         const is_Crypto = cryptoTickers.includes(requestedAsset)
@@ -829,18 +826,58 @@ exports.priceAlert = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
         }
 
         const scrapedHistory = await use_history();
+        const assetData = scrapedHistory.data
+        var name;
         var historyData;
+
         if (is_Stock) {
-            historyData = scrapedHistory.data.stocks_history[requestedAsset];
+            historyData = assetData.stocks_history[requestedAsset].history[0];
+            name = assetData.stocks_history[requestedAsset].name
         }
         else {
-            historyData = scrapedHistory.data.cryptos_history[requestedAsset];
+            historyData = assetData.cryptos_history[requestedAsset].history[0];
+            name = assetData.stocks_history[requestedAsset].name
         }
 
-        const name = historyData.name
-        const currentPrice = historyData.currentPrice
-        const open = historyData.history.open
-        console.log(name, currentPrice, open)
+        function actualChange(open, currentPrice) {
+            return ((open / currentPrice) * 100) - 100
+        }
+
+        if (name != undefined) {
+            const currentPrice = historyData.currentPrice
+            const open = historyData.Open
+
+            const change = Math.round(actualChange(open, currentPrice) * 100) / 100;
+            console.log('change : ', change)
+
+            const signIncrease = open * 1.05;
+            const signDecrease = open * 0.95;
+
+            if (currentPrice >= signIncrease) {
+                return res.status(200).json({
+                    verdict: `${requestedAsset} is up by ${change}%`,
+                    currentPrice: currentPrice,
+                    open: open
+                })
+            }
+            else if (currentPrice <= signDecrease) {
+                return res.status(200).json({
+                    verdict: `${requestedAsset} is down by ${change}%`,
+                    currentPrice: currentPrice,
+                    open: open
+                })
+            }
+            else {
+                return res.status(200).json({
+                    verdict: `${requestedAsset} has had no significant price change (${change}%)`,
+                    currentPrice: currentPrice,
+                    open: open
+                })
+            }
+        }
+        else {
+            return res.status(200).json({ error: `${requestedAsset} is not a valid Stock or Crypto` })
+        }
     })
 })
 
@@ -853,4 +890,5 @@ http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/scraper
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/history
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/updateManagersDetails
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/currentUser
+http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/priceAlert
 */

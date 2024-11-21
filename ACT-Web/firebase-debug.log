@@ -1,111 +1,53 @@
-[debug] [2024-11-19T19:19:28.648Z] ----------------------------------------------------------------------
-[debug] [2024-11-19T19:19:28.650Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\GojoDev\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js emulators:start
-[debug] [2024-11-19T19:19:28.650Z] CLI Version:   13.23.0
-[debug] [2024-11-19T19:19:28.650Z] Platform:      win32
-[debug] [2024-11-19T19:19:28.650Z] Node Version:  v20.13.1
-[debug] [2024-11-19T19:19:28.650Z] Time:          Tue Nov 19 2024 19:19:28 GMT+0000 (Greenwich Mean Time)
-[debug] [2024-11-19T19:19:28.650Z] ----------------------------------------------------------------------
+[debug] [2024-11-21T15:27:44.543Z] ----------------------------------------------------------------------
+[debug] [2024-11-21T15:27:44.545Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\GojoDev\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions
+[debug] [2024-11-21T15:27:44.545Z] CLI Version:   13.23.0
+[debug] [2024-11-21T15:27:44.545Z] Platform:      win32
+[debug] [2024-11-21T15:27:44.545Z] Node Version:  v20.13.1
+[debug] [2024-11-21T15:27:44.545Z] Time:          Thu Nov 21 2024 15:27:44 GMT+0000 (Greenwich Mean Time)
+[debug] [2024-11-21T15:27:44.545Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2024-11-19T19:19:28.725Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2024-11-19T19:19:28.725Z] > authorizing via signed-in user (eakoledoye@gmail.com)
-[debug] [2024-11-19T19:19:28.871Z] java version "23" 2024-09-17
-
-[debug] [2024-11-19T19:19:28.872Z] Java(TM) SE Runtime Environment (build 23+37-2369)
-Java HotSpot(TM) 64-Bit Server VM (build 23+37-2369, mixed mode, sharing)
-
-[debug] [2024-11-19T19:19:28.886Z] Parsed Java major version: 23
-[info] i  emulators: Starting emulators: functions, hosting, storage, tasks, extensions {"metadata":{"emulator":{"name":"hub"},"message":"Starting emulators: functions, hosting, storage, tasks, extensions"}}
-[debug] [2024-11-19T19:19:28.888Z] Checked if tokens are valid: false, expires at: 1732040881312
-[debug] [2024-11-19T19:19:28.889Z] Checked if tokens are valid: false, expires at: 1732040881312
-[debug] [2024-11-19T19:19:28.889Z] > refreshing access token with scopes: []
-[debug] [2024-11-19T19:19:28.890Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
-[debug] [2024-11-19T19:19:28.890Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
-[debug] [2024-11-19T19:19:29.887Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
-[debug] [2024-11-19T19:19:29.887Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
-[debug] [2024-11-19T19:19:29.894Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d [none]
-[debug] [2024-11-19T19:19:31.024Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d 200
-[debug] [2024-11-19T19:19:31.024Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d {"projectId":"rd-year-project-1f41d","projectNumber":"823208675027","displayName":"3rd year project","name":"projects/rd-year-project-1f41d","resources":{"hostingSite":"rd-year-project-1f41d","storageBucket":"rd-year-project-1f41d.appspot.com","locationId":"europe-west2"},"state":"ACTIVE","etag":"1_ebe102b0-cdb5-43f1-8723-6be182a85851"}
-[debug] [2024-11-19T19:19:31.035Z] [logging] Logging Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
-[debug] [2024-11-19T19:19:31.035Z] [hosting] Hosting Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
-[debug] [2024-11-19T19:19:31.035Z] [storage] Storage Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
-[debug] [2024-11-19T19:19:31.035Z] assigned listening specs for emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"hosting":[{"address":"127.0.0.1","family":"IPv4","port":5002}],"storage":[{"address":"127.0.0.1","family":"IPv4","port":9199}]},"metadata":{"message":"assigned listening specs for emulators"}}
-[debug] [2024-11-19T19:19:31.040Z] [hub] writing locator at C:\Users\GojoDev\AppData\Local\Temp\hub-rd-year-project-1f41d.json
-[debug] [2024-11-19T19:19:31.045Z] [Extensions] Started Extensions emulator, this is a noop.
-[debug] [2024-11-19T19:19:31.050Z] [functions] Functions Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
-[debug] [2024-11-19T19:19:31.050Z] [eventarc] Eventarc Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
-[debug] [2024-11-19T19:19:31.050Z] [tasks] Cloud Tasks Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
-[debug] [2024-11-19T19:19:31.050Z] late-assigned ports for functions and eventarc emulators {"user":{"hub":[{"address":"127.0.0.1","family":"IPv4","port":4400},{"address":"::1","family":"IPv6","port":4400}],"ui":[{"address":"127.0.0.1","family":"IPv4","port":4000},{"address":"::1","family":"IPv6","port":4000}],"logging":[{"address":"127.0.0.1","family":"IPv4","port":4500}],"hosting":[{"address":"127.0.0.1","family":"IPv4","port":5002}],"storage":[{"address":"127.0.0.1","family":"IPv4","port":9199}],"functions":[{"address":"127.0.0.1","family":"IPv4","port":5001}],"eventarc":[{"address":"127.0.0.1","family":"IPv4","port":9299}],"tasks":[{"address":"127.0.0.1","family":"IPv4","port":9499}]},"metadata":{"message":"late-assigned ports for functions and eventarc emulators"}}
-[warn] !  functions: The following emulators are not running, calls to these services from the Functions emulator will affect production: auth, firestore, database, pubsub, dataconnect {"metadata":{"emulator":{"name":"functions"},"message":"The following emulators are not running, calls to these services from the Functions emulator will affect production: \u001b[1mauth, firestore, database, pubsub, dataconnect\u001b[22m"}}
-[debug] [2024-11-19T19:19:31.052Z] defaultcredentials: writing to file C:\Users\GojoDev\AppData\Roaming\firebase\eakoledoye_gmail_com_application_default_credentials.json
-[debug] [2024-11-19T19:19:31.054Z] Setting GAC to C:\Users\GojoDev\AppData\Roaming\firebase\eakoledoye_gmail_com_application_default_credentials.json {"metadata":{"emulator":{"name":"functions"},"message":"Setting GAC to C:\\Users\\GojoDev\\AppData\\Roaming\\firebase\\eakoledoye_gmail_com_application_default_credentials.json"}}
-[debug] [2024-11-19T19:19:31.054Z] Checked if tokens are valid: true, expires at: 1732047568887
-[debug] [2024-11-19T19:19:31.054Z] Checked if tokens are valid: true, expires at: 1732047568887
-[debug] [2024-11-19T19:19:31.054Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d/adminSdkConfig [none]
-[debug] [2024-11-19T19:19:32.020Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d/adminSdkConfig 200
-[debug] [2024-11-19T19:19:32.020Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d/adminSdkConfig {"projectId":"rd-year-project-1f41d","storageBucket":"rd-year-project-1f41d.appspot.com","locationId":"europe-west2"}
-[debug] [2024-11-19T19:19:32.033Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"storage"},"message":"Ignoring unsupported arg: port"}}
-[debug] [2024-11-19T19:19:32.720Z] Temp file directory for storage emulator: C:\Users\GojoDev\AppData\Local\Temp/firebase/storage/blobs {"metadata":{"emulator":{"name":"storage"},"message":"Temp file directory for storage emulator: C:\\Users\\GojoDev\\AppData\\Local\\Temp/firebase/storage/blobs"}}
-[debug] [2024-11-19T19:19:32.725Z] Checked if tokens are valid: true, expires at: 1732047568887
-[debug] [2024-11-19T19:19:32.725Z] Checked if tokens are valid: true, expires at: 1732047568887
-[debug] [2024-11-19T19:19:32.725Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/rd-year-project-1f41d/sites 
-[debug] [2024-11-19T19:19:34.027Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/rd-year-project-1f41d/sites 200
-[debug] [2024-11-19T19:19:34.027Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/rd-year-project-1f41d/sites {"sites":[{"name":"projects/rd-year-project-1f41d/sites/rd-year-project-1f41d","defaultUrl":"https://rd-year-project-1f41d.web.app","appId":"1:823208675027:web:040ff96eac0fc89b0e3626","type":"DEFAULT_SITE"}]}
-[debug] [2024-11-19T19:19:34.027Z] Checked if tokens are valid: true, expires at: 1732047568887
-[debug] [2024-11-19T19:19:34.027Z] Checked if tokens are valid: true, expires at: 1732047568887
-[debug] [2024-11-19T19:19:34.027Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d/webApps/1:823208675027:web:040ff96eac0fc89b0e3626/config [none]
-[debug] [2024-11-19T19:19:35.068Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d/webApps/1:823208675027:web:040ff96eac0fc89b0e3626/config 200
-[debug] [2024-11-19T19:19:35.068Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d/webApps/1:823208675027:web:040ff96eac0fc89b0e3626/config {"projectId":"rd-year-project-1f41d","appId":"1:823208675027:web:040ff96eac0fc89b0e3626","storageBucket":"rd-year-project-1f41d.appspot.com","locationId":"europe-west2","apiKey":"AIzaSyAFayRb90ywbg82EcLOnH5iBDm3qnZx9TU","authDomain":"rd-year-project-1f41d.firebaseapp.com","messagingSenderId":"823208675027","measurementId":"G-86DQSH17PT"}
-[debug] [2024-11-19T19:19:35.072Z] Checked if tokens are valid: true, expires at: 1732047568887
-[debug] [2024-11-19T19:19:35.072Z] Checked if tokens are valid: true, expires at: 1732047568887
-[debug] [2024-11-19T19:19:35.072Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d [none]
-[debug] [2024-11-19T19:19:35.500Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d 200
-[debug] [2024-11-19T19:19:35.500Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d {"projectId":"rd-year-project-1f41d","projectNumber":"823208675027","displayName":"3rd year project","name":"projects/rd-year-project-1f41d","resources":{"hostingSite":"rd-year-project-1f41d","storageBucket":"rd-year-project-1f41d.appspot.com","locationId":"europe-west2"},"state":"ACTIVE","etag":"1_ebe102b0-cdb5-43f1-8723-6be182a85851"}
-[info] i  hosting[rd-year-project-1f41d]: Serving hosting files from: public {"metadata":{"emulator":{"name":"hosting"},"message":"Serving hosting files from: \u001b[1mpublic\u001b[22m"}}
-[info] +  hosting[rd-year-project-1f41d]: Local server: http://127.0.0.1:5002 {"metadata":{"emulator":{"name":"hosting"},"message":"Local server: \u001b[4m\u001b[1mhttp://127.0.0.1:5002\u001b[22m\u001b[24m"}}
-[debug] [2024-11-19T19:19:35.516Z] Ignoring unsupported arg: auto_download {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: auto_download"}}
-[debug] [2024-11-19T19:19:35.516Z] Ignoring unsupported arg: port {"metadata":{"emulator":{"name":"ui"},"message":"Ignoring unsupported arg: port"}}
-[debug] [2024-11-19T19:19:35.516Z] Starting Emulator UI with command {"binary":"node","args":["C:\\Users\\GojoDev\\.cache\\firebase\\emulators\\ui-v1.14.0\\server\\server.mjs"],"optionalArgs":[],"joinArgs":false,"shell":false,"port":4000} {"metadata":{"emulator":{"name":"ui"},"message":"Starting Emulator UI with command {\"binary\":\"node\",\"args\":[\"C:\\\\Users\\\\GojoDev\\\\.cache\\\\firebase\\\\emulators\\\\ui-v1.14.0\\\\server\\\\server.mjs\"],\"optionalArgs\":[],\"joinArgs\":false,\"shell\":false,\"port\":4000}"}}
-[info] i  ui: Emulator UI logging to ui-debug.log {"metadata":{"emulator":{"name":"ui"},"message":"Emulator UI logging to \u001b[1mui-debug.log\u001b[22m"}}
-[debug] [2024-11-19T19:19:35.620Z] Web / API server started at 127.0.0.1:4000
- {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at 127.0.0.1:4000\n"}}
-[debug] [2024-11-19T19:19:35.620Z] Web / API server started at ::1:4000
- {"metadata":{"emulator":{"name":"ui"},"message":"Web / API server started at ::1:4000\n"}}
-[debug] [2024-11-19T19:19:35.724Z] [Extensions] Connecting Extensions emulator, this is a noop.
-[info] i  functions: Watching "C:\Users\GojoDev\Desktop\Emmanuel K\college stuff\year 3\3rd-yr-group-project\ACT-Web\functions" for Cloud Functions... {"metadata":{"emulator":{"name":"functions"},"message":"Watching \"C:\\Users\\GojoDev\\Desktop\\Emmanuel K\\college stuff\\year 3\\3rd-yr-group-project\\ACT-Web\\functions\" for Cloud Functions..."}}
-[debug] [2024-11-19T19:19:35.729Z] Validating nodejs source
-[warn] !  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
-[debug] [2024-11-19T19:19:36.725Z] > [functions] package.json contents: {
-  "name": "functions",
-  "description": "Cloud Functions for Firebase",
-  "scripts": {
-    "shell": "firebase functions:shell",
-    "start": "firebase emulators:start",
-    "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
-  },
-  "engines": {
-    "node": "20"
-  },
-  "main": "index.js",
-  "dependencies": {
-    "axios": "^1.7.7",
-    "bcrypt": "^5.1.1",
-    "firebase": "^10.14.1",
-    "firebase-admin": "^12.6.0",
-    "firebase-functions": "^6.0.1",
-    "firebase-tools": "^1.2.0",
-    "yahoo-finance2": "^2.13.2"
-  },
-  "devDependencies": {
-    "firebase-functions-test": "^3.1.0"
-  },
-  "private": true
-}
-[debug] [2024-11-19T19:19:36.725Z] Building nodejs source
-[debug] [2024-11-19T19:19:36.726Z] Failed to find version of module node: reached end of search path C:\Users\GojoDev\Desktop\Emmanuel K\college stuff\year 3\3rd-yr-group-project\ACT-Web\functions\node_modules
-[info] +  functions: Using node@20 from host. 
-[debug] [2024-11-19T19:19:36.728Z] Could not find functions.yaml. Must use http discovery
-[debug] [2024-11-19T19:19:36.733Z] Found firebase-functions binary at 'C:\Users\GojoDev\Desktop\Emmanuel K\college stuff\year 3\3rd-yr-group-project\ACT-Web\functions\node_modules\.bin\firebase-functions'
-[info] Serving at port 8265
-
-[debug] [2024-11-19T19:19:37.591Z] Got response from /__/functions.yaml {"endpoints":{"showDB":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west2"],"labels":{},"httpsTrigger":{},"entryPoint":"showDB"},"userOps":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west2"],"labels":{},"httpsTrigger":{},"entryPoint":"userOps"},"scraper":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west2"],"labels":{},"httpsTrigger":{},"entryPoint":"scraper"},"history":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west2"],"labels":{},"httpsTrigger":{},"entryPoint":"history"},"currentUser":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west2"],"labels":{},"httpsTrigger":{},"entryPoint":"currentUser"},"priceAlert":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west2"],"labels":{},"httpsTrigger":{},"entryPoint":"priceAlert"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
+[debug] [2024-11-21T15:27:44.593Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-11-21T15:27:44.594Z] > authorizing via signed-in user (eakoledoye@gmail.com)
+[debug] [2024-11-21T15:27:44.594Z] [iam] checking project rd-year-project-1f41d for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2024-11-21T15:27:44.595Z] Checked if tokens are valid: true, expires at: 1732206274272
+[debug] [2024-11-21T15:27:44.595Z] Checked if tokens are valid: true, expires at: 1732206274272
+[debug] [2024-11-21T15:27:44.595Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d:testIamPermissions [none]
+[debug] [2024-11-21T15:27:44.595Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d:testIamPermissions x-goog-quota-user=projects/rd-year-project-1f41d
+[debug] [2024-11-21T15:27:44.595Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2024-11-21T15:27:45.283Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d:testIamPermissions 200
+[debug] [2024-11-21T15:27:45.284Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2024-11-21T15:27:45.284Z] Checked if tokens are valid: true, expires at: 1732206274272
+[debug] [2024-11-21T15:27:45.284Z] Checked if tokens are valid: true, expires at: 1732206274272
+[debug] [2024-11-21T15:27:45.284Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/rd-year-project-1f41d/serviceAccounts/rd-year-project-1f41d@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2024-11-21T15:27:45.284Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/rd-year-project-1f41d/serviceAccounts/rd-year-project-1f41d@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2024-11-21T15:27:45.948Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/rd-year-project-1f41d/serviceAccounts/rd-year-project-1f41d@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2024-11-21T15:27:45.948Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/rd-year-project-1f41d/serviceAccounts/rd-year-project-1f41d@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'rd-year-project-1f41d'...
+[info] 
+[info] i  deploying functions 
+[debug] [2024-11-21T15:27:45.950Z] Checked if tokens are valid: true, expires at: 1732206274272
+[debug] [2024-11-21T15:27:45.950Z] Checked if tokens are valid: true, expires at: 1732206274272
+[debug] [2024-11-21T15:27:45.951Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d [none]
+[debug] [2024-11-21T15:27:46.222Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d 200
+[debug] [2024-11-21T15:27:46.222Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d {"projectId":"rd-year-project-1f41d","projectNumber":"823208675027","displayName":"3rd year project","name":"projects/rd-year-project-1f41d","resources":{"hostingSite":"rd-year-project-1f41d","storageBucket":"rd-year-project-1f41d.appspot.com","locationId":"europe-west2"},"state":"ACTIVE","etag":"1_ebe102b0-cdb5-43f1-8723-6be182a85851"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[debug] [2024-11-21T15:27:46.223Z] Checked if tokens are valid: true, expires at: 1732206274272
+[debug] [2024-11-21T15:27:46.223Z] Checked if tokens are valid: true, expires at: 1732206274272
+[debug] [2024-11-21T15:27:46.224Z] Checked if tokens are valid: true, expires at: 1732206274272
+[debug] [2024-11-21T15:27:46.224Z] Checked if tokens are valid: true, expires at: 1732206274272
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[debug] [2024-11-21T15:27:46.224Z] Checked if tokens are valid: true, expires at: 1732206274272
+[debug] [2024-11-21T15:27:46.224Z] Checked if tokens are valid: true, expires at: 1732206274272
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2024-11-21T15:27:46.224Z] Checked if tokens are valid: true, expires at: 1732206274272
+[debug] [2024-11-21T15:27:46.224Z] Checked if tokens are valid: true, expires at: 1732206274272
+[debug] [2024-11-21T15:27:46.224Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/cloudfunctions.googleapis.com [none]
+[debug] [2024-11-21T15:27:46.224Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/rd-year-project-1f41d
+[debug] [2024-11-21T15:27:46.225Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/runtimeconfig.googleapis.com [none]
+[debug] [2024-11-21T15:27:46.225Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/rd-year-project-1f41d
+[debug] [2024-11-21T15:27:46.226Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/cloudbuild.googleapis.com [none]
+[debug] [2024-11-21T15:27:46.226Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/cloudbuild.googleapis.com x-goog-quota-user=projects/rd-year-project-1f41d
+[debug] [2024-11-21T15:27:46.227Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/artifactregistry.googleapis.com [none]
+[debug] [2024-11-21T15:27:46.227Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/artifactregistry.googleapis.com x-goog-quota-user=projects/rd-year-project-1f41d

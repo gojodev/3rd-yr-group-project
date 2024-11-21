@@ -1,6 +1,6 @@
-async function verifyAdmin(username, name, email, password, id) {
+async function verifyAdmin(username, name, email, password, operation, type) {
     try {
-        const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyAdmin', {
+        const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/userOps', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -10,7 +10,9 @@ async function verifyAdmin(username, name, email, password, id) {
                 name,
                 email,
                 password,
-                id
+
+                operation,
+                type
             }),
         });
 
@@ -27,7 +29,7 @@ async function verifyAdmin(username, name, email, password, id) {
 
 
 async function verifyAdmin_test() {
-    let verdict = await verifyAdmin('user1', 'first1 last1', 'user1@gmail.com', 'user1_password!', 'A_$2b$05$JY0rzd48rF1LPV/0R.4Ds./ublblLDLJxwZLWomcOs0seqH1tCl5W')
+    let verdict = await verifyAdmin('user1', 'first1 last1', 'user1@gmail.com', 'user1_password!', 'verify', 'admin')
     console.log(verdict)
 }
 

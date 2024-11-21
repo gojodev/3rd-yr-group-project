@@ -1,5 +1,3 @@
-const array = [1, 2, 3, 4, 5];
+const bcrypt = require('bcrypt')
 
-const maxValue = array.reduce((max, current) => (current > max ? current : max), array[0]);
-
-console.log(maxValue); // Output: 5
+console.log(bcrypt.compareSync('user1_password!', '$2b$10$pXeT04LdC34Yh4rBg58HPeRbfML3Xyj96I41pIHP385SLamOgZlZ6'))
