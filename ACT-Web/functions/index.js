@@ -814,7 +814,7 @@ exports.priceAlert = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
         const scrapedHistory = await use_history();
 
         function actualChange(open, currentPrice) {
-            return Math.abs(((open / currentPrice) * 100) - 100)
+            return ((open / currentPrice) * 100) - 100
         }
 
         async function getAlertData(tickers, is_Stock) {
@@ -840,10 +840,10 @@ exports.priceAlert = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
 
                 const change = Math.round(actualChange(open, currentPrice) * 100) / 100;
 
-                if (currentPrice > 0) {
+                if (change > 0) {
                     alertInfo.push(`${requestedAsset} is up by ${change}%`)
                 }
-                else if (currentPrice < 0) {
+                else if (change < 0) {
                     alertInfo.push(`${requestedAsset} is down by ${change}%`)
                 }
 
