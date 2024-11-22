@@ -1,6 +1,6 @@
 async function priceAlert(requestedAsset) {
     try {
-        const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/priceAlert', {
+        const response = await fetch('https://pricealert-ieevug7ulq-nw.a.run.app/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -811,72 +811,58 @@ async function use_history() {
 
 exports.priceAlert = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     corsHandler(req, res, async () => {
-
-        const requestedAsset = req.body.requestedAsset // is a crypto or stock
-
-        if (requestedAsset == undefined) {
-            return res.status(200).json({ error: `${requestedAsset} is required in the JSON body` })
-        }
-
-        const is_Stock = stockTickers.includes(requestedAsset)
-        const is_Crypto = cryptoTickers.includes(requestedAsset)
-
-        if (is_Stock == false && is_Crypto == false) {
-            return res.status(200).json({ error: `'${requestedAsset}' is not a Stock or Crypto` })
-        }
-
         const scrapedHistory = await use_history();
-        const assetData = scrapedHistory.data
-        var name;
-        var historyData;
-
-        if (is_Stock) {
-            historyData = assetData.stocks_history[requestedAsset].history[0];
-            name = assetData.stocks_history[requestedAsset].name
-        }
-        else {
-            historyData = assetData.cryptos_history[requestedAsset].history[0];
-            name = assetData.stocks_history[requestedAsset].name
-        }
 
         function actualChange(open, currentPrice) {
-            return ((open / currentPrice) * 100) - 100
+            return Math.abs(((open / currentPrice) * 100) - 100)
         }
 
-        if (name != undefined) {
-            const currentPrice = historyData.currentPrice
-            const open = historyData.Open
+        async function getAlertData(tickers, is_Stock) {
+            var alertInfo = [];
+            var requestedAsset;
 
-            const change = Math.round(actualChange(open, currentPrice) * 100) / 100;
-            console.log('change : ', change)
+            for (let i = 0; i < tickers.length; i++) {
+                requestedAsset = tickers[i];
 
-            const signIncrease = open * 1.05;
-            const signDecrease = open * 0.95;
+                const All_assetData = scrapedHistory.data
 
-            if (currentPrice >= signIncrease) {
-                return res.status(200).json({
-                    verdict: `${requestedAsset} is up by ${change}%`,
-                    currentPrice: currentPrice,
-                    open: open
-                })
+                var historyData;
+
+                if (is_Stock) {
+                    historyData = All_assetData.stocks_history[requestedAsset].history[0];
+                }
+                else {
+                    historyData = All_assetData.cryptos_history[requestedAsset].history[0];
+                }
+
+                const currentPrice = historyData.currentPrice
+                const open = historyData.Open
+
+                const change = Math.round(actualChange(open, currentPrice) * 100) / 100;
+
+                if (currentPrice > 0) {
+                    alertInfo.push(`${requestedAsset} is up by ${change}%`)
+                }
+                else if (currentPrice < 0) {
+                    alertInfo.push(`${requestedAsset} is down by ${change}%`)
+                }
+
             }
-            else if (currentPrice <= signDecrease) {
-                return res.status(200).json({
-                    verdict: `${requestedAsset} is down by ${change}%`,
-                    currentPrice: currentPrice,
-                    open: open
-                })
-            }
-            else {
-                return res.status(200).json({
-                    verdict: `${requestedAsset} has had no significant price change (${change}%)`,
-                    currentPrice: currentPrice,
-                    open: open
-                })
-            }
+            return alertInfo;
         }
-        else {
-            return res.status(200).json({ error: `${requestedAsset} is not a valid Stock or Crypto` })
+
+        try {
+            const stockAlerts = await getAlertData(stockTickers, true)
+            const cryptoAlerts = await getAlertData(cryptoTickers, false)
+
+            return res.status(200).json({
+                stockAlerts: stockAlerts,
+                cryptoAlerts: cryptoAlerts
+            })
+        }
+
+        catch (error) {
+            console.error('Error fetching alert data', error.message);
         }
     })
 })
