@@ -1,4 +1,4 @@
-async function verify_Manager(username, email, password, operation, type) {
+async function verify_Manager(username, email, name, password, operation, type) {
     try {
         const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/userOps', {
             method: 'POST',
@@ -8,6 +8,7 @@ async function verify_Manager(username, email, password, operation, type) {
             body: JSON.stringify({
                 username,
                 email,
+                name,
                 password,
 
                 operation,
@@ -26,9 +27,9 @@ async function verify_Manager(username, email, password, operation, type) {
     }
 }
 
-async function verify_Manager_test() {
-    let res = await verify_Manager('m_user1', 'm_user1@gmail.com', 'm_user1_password!', 'verify', 'manager')
+async function clientSide_test() {
+    let res = await verify_Manager('m_jing', 'm_jing@gmail.com', 'jing hua ye', 'm_jing_password!', 'create', 'manager')
     console.log(res)
 }
 
-verify_Manager_test()
+clientSide_test()

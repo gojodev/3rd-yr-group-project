@@ -79,7 +79,7 @@ function missingInfoWarning(arr) {
     return missingItems
 }
 
-exports.showDB = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+exports.showDB = onRequest({ 'region': 'europe-west2', timeoutSeconds: 30, memory: "1GiB"}, async (req, res) => {
     corsHandler(req, res, async () => {
         try {
             let db = await loadInfo(M_userCreds);
@@ -153,7 +153,7 @@ async function verify_Client(client_username, client_name, client_contact, opera
     }
 }
 
-async function verify_Manager(username, email, password, operation, type) {
+async function verify_Manager(username, email, name, password, operation, type) {
     try {
         const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/userOps', {
             method: 'POST',
@@ -163,6 +163,7 @@ async function verify_Manager(username, email, password, operation, type) {
             body: JSON.stringify({
                 username,
                 email,
+                name,
                 password,
 
                 operation,
@@ -181,7 +182,7 @@ async function verify_Manager(username, email, password, operation, type) {
     }
 }
 
-exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+exports.userOps = onRequest({ 'region': 'europe-west2', timeoutSeconds: 30, memory: "1GiB"}, async (req, res) => {
     corsHandler(req, res, async () => {
         const operation = req.body.operation // create, read, modify, delete, verify (CRUDV)
         const type = req.body.type // client, manager, admin
@@ -199,319 +200,322 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
         const addAdmin = operation == 'create' && type == 'admin'
         const addManager = operation == 'create' && type == 'manager'
 
+        // todo
+        const updatePortfollio = operation == 'modify' && type == 'client'
+
         try {
-            if (addClients) {
-                const client_username = req.body.client_username
-                const client_name = req.body.client_name
-                const client_contact = req.body.client_contact
-                const managers_username = req.body.managers_username;
+            // if (addClients) {
+            //     const client_username = req.body.client_username
+            //     const client_name = req.body.client_name
+            //     const client_contact = req.body.client_contact
+            //     const managers_username = req.body.managers_username;
 
 
-                let isExistingUser = await verify_Client(client_username, client_name, client_contact).verdict
+            //     let isExistingUser = await verify_Client(client_username, client_name, client_contact).verdict
 
-                if (isExistingUser) {
-                    return res.status(200).json({ verdict: `Client with username ${client_username} has been added` });
-                }
+            //     if (isExistingUser) {
+            //         return res.status(200).json({ verdict: `Client with username ${client_username} has been added` });
+            //     }
 
-                else {
-                    const max = 30000
-                    const min = 30
-                    const cash = Math.floor(Math.random() * (max - min + 1) + min);
+            //     else {
+            //         const max = 30000
+            //         const min = 30
+            //         const cash = Math.floor(Math.random() * (max - min + 1) + min);
 
-                    const newClient = {
-                        [client_username]: {
-                            name: client_name,
-                            contact: client_contact,
-                            cash: cash,
-                            managers_username: managers_username,
-                            portfolio: []
-                        }
-                    }
+            //         const newClient = {
+            //             [client_username]: {
+            //                 name: client_name,
+            //                 contact: client_contact,
+            //                 cash: cash,
+            //                 managers_username: managers_username,
+            //                 portfolio: []
+            //             }
+            //         }
 
-                    const C_db = await loadInfo(C_userCreds);
-                    Object.assign(C_db, newClient)
+            //         const C_db = await loadInfo(C_userCreds);
+            //         Object.assign(C_db, newClient)
 
-                    uploadString(C_userCreds, JSON.stringify(C_db)).then(() => {
-                        return res.status(200).json({
-                            verdict: `Client with username ${client_username} has been created`
-                        });
-                    });
+            //         uploadString(C_userCreds, JSON.stringify(C_db)).then(() => {
+            //             return res.status(200).json({
+            //                 verdict: `Client with username ${client_username} has been created`
+            //             });
+            //         });
 
-                    const M_db = await loadInfo(M_userCreds)
+            //         const M_db = await loadInfo(M_userCreds)
 
-                    M_db[find_db_username(M_db, managers_username)].clients.push(newClient)
+            //         M_db[find_db_username(M_db, managers_username)].clients.push(newClient)
 
-                    uploadString(M_userCreds, JSON.stringify(M_db)).then(() => {
-                        return res.status(200).json({
-                            verdict: `Updated ${managers_username}'s client list with ${client_username}'s details`
-                        });
-                    });
-                }
-            }
-            else if (showClientDetails) {
-                const username = req.body.username;
+            //         uploadString(M_userCreds, JSON.stringify(M_db)).then(() => {
+            //             return res.status(200).json({
+            //                 verdict: `Updated ${managers_username}'s client list with ${client_username}'s details`
+            //             });
+            //         });
+            //     }
+            // }
+            // else if (showClientDetails) {
+            //     const username = req.body.username;
 
-                const C_db = await loadInfo(C_userCreds);
-                const data = findUserProfile(C_db, username);
+            //     const C_db = await loadInfo(C_userCreds);
+            //     const data = findUserProfile(C_db, username);
 
-                if (data != undefined) {
-                    res.status(200).json({ data })
-                }
-                else {
-                    res.status(200).json({ error: `The User ${username} does not exist` })
-                }
-            }
-            else if (updateClientDetails) {
-                const client_username = req.body.client_username
-                const updateData = req.body.updateData
-                const managers_username = req.body.managers_username
+            //     if (data != undefined) {
+            //         res.status(200).json({ data })
+            //     }
+            //     else {
+            //         res.status(200).json({ error: `The User ${username} does not exist` })
+            //     }
+            // }
+            // else if (updateClientDetails) {
+            //     const client_username = req.body.client_username
+            //     const updateData = req.body.updateData
+            //     const managers_username = req.body.managers_username
 
-                const clientData = [client_username, updateData, managers_username]
-                const missingItems = missingInfoWarning(clientData);
+            //     const clientData = [client_username, updateData, managers_username]
+            //     const missingItems = missingInfoWarning(clientData);
 
-                if (missingItems != []) {
-                    return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
-                }
+            //     if (missingItems != []) {
+            //         return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
+            //     }
 
-                const C_db = await loadInfo(C_userCreds)
-                let isClient = Object.keys(C_db).includes(find_db_username(C_db, client_username))
+            //     const C_db = await loadInfo(C_userCreds)
+            //     let isClient = Object.keys(C_db).includes(find_db_username(C_db, client_username))
 
-                const updatedProfile = {
-                    [client_username]: {
-                        name: bcrypt.hashSync(updateData.name, 5),
-                        contact: bcrypt.hashSync(updateData.contact, 5),
-                        cash: bcrypt.hashSync(updateData.cash, 5),
-                        portfolio: updateData.portfolio
-                    }
-                }
+            //     const updatedProfile = {
+            //         [client_username]: {
+            //             name: bcrypt.hashSync(updateData.name, 5),
+            //             contact: bcrypt.hashSync(updateData.contact, 5),
+            //             cash: bcrypt.hashSync(updateData.cash, 5),
+            //             portfolio: updateData.portfolio
+            //         }
+            //     }
 
-                if (isClient) {
-                    C_db[find_db_username(C_db, client_username)] = updatedProfile
+            //     if (isClient) {
+            //         C_db[find_db_username(C_db, client_username)] = updatedProfile
 
-                    uploadString(C_userCreds, JSON.stringify(C_db))
+            //         uploadString(C_userCreds, JSON.stringify(C_db))
 
-                    const M_db = await loadInfo(M_userCreds);
-                    M_db[find_db_username(M_db, managers_username)].clients[find_db_username(C_db, client_username)] = updatedProfile
-                    uploadString(M_userCreds, JSON.stringify(M_db)).then(() => {
-                        return res.status(200).json({
-                            verdict: `Updated ${client_username}`,
-                            updatedProfile: updatedProfile
-                        });
-                    });
-                }
-                else {
-                    return res.status(200).json({
-                        error: `Double check what data you sent concerning ${client_username}`,
-                        updatedProfile: updatedProfile
-                    });
-                }
-            }
-            else if (removeClients) {
-                if (req.method != 'POST') {
-                    return res.status(405).json({ error: "Method not allowed" })
-                }
+            //         const M_db = await loadInfo(M_userCreds);
+            //         M_db[find_db_username(M_db, managers_username)].clients[find_db_username(C_db, client_username)] = updatedProfile
+            //         uploadString(M_userCreds, JSON.stringify(M_db)).then(() => {
+            //             return res.status(200).json({
+            //                 verdict: `Updated ${client_username}`,
+            //                 updatedProfile: updatedProfile
+            //             });
+            //         });
+            //     }
+            //     else {
+            //         return res.status(200).json({
+            //             error: `Double check what data you sent concerning ${client_username}`,
+            //             updatedProfile: updatedProfile
+            //         });
+            //     }
+            // }
+            // else if (removeClients) {
+            //     if (req.method != 'POST') {
+            //         return res.status(405).json({ error: "Method not allowed" })
+            //     }
 
-                const client_username = req.body.client_username;
-                const managers_username = req.body.managers_username;
+            //     const client_username = req.body.client_username;
+            //     const managers_username = req.body.managers_username;
 
-                const C_db = await loadInfo(C_userCreds)
+            //     const C_db = await loadInfo(C_userCreds)
 
-                delete C_db[find_db_username(C_db, client_username)]
+            //     delete C_db[find_db_username(C_db, client_username)]
 
-                uploadString(C_userCreds, JSON.stringify(C_db)).then(() => {
-                    return res.status(200).json({
-                        verdict: `removed ${client_username}`
-                    });
-                });
+            //     uploadString(C_userCreds, JSON.stringify(C_db)).then(() => {
+            //         return res.status(200).json({
+            //             verdict: `removed ${client_username}`
+            //         });
+            //     });
 
-                const M_db = await loadInfo(M_userCreds)
-                const index = M_db[find_db_username(M_db, managers_username)].clients.indexOf(find_db_username(C_db, client_username))
-                M_db[find_db_username(M_db, managers_username)].clients.splice(index, 1)
+            //     const M_db = await loadInfo(M_userCreds)
+            //     const index = M_db[find_db_username(M_db, managers_username)].clients.indexOf(find_db_username(C_db, client_username))
+            //     M_db[find_db_username(M_db, managers_username)].clients.splice(index, 1)
 
-                uploadString(M_userCreds, JSON.stringify(M_db)).then(() => {
-                    return res.status(200).json({
-                        verdict: `removed ${client_username}`
-                    });
-                });
-            }
-            else if (verifyClient) {
-                const client_username = req.body.username;
-                const client_name = req.body.client_name;
-                const client_contact = req.body.client_contact;
+            //     uploadString(M_userCreds, JSON.stringify(M_db)).then(() => {
+            //         return res.status(200).json({
+            //             verdict: `removed ${client_username}`
+            //         });
+            //     });
+            // }
+            // else if (verifyClient) {
+            //     const client_username = req.body.username;
+            //     const client_name = req.body.client_name;
+            //     const client_contact = req.body.client_contact;
 
-                const clientData = [client_username, client_name, client_contact]
-                const missingItems = missingInfoWarning(clientData);
+            //     const clientData = [client_username, client_name, client_contact]
+            //     const missingItems = missingInfoWarning(clientData);
 
-                if (missingItems != []) {
-                    return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
-                }
+            //     if (missingItems != []) {
+            //         return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
+            //     }
 
-                const db = await loadInfo(C_userCreds)
+            //     const db = await loadInfo(C_userCreds)
 
-                const userInfo = findUserProfile(db, client_username);
-                if (userInfo != undefined) {
-                    const db_name = userInfo.name;
-                    const db_contact = userInfo.contact
+            //     const userInfo = findUserProfile(db, client_username);
+            //     if (userInfo != undefined) {
+            //         const db_name = userInfo.name;
+            //         const db_contact = userInfo.contact
 
-                    let clientData = [client_name, client_contact];
-                    let missingItems = missingInfoWarning(clientData);
+            //         let clientData = [client_name, client_contact];
+            //         let missingItems = missingInfoWarning(clientData);
 
-                    if (missingItems != []) {
-                        return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
-                    }
+            //         if (missingItems != []) {
+            //             return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
+            //         }
 
-                    let correctName = bcrypt.compareSync(client_name, db_name);
-                    let correctContact = bcrypt.compareSync(client_contact, db_contact);
+            //         let correctName = bcrypt.compareSync(client_name, db_name);
+            //         let correctContact = bcrypt.compareSync(client_contact, db_contact);
 
-                    let verdict = correctName && correctContact;
+            //         let verdict = correctName && correctContact;
 
-                    return res.status(200).json({
-                        'verdict': verdict,
-                        'userInfo': userInfo
-                    });
-                }
+            //         return res.status(200).json({
+            //             'verdict': verdict,
+            //             'userInfo': userInfo
+            //         });
+            //     }
 
-                else {
-                    return res.status(200).json({
-                        'verdict': false,
-                        'reason': `${client_username} does not exist`
-                    });
-                }
-            }
-            else if (verifyManager) {
+            //     else {
+            //         return res.status(200).json({
+            //             'verdict': false,
+            //             'reason': `${client_username} does not exist`
+            //         });
+            //     }
+            // }
+            // else if (verifyManager) {
+            //     const client_username = req.body.username;
+            //     const client_email = req.body.email;
+            //     const client_password = req.body.password;
+
+            //     let clientData = [client_email, client_password];
+
+            //     let missingItems = missingInfoWarning(clientData);
+
+            //     if (missingItems != []) {
+            //         return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
+            //     }
+
+            //     const db = await loadInfo(M_userCreds)
+
+            //     const managerInfo = findUserProfile(db, client_username);
+            //     if (managerInfo != undefined) {
+            //         const db_email = managerInfo.email;
+            //         const db_password = managerInfo.password
+            //         const correctEmail = bcrypt.compareSync(client_email, db_email);
+            //         const correctPassword = bcrypt.compareSync(client_password, db_password);
+
+            //         let verdict = correctEmail && correctPassword;
+
+            //         return res.status(200).json({
+            //             'verdict': verdict,
+            //             'managerInfo': managerInfo,
+            //         });
+            //     }
+
+            //     else {
+            //         return res.status(200).json({
+            //             'verdict': false,
+            //             'reason': `${client_username} does not exist`
+            //         });
+            //     }
+            // }
+            // else if (verifyAdmin) {
+            //     const name = req.body.name;
+            //     const username = req.body.username;
+            //     const email = req.body.email;
+            //     const password = req.body.password;
+
+            //     const clientData = [name, username, email, password]
+            //     const missingItems = missingInfoWarning(clientData);
+
+            //     if (missingItems != []) {
+            //         return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
+            //     }
+
+
+            //     const db = await loadInfo(A_userCreds)
+
+
+            //     const userInfo = findUserProfile(db, username);
+            //     if (userInfo != undefined) {
+            //         const db_email = userInfo.email;
+            //         const db_password = userInfo.password;
+            //         const db_name = userInfo.name;
+
+            //         let clientData = [email, password, username];
+            //         let missingItems = missingInfoWarning(clientData);
+
+            //         if (missingItems != []) {
+            //             return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
+            //         }
+
+            //         let correctEmail = bcrypt.compareSync(email, db_email);
+            //         let correctPassword = bcrypt.compareSync(password, db_password);
+            //         let correctName = bcrypt.compareSync(name, db_name);
+            //         let verdict = correctEmail && correctPassword && correctName;
+
+            //         return res.status(200).json({
+            //             'verdict': verdict,
+            //             'correctEmail': correctEmail,
+            //             'correctPassword': correctPassword,
+            //             'correctName': correctName
+            //         });
+            //     }
+
+            //     else {
+            //         return res.status(200).json({
+            //             'verdict': false,
+            //             'reason': `${username} does not exist`
+            //         });
+            //     }
+            // }
+            // else if (addAdmin) {
+            //     if (req.method != 'POST') {
+            //         return res.status(405).json({ error: "Method not allowed" })
+            //     }
+
+            //     const client_username = req.body.username;
+            //     const client_email = req.body.email;
+            //     const client_password = req.body.password;
+
+            //     let isExistingUser = await verify_Admin(client_username, client_email, client_password)
+
+            //     if (isExistingUser) {
+            //         return res.status(200).json({ verdict: `Account with username ${client_username} already exists` });
+            //     }
+
+            //     else {
+            //         const saltRounds = 10;
+            //         const username_hash = bcrypt.hashSync(client_username, saltRounds)
+            //         const email_hash = bcrypt.hashSync(client_email, saltRounds)
+            //         const password_hash = bcrypt.hashSync(client_password, saltRounds)
+
+            //         let newUser = {
+            //             [username_hash]:
+            //             {
+            //                 email: email_hash,
+            //                 password: password_hash
+            //             }
+            //         }
+
+            //         const db = await loadInfo(A_userCreds);
+
+            //         Object.assign(db, newUser)
+
+            //         uploadString(A_userCreds, JSON.stringify(db)).then(() => {
+            //             return res.status(200).json({
+            //                 'verdict': `New user ${client_username} has been created`
+            //             });
+            //         });
+            //     }
+            // }
+            if (addManager) {
                 const client_username = req.body.username;
                 const client_email = req.body.email;
-                const client_password = req.body.password;
-
-                let clientData = [client_email, client_password];
-
-                let missingItems = missingInfoWarning(clientData);
-
-                if (missingItems != []) {
-                    return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
-                }
-
-                const db = await loadInfo(M_userCreds)
-
-                const managerInfo = findUserProfile(db, client_username);
-                if (managerInfo != undefined) {
-                    const db_email = managerInfo.email;
-                    const db_password = managerInfo.password
-                    const correctEmail = bcrypt.compareSync(client_email, db_email);
-                    const correctPassword = bcrypt.compareSync(client_password, db_password);
-
-                    let verdict = correctEmail && correctPassword;
-
-                    return res.status(200).json({
-                        'verdict': verdict,
-                        'managerInfo': managerInfo,
-                    });
-                }
-
-                else {
-                    return res.status(200).json({
-                        'verdict': false,
-                        'reason': `${client_username} does not exist`
-                    });
-                }
-            }
-            else if (verifyAdmin) {
-                const name = req.body.name;
-                const username = req.body.username;
-                const email = req.body.email;
-                const password = req.body.password;
-
-                const clientData = [name, username, email, password]
-                const missingItems = missingInfoWarning(clientData);
-
-                if (missingItems != []) {
-                    return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
-                }
-
-
-                const db = await loadInfo(A_userCreds)
-
-
-                const userInfo = findUserProfile(db, username);
-                if (userInfo != undefined) {
-                    const db_email = userInfo.email;
-                    const db_password = userInfo.password;
-                    const db_name = userInfo.name;
-
-                    let clientData = [email, password, username];
-                    let missingItems = missingInfoWarning(clientData);
-
-                    if (missingItems != []) {
-                        return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
-                    }
-
-                    let correctEmail = bcrypt.compareSync(email, db_email);
-                    let correctPassword = bcrypt.compareSync(password, db_password);
-                    let correctName = bcrypt.compareSync(name, db_name);
-                    let verdict = correctEmail && correctPassword && correctName;
-
-                    return res.status(200).json({
-                        'verdict': verdict,
-                        'correctEmail': correctEmail,
-                        'correctPassword': correctPassword,
-                        'correctName': correctName
-                    });
-                }
-
-                else {
-                    return res.status(200).json({
-                        'verdict': false,
-                        'reason': `${username} does not exist`
-                    });
-                }
-            }
-            else if (addAdmin) {
-                if (req.method != 'POST') {
-                    return res.status(405).json({ error: "Method not allowed" })
-                }
-
-                const client_username = req.body.username;
-                const client_email = req.body.email;
-                const client_password = req.body.password;
-
-                let isExistingUser = await verify_Admin(client_username, client_email, client_password)
-
-                if (isExistingUser) {
-                    return res.status(200).json({ verdict: `Account with username ${client_username} already exists` });
-                }
-
-                else {
-                    const saltRounds = 10;
-                    const username_hash = bcrypt.hashSync(client_username, saltRounds)
-                    const email_hash = bcrypt.hashSync(client_email, saltRounds)
-                    const password_hash = bcrypt.hashSync(client_password, saltRounds)
-
-                    let newUser = {
-                        [username_hash]:
-                        {
-                            email: email_hash,
-                            password: password_hash
-                        }
-                    }
-
-                    const db = await loadInfo(A_userCreds);
-
-                    Object.assign(db, newUser)
-
-                    uploadString(A_userCreds, JSON.stringify(db)).then(() => {
-                        return res.status(200).json({
-                            'verdict': `New user ${client_username} has been created`
-                        });
-                    });
-                }
-            }
-            else if (addManager) {
-                const client_username = req.body.username;
                 const client_name = req.body.name;
-                const client_email = req.body.email;
                 const client_password = req.body.password;
 
-                let isExistingUser = await verify_Manager(client_username, client_name, client_email, client_password)
+                let isExistingUser = await verify_Manager(client_username, client_email, client_name, client_password)
 
                 if (isExistingUser) {
                     return res.status(200).json({ verdict: `Account with username ${client_username} already exists` });
@@ -537,7 +541,7 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
 
                     Object.assign(db, newUser)
 
-                    uploadString(M_userCreds, JSON.stringify(db)).then(() => {
+                    uploadString(M_userCreds, JSON.stringify(db)).then(() => { // ? how long???
                         return res.status(200).json({
                             verdict: `New user ${client_username} has been created`,
                             newUser: newUser
@@ -551,6 +555,110 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
             return res.status(500).json({ error: "Interal server error (userOps)" })
         }
     })
+})
+
+exports.addManager = onRequest({ region: 'europe-west2' }, async (req, res) => {
+    corsHandler(req, res, async () => {
+        const client_username = req.body.username;
+        const client_email = req.body.email;
+        const client_name = req.body.name;
+        const client_password = req.body.password;
+
+        let isExistingUser = await verify_Manager(client_username, client_email, client_name, client_password)
+
+        if (isExistingUser) {
+            return res.status(200).json({ verdict: `Account with username ${client_username} already exists` });
+        }
+
+        else {
+            const saltRounds = 5;
+            const username_hash = bcrypt.hashSync(client_username, saltRounds)
+            const email_hash = bcrypt.hashSync(client_email, saltRounds)
+            const password_hash = bcrypt.hashSync(client_password, saltRounds)
+            const name_hash = bcrypt.hashSync(client_name, saltRounds)
+
+            let newUser = {
+                [username_hash]:
+                {
+                    name: name_hash,
+                    email: email_hash,
+                    password: password_hash
+                }
+            }
+
+            const db = await loadInfo(M_userCreds)
+            console.log(db)
+            // const db = {
+            //     "$2b$05$PSz14z6GK/7MEhMblOi3buMpdzzOEXI25OydbwoV6zqTQnaJzKLem": {
+            //         "name": "$2b$05$bOTsmereH90vfIqoojj/NuoQOMaVES5N9xCZHWjRXV6djuUfjIzrC",
+            //         "email": "$2b$05$zznYv.7BQMLXHdgJELKaI.iBbuFjt1.5YiRyhhs3zI0nlUQq0kfAu",
+            //         "password": "$2b$05$fZTmA6nLg87A4aAPimY.l.yZ1HTlZAcJSuyLYqOoRZDX3YterOIwu",
+            //         "id": "M_$2b$05$eX5qSeIsfQZtAR2RAFxYiuK/owcXv.TNPQOE5s3v7PgKqziXCSxoy",
+            //         "contact": "$2b$05$FXvMpdMABhxzrmmsOKaMnOyEUABb5R4MKk9qm3vDJnC7YT9.WBZO6",
+            //         "clients": [
+            //             {
+            //                 "$2b$05$WeIkpl2V61Vpn5edUh0l/u/164nNUPgYXyLfou92Wu2bMdARumcXK": {
+            //                     "name": "$2b$05$L8CKRQwvfL/uvfpfBLjMSeRIm8dX4nTebVqKnRq6XeRESZfTIQzKW",
+            //                     "id": "C_$2b$05$MRd8CuSOQCSsEwfdZTwEpektVY8rXTxYnnRWngUTYnCXamQinmX5O",
+            //                     "managerID": "M_$2b$05$eX5qSeIsfQZtAR2RAFxYiuK/owcXv.TNPQOE5s3v7PgKqziXCSxoy",
+            //                     "contact": "$2b$05$Iq6iXMsUg7fdGor3Qdj8kuC6ZtPrGOneG0X0OU4RuMBJsF./kzTkG",
+            //                     "cash": "500",
+            //                     "portfolio": []
+            //                 }
+            //             }
+            //         ]
+            //     },
+            //     "$2b$05$qmJ1lAeKwSFqRUsCC/u2tOIeO/EKa2YY256A4AHcCsassIF.Q7ddu": {
+            //         "name": "$2b$05$993jK.MVswCDk3k3f3I4dua2RIpSCfAInwASI4BYan4suGOaWEo2G",
+            //         "email": "$2b$05$Iy2oIDLPqbO94dlzb7t2bO8mz0Ph3pV8cXd/VvPHe/dAsE54/HJXO",
+            //         "password": "$2b$05$LFkH0aT4rgLE9PRsJ.uFOeRAUhyGoRkdjLIRmQL91v5zBFvGQ7oCC",
+            //         "id": "M_$2b$05$Yf64wGoRjk8zPFlDCefsiuHnAM3RI61J8VoDn.Y8Iro7cP2r5ZXC6",
+            //         "contact": "$2b$05$.0QbW4U8YpzB8/nRGZoqcOIwpxhdDWW1gVnPNRulmnHmf54YOMexi",
+            //         "clients": [
+            //             {
+            //                 "$2b$05$NCNwCNhptyU2/B.pjFgWp.IDs0B3pkGVTemXa0j2YyjddJgsD.FlO": {
+            //                     "name": "$2b$05$wYcqq2kDNgrGyhkCsKyeueOJVV/T7/Ba8.gsozU.D8GVVuf7euwES",
+            //                     "id": "C_$2b$05$XTqp2OH0DQq012nh7DuKxuT5FEycX7DR.8JgWjffu1xmgmr1hXHwC",
+            //                     "managerID": "M_$2b$05$Yf64wGoRjk8zPFlDCefsiuHnAM3RI61J8VoDn.Y8Iro7cP2r5ZXC6",
+            //                     "contact": "$2b$05$mew/ra0sc6yXEKbc/VVKNeMXXY254JAkmjX7pQVCgxjvLExfx6eiC",
+            //                     "cash": "26000",
+            //                     "portfolio": []
+            //                 }
+            //             }
+            //         ]
+            //     },
+            //     "m_us$2b$05$f5KL1hDqC76sFdU/jr22NOXjylRwyNc7PytdxbptrIxFnvCBg/UNier3": {
+            //         "name": "$2b$05$SX1jmp1.VcEd9aGjbKodNOLGFMu2ufZ3Y0pJKrlO6NB9AmUHj803.",
+            //         "email": "$2b$05$WHSVRjNJuNl0VNLmsG8mjeN3syPfeMy6lDMqarJMcxRkHfmkp/28O",
+            //         "password": "$2b$05$KkF8icD1NzVGh4u4E1mF9OjHtmg3.ydArhA40Ru4ooG56gGq9dkia",
+            //         "id": "M_$2b$05$sQeu1bLhsrAiiAYkl3Xsy.lnopTsyeGIF696/vPUjSrgapdsFUeOe",
+            //         "contact": "$2b$05$6GqzdRBo4cRqD4G5BcQ4aOf6XxznYI8M.Qmkhk1r5YR7W5HJibDS.",
+            //         "clients": [
+            //             {
+            //                 "$2b$05$./62Q9wCcYt3uK8BfNAeI.36VPzrv.ad8qtCC5dxUKkG9tX0RPfwS": {
+            //                     "name": "$2b$05$T87DOlL1N2bhSB1das2g8uCVj8zgW3QlQLF79e7rrBLCf1RoxQGxu",
+            //                     "id": "C_$2b$05$jz8sTjt98BQ.Nph3D78qb.S2ib60CXVeOprsS/sY4J0oytBKt0kee",
+            //                     "managerID": "M_$2b$05$sQeu1bLhsrAiiAYkl3Xsy.lnopTsyeGIF696/vPUjSrgapdsFUeOe",
+            //                     "contact": "$2b$05$Ee.OZWAlgyaqBubdkH9e0eOi0KLhll2pM9RSEAzrIftugCxjL1qu.",
+            //                     "cash": "30000",
+            //                     "portfolio": []
+            //                 }
+            //             }
+            //         ]
+            //     }
+            // }
+
+            Object.assign(db, newUser)
+
+            uploadString(M_userCreds, JSON.stringify(db)).then(() => { // ? how long???
+                return res.status(200).json({
+                    verdict: `New user ${client_username} has been created`,
+                    newUser: newUser
+                });
+            });
+        }
+    })
+
 })
 
 const stockTickers = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "NVDA", "META", "DELL", "AMD", "NVDA"];
@@ -734,7 +842,7 @@ exports.history = onRequest({ region: 'europe-west2' }, async (req, res) => {
     });
 });
 
-exports.currentUser = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+exports.currentUser = onRequest({ 'region': 'europe-west2', timeoutSeconds: 30, memory: "1GiB"}, async (req, res) => {
     corsHandler(req, res, async () => {
         try {
             if (req.method == 'POST') {
@@ -809,7 +917,7 @@ async function use_history() {
     }
 }
 
-exports.priceAlert = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+exports.priceAlert = onRequest({ 'region': 'europe-west2', timeoutSeconds: 30, memory: "1GiB"}, async (req, res) => {
     corsHandler(req, res, async () => {
         const scrapedHistory = await use_history();
 
