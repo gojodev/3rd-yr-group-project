@@ -51,35 +51,30 @@ async function loadInfo(data) {
 // }
 
 function findUserProfile(db, client_username) {
+    let res = undefined;
     for (const key in db) {
         const valid_username = bcrypt.compareSync(client_username, key)
         if (valid_username) {
-            return db[key]
+            res = db[key];
+            break
         }
     }
+    return res;
 }
 
 function find_db_username(db, client_username) {
+    let res = undefined;
     for (const key in db) {
         let valid_username = bcrypt.compareSync(client_username, key)
         if (valid_username) {
-            return key
+            res = key
+            break
         }
     }
+    return res
 }
 
-function missingInfoWarning(arr) {
-    let missingItems = [];
-    for (var item in arr) {
-        if (item == undefined) {
-            missingItems.push(item)
-        }
-    }
-
-    return missingItems
-}
-
-exports.showDB = onRequest({ 'region': 'europe-west2'}, async (req, res) => {
+exports.showDB = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     corsHandler(req, res, async () => {
         try {
             let db = await loadInfo(M_userCreds);
@@ -92,38 +87,6 @@ exports.showDB = onRequest({ 'region': 'europe-west2'}, async (req, res) => {
         }
     });
 });
-
-
-async function verify_Admin(username, name, email, password, operation, type) {
-    corsHandler(async () => {
-        try {
-            const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/uesrOps', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username,
-                    name,
-                    email,
-                    password,
-
-                    operation,
-                    type
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-
-            const userData = await response.json();
-            return userData.verdict;
-        } catch (error) {
-            console.error('Error fetching user data:', error);
-        }
-    });
-}
 
 async function verify_Client(client_username, client_name, client_contact, operation, type) {
     try {
@@ -182,7 +145,7 @@ async function verify_Manager(username, email, name, password, operation, type) 
     }
 }
 
-exports.userOps = onRequest({ 'region': 'europe-west2'}, async (req, res) => {
+exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     corsHandler(req, res, async () => {
         const operation = req.body.operation // create, read, modify, delete, verify (CRUDV)
         const type = req.body.type // client, manager, admin
@@ -210,10 +173,10 @@ exports.userOps = onRequest({ 'region': 'europe-west2'}, async (req, res) => {
                 const client_contact = req.body.client_contact
                 const managers_username = req.body.managers_username;
 
+                const C_db = await loadInfo(C_userCreds);
+                let isExistingUser = findUserProfile(C_db, client_username)
 
-                let isExistingUser = await verify_Client(client_username, client_name, client_contact, 'verify', 'client').verdict
-
-                if (isExistingUser) {
+                if (isExistingUser != undefined) {
                     return res.status(200).json({ verdict: `Client with username ${client_username} has been added` });
                 }
 
@@ -232,7 +195,6 @@ exports.userOps = onRequest({ 'region': 'europe-west2'}, async (req, res) => {
                         }
                     }
 
-                    const C_db = await loadInfo(C_userCreds);
                     Object.assign(C_db, newClient)
 
                     uploadString(C_userCreds, JSON.stringify(C_db)).then(() => {
@@ -269,13 +231,6 @@ exports.userOps = onRequest({ 'region': 'europe-west2'}, async (req, res) => {
                 const client_username = req.body.client_username
                 const updateData = req.body.updateData
                 const managers_username = req.body.managers_username
-
-                const clientData = [client_username, updateData, managers_username]
-                const missingItems = missingInfoWarning(clientData);
-
-                if (missingItems != []) {
-                    return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
-                }
 
                 const C_db = await loadInfo(C_userCreds)
                 let isClient = Object.keys(C_db).includes(find_db_username(C_db, client_username))
@@ -343,13 +298,6 @@ exports.userOps = onRequest({ 'region': 'europe-west2'}, async (req, res) => {
                 const client_name = req.body.client_name;
                 const client_contact = req.body.client_contact;
 
-                const clientData = [client_username, client_name, client_contact]
-                const missingItems = missingInfoWarning(clientData);
-
-                if (missingItems != []) {
-                    return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
-                }
-
                 const db = await loadInfo(C_userCreds)
 
                 const userInfo = findUserProfile(db, client_username);
@@ -357,12 +305,6 @@ exports.userOps = onRequest({ 'region': 'europe-west2'}, async (req, res) => {
                     const db_name = userInfo.name;
                     const db_contact = userInfo.contact
 
-                    let clientData = [client_name, client_contact];
-                    let missingItems = missingInfoWarning(clientData);
-
-                    if (missingItems != []) {
-                        return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
-                    }
 
                     let correctName = bcrypt.compareSync(client_name, db_name);
                     let correctContact = bcrypt.compareSync(client_contact, db_contact);
@@ -386,14 +328,6 @@ exports.userOps = onRequest({ 'region': 'europe-west2'}, async (req, res) => {
                 const client_username = req.body.username;
                 const client_email = req.body.email;
                 const client_password = req.body.password;
-
-                let clientData = [client_email, client_password];
-
-                let missingItems = missingInfoWarning(clientData);
-
-                if (missingItems != []) {
-                    return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
-                }
 
                 const db = await loadInfo(M_userCreds)
 
@@ -420,34 +354,18 @@ exports.userOps = onRequest({ 'region': 'europe-west2'}, async (req, res) => {
                 }
             }
             else if (verifyAdmin) {
-                const name = req.body.name;
                 const username = req.body.username;
                 const email = req.body.email;
+                const name = req.body.name;
                 const password = req.body.password;
 
-                const clientData = [name, username, email, password]
-                const missingItems = missingInfoWarning(clientData);
-
-                if (missingItems != []) {
-                    return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
-                }
-
-
                 const db = await loadInfo(A_userCreds)
-
 
                 const userInfo = findUserProfile(db, username);
                 if (userInfo != undefined) {
                     const db_email = userInfo.email;
                     const db_password = userInfo.password;
                     const db_name = userInfo.name;
-
-                    let clientData = [email, password, username];
-                    let missingItems = missingInfoWarning(clientData);
-
-                    if (missingItems != []) {
-                        return res.status(200).json({ error: `${missingItems} is required in the JSON body` })
-                    }
 
                     let correctEmail = bcrypt.compareSync(email, db_email);
                     let correctPassword = bcrypt.compareSync(password, db_password);
@@ -474,37 +392,41 @@ exports.userOps = onRequest({ 'region': 'europe-west2'}, async (req, res) => {
                     return res.status(405).json({ error: "Method not allowed" })
                 }
 
-                const client_username = req.body.username;
-                const client_email = req.body.email;
-                const client_password = req.body.password;
+                const username = req.body.username;
+                const email = req.body.email;
+                const name = req.body.name;
+                const password = req.body.password;
 
-                let isExistingUser = await verify_Admin(client_username, client_email, client_password, 'verify', 'admin')
+                console.log(username, email, name, password)
 
-                if (isExistingUser) {
-                    return res.status(200).json({ verdict: `Account with username ${client_username} already exists` });
+                const A_db = await loadInfo(A_userCreds);
+                let isExistingUser = findUserProfile(A_db, username)
+
+                if (isExistingUser != undefined) {
+                    return res.status(200).json({ verdict: `Account with username ${username} already exists` });
                 }
 
                 else {
                     const saltRounds = 10;
-                    const username_hash = bcrypt.hashSync(client_username, saltRounds)
-                    const email_hash = bcrypt.hashSync(client_email, saltRounds)
-                    const password_hash = bcrypt.hashSync(client_password, saltRounds)
+                    const username_hash = bcrypt.hashSync(username, saltRounds)
+                    const name_hash = bcrypt.hashSync(name, saltRounds)
+                    const email_hash = bcrypt.hashSync(email, saltRounds)
+                    const password_hash = bcrypt.hashSync(password, saltRounds)
 
                     let newUser = {
                         [username_hash]:
                         {
                             email: email_hash,
+                            name: name_hash,
                             password: password_hash
                         }
                     }
 
-                    const db = await loadInfo(A_userCreds);
+                    Object.assign(A_db, newUser)
 
-                    Object.assign(db, newUser)
-
-                    uploadString(A_userCreds, JSON.stringify(db)).then(() => {
+                    uploadString(A_userCreds, JSON.stringify(A_db)).then(() => {
                         return res.status(200).json({
-                            'verdict': `New user ${client_username} has been created`
+                            'verdict': `New user ${username} has been created`
                         });
                     });
                 }
@@ -515,9 +437,10 @@ exports.userOps = onRequest({ 'region': 'europe-west2'}, async (req, res) => {
                 const client_name = req.body.name;
                 const client_password = req.body.password;
 
-                let isExistingUser = await verify_Manager(client_username, client_email, client_name, client_password, 'verify', 'manager')
+                const M_db = await loadInfo(M_userCreds)
+                let isExistingUser = findUserProfile(M_db, client_username)
 
-                if (isExistingUser) {
+                if (isExistingUser != undefined) {
                     return res.status(200).json({ verdict: `Account with username ${client_username} already exists` });
                 }
 
@@ -537,11 +460,9 @@ exports.userOps = onRequest({ 'region': 'europe-west2'}, async (req, res) => {
                         }
                     }
 
-                    const db = await loadInfo(M_userCreds)
+                    Object.assign(M_db, newUser)
 
-                    Object.assign(db, newUser)
-
-                    uploadString(M_userCreds, JSON.stringify(db)).then(() => { // ? how long???
+                    uploadString(M_userCreds, JSON.stringify(M_db)).then(() => { // ? how long???
                         return res.status(200).json({
                             verdict: `New user ${client_username} has been created`,
                             newUser: newUser
@@ -738,7 +659,7 @@ exports.history = onRequest({ region: 'europe-west2' }, async (req, res) => {
     });
 });
 
-exports.currentUser = onRequest({ 'region': 'europe-west2'}, async (req, res) => {
+exports.currentUser = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     corsHandler(req, res, async () => {
         try {
             if (req.method == 'POST') {
@@ -813,7 +734,7 @@ async function use_history() {
     }
 }
 
-exports.priceAlert = onRequest({ 'region': 'europe-west2'}, async (req, res) => {
+exports.priceAlert = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     corsHandler(req, res, async () => {
         const scrapedHistory = await use_history();
 
