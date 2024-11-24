@@ -1,4 +1,4 @@
-async function verify_Manager(username, email, name, password, operation, type) {
+async function backendTest(username, email, name, password, operation, type) {
     try {
         const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/userOps', {
             method: 'POST',
@@ -28,7 +28,7 @@ async function verify_Manager(username, email, name, password, operation, type) 
 }
 
 async function clientSide_test() {
-    let res = await verify_Manager('m_jing', 'm_jing@gmail.com', 'jing hua ye', 'm_jing_password!', 'create', 'manager')
+    let res = await backendTest('m_jing', 'm_jing@gmail.com', 'jing hua ye', 'm_jing_password!', 'create', 'manager')
     console.log(res)
 }
 
