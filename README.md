@@ -1,8 +1,6 @@
 A trading bot to invest in tech stocks and crpto for companies
 
 
-
-
 ```
 3rd-yr-group-project
 ├─ ACT-Web
@@ -29,6 +27,7 @@ A trading bot to invest in tech stocks and crpto for companies
 │  │  └─ SDH3-CS3-SD3-Project-2024.pdf
 │  ├─ esbuild.config.js
 │  ├─ eslint.config.mjs
+│  ├─ firebase-debug.log
 │  ├─ firebase.json
 │  ├─ functions
 │  │  ├─ index.js

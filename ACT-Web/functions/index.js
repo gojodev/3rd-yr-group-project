@@ -78,7 +78,10 @@ exports.showDB = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     corsHandler(req, res, async () => {
         try {
             let db = await loadInfo(M_userCreds);
-            res.json(db);
+            res.json({
+                type: "managers",
+                db
+            });
 
         }
         catch (error) {
@@ -88,62 +91,6 @@ exports.showDB = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     });
 });
 
-async function verify_Client(client_username, client_name, client_contact, operation, type) {
-    try {
-        const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/userOps', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                client_username,
-                client_name,
-                client_contact,
-
-                operation,
-                type
-            }),
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const userData = await response.json();
-        return userData;
-    } catch (error) {
-        console.error('Error fetching user data:', error);
-    }
-}
-
-async function verify_Manager(username, email, name, password, operation, type) {
-    try {
-        const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/userOps', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                username,
-                email,
-                name,
-                password,
-
-                operation,
-                type
-            }),
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const userData = await response.json();
-        return userData.verdict;
-    } catch (error) {
-        console.error('Error fetching user data:', error);
-    }
-}
 
 exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     corsHandler(req, res, async () => {
@@ -480,56 +427,6 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
 
 const stockTickers = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "NVDA", "META", "DELL", "AMD", "NVDA"];
 const cryptoTickers = ["BTC-USD", "ETH-USD", "DOGE-USD"];
-
-exports.scraper = onRequest({ region: 'europe-west2' }, async (req, res) => {
-    corsHandler(req, res, async () => {
-        try {
-            async function fetchData(tickers, isCrypto = false) {
-                const data = {};
-
-                for (const ticker of tickers) {
-                    try {
-                        const info = await yahooFinance.quoteSummary(ticker, { modules: ['price', 'summaryDetail', 'recommendationTrend', 'earningsTrend'] });
-                        data[ticker] = {
-                            name: info.price.shortName || "N/A",
-                            currentPrice: info.price.regularMarketPrice || "N/A",
-                            marketCap: info.price.marketCap || "N/A",
-                            volume: info.price.regularMarketVolume || "N/A",
-                        };
-
-                        if (!isCrypto) {
-                            data[ticker]["recommendations"] = info.recommendationTrend ? JSON.stringify(info.recommendationTrend.trend) : "N/A";
-                        }
-                    } catch (error) {
-                        console.error(`Error fetching data for ${ticker}:`, error);
-                        data[ticker] = { error: "Failed to retrieve data" };
-                    }
-                }
-                return data;
-            }
-
-            const stocksData = await fetchData(stockTickers, false);
-            const cryptosData = await fetchData(cryptoTickers, true);
-
-            const allData = {
-                stocks: stocksData,
-                cryptos: cryptosData
-            };
-
-            const financialData = ref(storage, 'financialData.json'); // scraped data from market
-            uploadString(financialData, JSON.stringify(allData)).then(() => {
-                return res.status(200).json({
-                    verdict: "Financial data saved to Firebase successfully"
-                });
-            });
-
-            return res.status(200).json({ message: 'Financial data saved to Firebase successfully', data: allData });
-        } catch (error) {
-            console.error("Error saving financial data:", error);
-            return res.status(500).json({ error: "Failed to save financial data" });
-        }
-    });
-});
 
 exports.history = onRequest({ region: 'europe-west2' }, async (req, res) => {
     corsHandler(req, res, async () => {
