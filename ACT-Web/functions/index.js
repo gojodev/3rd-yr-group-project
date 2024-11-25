@@ -77,7 +77,7 @@ function find_db_username(db, client_username) {
 exports.showDB = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     corsHandler(req, res, async () => {
         try {
-            let db = await loadInfo(M_userCreds);
+            let db = await loadInfo(A_userCreds);
             res.json(db);
 
         }
@@ -151,20 +151,20 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
         const type = req.body.type // client, manager, admin
 
         // ? all possible opeartions
-        const addClients = operation == 'create' && type == 'client'
         const showClientDetails = operation == 'read' && type == 'client'
         const updateClientDetails = operation == 'modify' && type == 'client'
-        const removeClients = operation == 'delete' && type == 'client'
+        
         const verifyClient = operation == 'verify' && type == 'client'
-
         const verifyManager = operation == 'verify' && type == 'manager'
         const verifyAdmin = operation == 'verify' && type == 'admin'
-
+        
+        const addClients = operation == 'create' && type == 'client'
         const addAdmin = operation == 'create' && type == 'admin'
         const addManager = operation == 'create' && type == 'manager'
-
-        // todo
-        // const updatePortfollio = operation == 'modify' && type == 'client'
+        
+        const deleteClients = operation == 'delete' && type == 'client'
+        const deleteManager = operation == 'delete' && type == 'manager'
+        const deleteAdmin = operation == 'delete' && type == 'admin'
 
         try {
             if (addClients) {
@@ -265,7 +265,7 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
                     });
                 }
             }
-            else if (removeClients) {
+            else if (deleteClients) {
                 if (req.method != 'POST') {
                     return res.status(405).json({ error: "Method not allowed" })
                 }
@@ -469,6 +469,40 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
                         });
                     });
                 }
+            }
+            else if (deleteManager) {
+                if (req.method != 'POST') {
+                    return res.status(405).json({ error: "Method not allowed" })
+                }
+
+                const username = req.body.username;
+
+                const M_db = await loadInfo(M_userCreds)
+
+                delete M_db[find_db_username(M_db, username)]
+
+                uploadString(M_userCreds, JSON.stringify(M_db)).then(() => {
+                    return res.status(200).json({
+                        verdict: `removed ${username}`
+                    });
+                });
+            }
+            else if (deleteAdmin) {
+                if (req.method != 'POST') {
+                    return res.status(405).json({ error: "Method not allowed" })
+                }
+
+                const username = req.body.username;
+
+                const A_db = await loadInfo(A_userCreds)
+
+                delete A_db[find_db_username(A_db, username)]
+
+                uploadString(A_userCreds, JSON.stringify(A_db)).then(() => {
+                    return res.status(200).json({
+                        verdict: `removed ${username}`
+                    });
+                });
             }
         }
         catch (error) {
