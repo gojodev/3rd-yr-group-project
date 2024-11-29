@@ -1,6 +1,6 @@
 async function backendTest(requestedPeriod) {
     try {
-        const response = await fetch('https://history-ieevug7ulq-nw.a.run.app', {
+        const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/history', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -22,7 +22,7 @@ async function backendTest(requestedPeriod) {
 }
 
 async function clientSideTest() {
-    let verdict = await backendTest('1W')
+    const verdict = await backendTest('1D')
     console.log(verdict)
 }
 

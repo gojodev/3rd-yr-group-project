@@ -19,6 +19,7 @@ initializeApp(firebaseConfig);
 const { getStorage, ref, getDownloadURL, uploadString } = require("firebase/storage");
 
 const cors = require('cors');
+const { load } = require("firebase-tools/lib/commands");
 const corsHandler = cors({
     origin: true,
     methods: ['DELETE', 'PUT', 'GET', 'POST', 'OPTIONS'],
@@ -40,15 +41,11 @@ const A_userCreds = ref(storage, 'A_userCreds.json'); // admin
 const M_userCreds = ref(storage, 'M_userCreds.json'); // manager
 const C_userCreds = ref(storage, 'C_userCreds.json'); // client
 
-const currentUser = ref(storage, 'currentUser.json'); // current user data from a login or sign up
+const currentUser = ref(storage, 'currentUser.json'); // current user data from a login or sign up for all user types
 
 async function loadInfo(data) {
     return await Promise.resolve(getRef_json(data));
 }
-
-// function genId(type, name, email) {
-//     return `${type}_${bcrypt.hashSync(`${type}_${name}_${email}`, 5)}`
-// }
 
 function findUserProfile(db, client_username) {
     let res = undefined;
@@ -77,7 +74,7 @@ function find_db_username(db, client_username) {
 exports.showDB = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     corsHandler(req, res, async () => {
         try {
-            let db = await loadInfo(A_userCreds);
+            let db = await loadInfo(M_userCreds);
             res.json({
                 type: "managers",
                 db
@@ -91,6 +88,154 @@ exports.showDB = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     });
 });
 
+exports.addAsset = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+    corsHandler(req, res, async () => {
+        try {
+            const managers_username = req.body.managers_username
+            const clients_username = req.body.clients_username
+            const assetName = req.body.assetName
+            const assetSymbol = req.body.assetSymbol
+            const currentPrice = req.body.currentPrice
+            const amountBought = req.body.amountBought
+
+            const admins_username = req.body.admins_username
+
+            const data = {
+                assetName,
+                currentPrice,
+                amountBought
+            }
+
+            if (admins_username != null) {
+                const A_db = await loadInfo(A_userCreds)
+                const db_admin_username = find_db_username(A_db, admins_username)
+                A_db[db_admin_username].portfolio[assetSymbol] = data;
+
+                uploadString(A_userCreds, JSON.stringify(A_db), 'raw', { contentType: 'application/json' }).then(() => {
+                    return res.status(200).json({
+                        verdict: `Admin ${admins_username} added the asset ${assetSymbol} (${assetName}) to their portfolio`,
+                        data
+                    });
+                });
+
+            }
+            else if (managers_username == null && clients_username == null) {
+                const C_db = await loadInfo(C_userCreds)
+                const M_db = await loadInfo(M_userCreds)
+
+                const db_managers_username = find_db_username(M_db, managers_username)
+                const db_clients_username = find_db_username(C_db, clients_username)
+
+                M_db[db_managers_username].clients[db_clients_username].portfolio[assetSymbol] = data
+
+                uploadString(M_userCreds, JSON.stringify(M_db), 'raw', { contentType: 'application/json' }).then(() => {
+                    return res.status(200).json({
+                        verdict: `${managers_username} added ${assetSymbol} (${assetName}) to ${clients_username}'s portfolio`,
+                        data
+                    });
+                });
+
+                C_db[db_clients_username].portfolio[assetName] = data
+
+                uploadString(C_userCreds, JSON.stringify(C_db), 'raw', { contentType: 'application/json' })
+            }
+
+            else {
+                return res.status(200).json({
+                    verdict: `You need to have null values to use add assets for managers with their clients OR admins NOT both. Please look at your inputs again`,
+                    data
+                });
+            }
+        }
+
+        catch (error) {
+            console.log("Something went wrong (updatePortfolio): ", error)
+            return res.status(500).json({ error: "Interal server error (updatePortfolio)" })
+        }
+    })
+})
+
+function isOwnedAsset(data, search) {
+    const symbols = Object.keys(data)
+    for (let i = 0; i < symbols.length; i++) {
+        if (search == symbols[i]) {
+            return true
+        }
+    }
+    return false
+}
+
+exports.removeAsset = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+    corsHandler(req, res, async () => {
+        try {
+            const managers_username = req.body.managers_username
+            const clients_username = req.body.clients_username
+            const assetSymbol = req.body.assetSymbol
+
+            const admins_username = req.body.admins_username
+
+            if (admins_username != null) {
+                const A_db = await loadInfo(A_userCreds)
+
+                const db_admin_username = find_db_username(A_db, admins_username)
+
+                const portfolio = A_db[db_admin_username].portfolio
+                const isOwned = isOwnedAsset(portfolio, assetSymbol)
+
+                if (isOwned) {
+                    delete A_db[find_db_username(A_db, admins_username)].portfolio[assetSymbol]
+
+                    uploadString(A_userCreds, JSON.stringify(A_db), 'raw', { contentType: 'application/json' }).then(() => {
+                        return res.status(200).json({
+                            verdict: `${admins_username} removed ${assetSymbol} from their portfolio`,
+                        });
+                    });
+                }
+                else {
+                    return res.status(200).json({ error: `The Asset's symbol: ${assetSymbol} is not in the portfolio` })
+                }
+            }
+            else if (managers_username == null && clients_username == null) {
+                const M_db = await loadInfo(M_userCreds)
+                const C_db = await loadInfo(C_userCreds)
+
+                const portfolio = M_db[find_db_username(M_db, managers_username)].clients[find_db_username(C_db, clients_username)].portfolio
+                const isOwned = isOwnedAsset(portfolio, assetSymbol)
+
+                if (isOwned) {
+                    const db_managers_username = find_db_username(M_db, managers_username)
+                    const db_clients_username = find_db_username(C_db, clients_username)
+
+                    delete M_db[db_managers_username].clients[db_clients_username].portfolio[assetSymbol]
+                    delete C_db[db_clients_username].portfolio[assetSymbol]
+
+                    uploadString(M_userCreds, JSON.stringify(M_db), 'raw', { contentType: 'application/json' }).then(() => {
+                        return res.status(200).json({
+                            verdict: `${managers_username} removed ${assetSymbol} from ${clients_username}'s portfolio`,
+                        });
+                    });
+
+                    uploadString(C_userCreds, JSON.stringify(C_db), 'raw', { contentType: 'application/json' })
+                }
+                else {
+                    return res.status(200).json({ error: `The Asset's symbol: ${assetSymbol} is not in the portfolio` })
+                }
+
+            }
+            else {
+                return res.status(200).json({
+                    verdict: `You need to have null values to use add assets for managers with their clients OR admins NOT both. Please look at your inputs again`
+                });
+            }
+
+        }
+        catch (error) {
+            console.log("Something went wrong (updatePortfolio): ", error)
+            return res.status(500).json({ error: "Interal server error (updatePortfolio)" })
+        }
+    })
+})
+
 
 exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     corsHandler(req, res, async () => {
@@ -100,15 +245,15 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
         // ? all possible opeartions
         const showClientDetails = operation == 'read' && type == 'client'
         const updateClientDetails = operation == 'modify' && type == 'client'
-        
+
         const verifyClient = operation == 'verify' && type == 'client'
         const verifyManager = operation == 'verify' && type == 'manager'
         const verifyAdmin = operation == 'verify' && type == 'admin'
-        
+
         const addClients = operation == 'create' && type == 'client'
         const addAdmin = operation == 'create' && type == 'admin'
         const addManager = operation == 'create' && type == 'manager'
-        
+
         const deleteClients = operation == 'delete' && type == 'client'
         const deleteManager = operation == 'delete' && type == 'manager'
         const deleteAdmin = operation == 'delete' && type == 'admin'
@@ -138,13 +283,13 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
                             contact: client_contact,
                             cash: cash,
                             managers_username: managers_username,
-                            portfolio: []
+                            portfolio: {}
                         }
                     }
 
                     Object.assign(C_db, newClient)
 
-                    uploadString(C_userCreds, JSON.stringify(C_db)).then(() => {
+                    uploadString(C_userCreds, JSON.stringify(C_db), 'raw', { contentType: 'application/json' }).then(() => {
                         return res.status(200).json({
                             verdict: `Client with username ${client_username} has been created`
                         });
@@ -154,7 +299,7 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
 
                     M_db[find_db_username(M_db, managers_username)].clients.push(newClient)
 
-                    uploadString(M_userCreds, JSON.stringify(M_db)).then(() => {
+                    uploadString(M_userCreds, JSON.stringify(M_db), 'raw', { contentType: 'application/json' }).then(() => {
                         return res.status(200).json({
                             verdict: `Updated ${managers_username}'s client list with ${client_username}'s details`
                         });
@@ -194,11 +339,11 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
                 if (isClient) {
                     C_db[find_db_username(C_db, client_username)] = updatedProfile
 
-                    uploadString(C_userCreds, JSON.stringify(C_db))
+                    uploadString(C_userCreds, JSON.stringify(C_db), 'raw', { contentType: 'application/json' })
 
                     const M_db = await loadInfo(M_userCreds);
                     M_db[find_db_username(M_db, managers_username)].clients[find_db_username(C_db, client_username)] = updatedProfile
-                    uploadString(M_userCreds, JSON.stringify(M_db)).then(() => {
+                    uploadString(M_userCreds, JSON.stringify(M_db), 'raw', { contentType: 'application/json' }).then(() => {
                         return res.status(200).json({
                             verdict: `Updated ${client_username}`,
                             updatedProfile: updatedProfile
@@ -224,7 +369,7 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
 
                 delete C_db[find_db_username(C_db, client_username)]
 
-                uploadString(C_userCreds, JSON.stringify(C_db)).then(() => {
+                uploadString(C_userCreds, JSON.stringify(C_db), 'raw', { contentType: 'application/json' }).then(() => {
                     return res.status(200).json({
                         verdict: `removed ${client_username}`
                     });
@@ -234,97 +379,155 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
                 const index = M_db[find_db_username(M_db, managers_username)].clients.indexOf(find_db_username(C_db, client_username))
                 M_db[find_db_username(M_db, managers_username)].clients.splice(index, 1)
 
-                uploadString(M_userCreds, JSON.stringify(M_db)).then(() => {
+                uploadString(M_userCreds, JSON.stringify(M_db), 'raw', { contentType: 'application/json' }).then(() => {
                     return res.status(200).json({
                         verdict: `removed ${client_username}`
                     });
                 });
             }
             else if (verifyClient) {
-                const client_username = req.body.username;
-                const client_name = req.body.client_name;
-                const client_contact = req.body.client_contact;
+                const username = req.body.username
+                const name = req.body.name
+                const contact = req.body.contact
 
-                const db = await loadInfo(C_userCreds)
-
-                const userInfo = findUserProfile(db, client_username);
+                const c_db = await loadInfo(C_userCreds)
+                const userInfo = findUserProfile(c_db, username);
                 if (userInfo != undefined) {
-                    const db_name = userInfo.name;
+                    const db_name = userInfo.name
                     const db_contact = userInfo.contact
 
+                    let correctName = bcrypt.compareSync(name, db_name);
+                    let correctContact = bcrypt.compareSync(contact, db_contact)
 
-                    let correctName = bcrypt.compareSync(client_name, db_name);
-                    let correctContact = bcrypt.compareSync(client_contact, db_contact);
+                    const verdict = correctName && correctContact
 
-                    let verdict = correctName && correctContact;
+                    if (verdict) {
+                        const profile = findUserProfile(c_db, username)
+                        const db_current = await loadInfo(currentUser)
 
-                    return res.status(200).json({
-                        'verdict': verdict,
-                        'userInfo': userInfo
-                    });
+
+                        const data = {
+                            username: username,
+                            name: profile.name,
+                        }
+
+                        db_current['client'] = data
+
+
+                        uploadString(currentUser, JSON.stringify(db_current), 'raw', { contentType: 'application/json' })
+
+                        return res.status(200).json({
+                            'verdict': verdict
+                        });
+                    }
+                    else {
+                        return res.status(200).json({
+                            'verdict': false,
+                            reason: "incorrect username or password"
+                        });
+                    }
                 }
 
                 else {
                     return res.status(200).json({
                         'verdict': false,
-                        'reason': `${client_username} does not exist`
+                        'reason': `${username} does not exist`
                     });
                 }
             }
             else if (verifyManager) {
-                const client_username = req.body.username;
-                const client_email = req.body.email;
-                const client_password = req.body.password;
+                const username = req.body.username;
+                const email = req.body.email;
+                const password = req.body.password;
 
-                const db = await loadInfo(M_userCreds)
+                const M_db = await loadInfo(M_userCreds)
 
-                const managerInfo = findUserProfile(db, client_username);
+                const managerInfo = findUserProfile(M_db, username);
                 if (managerInfo != undefined) {
                     const db_email = managerInfo.email;
                     const db_password = managerInfo.password
-                    const correctEmail = bcrypt.compareSync(client_email, db_email);
-                    const correctPassword = bcrypt.compareSync(client_password, db_password);
+                    const correctEmail = email == db_email
+                    const correctPassword = bcrypt.compareSync(password, db_password);
 
-                    let verdict = correctEmail && correctPassword;
+                    const verdict = correctEmail && correctPassword;
 
-                    return res.status(200).json({
-                        'verdict': verdict,
-                        'managerInfo': managerInfo,
-                    });
+                    if (verdict) {
+                        const db_current = await loadInfo(currentUser)
+
+                        const profile = findUserProfile(M_db, username)
+
+                        const data = {
+                            username: username,
+                            name: profile.name,
+                            clients: profile.clients
+                        }
+
+                        db_current['manager'] = data
+
+                        uploadString(currentUser, JSON.stringify(db_current), 'raw', { contentType: 'application/json' })
+
+                        return res.status(200).json({
+                            'verdict': verdict
+                        });
+                    }
+                    else {
+                        return res.status(200).json({
+                            'verdict': false,
+                            reason: "incorrect username or password"
+                        });
+                    }
                 }
 
                 else {
                     return res.status(200).json({
-                        'verdict': false,
-                        'reason': `${client_username} does not exist`
+                        verdict: false,
+                        reason: `${username} does not exist`
                     });
                 }
             }
             else if (verifyAdmin) {
-                const username = req.body.username;
-                const email = req.body.email;
-                const name = req.body.name;
-                const password = req.body.password;
+                const username = req.body.username
+                const email = req.body.email
+                const name = req.body.name
+                const password = req.body.password
 
-                const db = await loadInfo(A_userCreds)
-
-                const userInfo = findUserProfile(db, username);
+                const a_db = await loadInfo(A_userCreds)
+                const userInfo = findUserProfile(a_db, username)
                 if (userInfo != undefined) {
-                    const db_email = userInfo.email;
-                    const db_password = userInfo.password;
-                    const db_name = userInfo.name;
+                    const db_email = userInfo.email
+                    const db_password = userInfo.password
+                    const db_name = userInfo.name
 
                     let correctEmail = bcrypt.compareSync(email, db_email);
                     let correctPassword = bcrypt.compareSync(password, db_password);
                     let correctName = bcrypt.compareSync(name, db_name);
-                    let verdict = correctEmail && correctPassword && correctName;
 
-                    return res.status(200).json({
-                        'verdict': verdict,
-                        'correctEmail': correctEmail,
-                        'correctPassword': correctPassword,
-                        'correctName': correctName
-                    });
+                    const verdict = correctEmail && correctPassword && correctName;
+
+                    if (verdict) {
+                        const profile = findUserProfile(a_db, username)
+
+                        const db_current = await loadInfo(currentUser)
+
+                        const data = {
+                            managers_username: username,
+                            name: profile.name,
+                        }
+
+                        db_current['admin'] = data
+
+                        uploadString(currentUser, JSON.stringify(db_current), 'raw', { contentType: 'application/json' })
+
+                        return res.status(200).json({
+                            'verdict': verdict
+                        });
+                    }
+                    else {
+                        return res.status(200).json({
+                            'verdict': false,
+                            reason: "incorrect username or password"
+                        });
+                    }
                 }
 
                 else {
@@ -343,8 +546,6 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
                 const email = req.body.email;
                 const name = req.body.name;
                 const password = req.body.password;
-
-                console.log(username, email, name, password)
 
                 const A_db = await loadInfo(A_userCreds);
                 let isExistingUser = findUserProfile(A_db, username)
@@ -371,7 +572,7 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
 
                     Object.assign(A_db, newUser)
 
-                    uploadString(A_userCreds, JSON.stringify(A_db)).then(() => {
+                    uploadString(A_userCreds, JSON.stringify(A_db), 'raw', { contentType: 'application/json' }).then(() => {
                         return res.status(200).json({
                             'verdict': `New user ${username} has been created`
                         });
@@ -379,39 +580,39 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
                 }
             }
             else if (addManager) {
-                const client_username = req.body.username;
-                const client_email = req.body.email;
-                const client_name = req.body.name;
-                const client_password = req.body.password;
+                const username = req.body.username;
+                const email = req.body.email;
+                const name = req.body.name;
+                const password = req.body.password;
 
                 const M_db = await loadInfo(M_userCreds)
-                let isExistingUser = findUserProfile(M_db, client_username)
+                let isExistingUser = findUserProfile(M_db, username)
 
                 if (isExistingUser != undefined) {
-                    return res.status(200).json({ verdict: `Account with username ${client_username} already exists` });
+                    return res.status(200).json({ verdict: `Account with username ${username} already exists` });
                 }
 
                 else {
                     const saltRounds = 5;
-                    const username_hash = bcrypt.hashSync(client_username, saltRounds)
-                    const email_hash = bcrypt.hashSync(client_email, saltRounds)
-                    const password_hash = bcrypt.hashSync(client_password, saltRounds)
-                    const name_hash = bcrypt.hashSync(client_name, saltRounds)
+                    const username_hash = bcrypt.hashSync(username, saltRounds)
+                    const password_hash = bcrypt.hashSync(password, saltRounds)
 
                     let newUser = {
                         [username_hash]:
                         {
-                            name: name_hash,
-                            email: email_hash,
-                            password: password_hash
+                            name,
+                            email,
+                            password: password_hash,
+                            contact: "",
+                            clients: {}
                         }
                     }
 
                     Object.assign(M_db, newUser)
 
-                    uploadString(M_userCreds, JSON.stringify(M_db)).then(() => { // ? how long???
+                    uploadString(M_userCreds, JSON.stringify(M_db), 'raw', { contentType: 'application/json' }).then(() => { // ? how long???
                         return res.status(200).json({
-                            verdict: `New user ${client_username} has been created`,
+                            verdict: `New user ${username} has been created`,
                             newUser: newUser
                         });
                     });
@@ -428,7 +629,7 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
 
                 delete M_db[find_db_username(M_db, username)]
 
-                uploadString(M_userCreds, JSON.stringify(M_db)).then(() => {
+                uploadString(M_userCreds, JSON.stringify(M_db), 'raw', { contentType: 'application/json' }).then(() => {
                     return res.status(200).json({
                         verdict: `removed ${username}`
                     });
@@ -445,7 +646,7 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
 
                 delete A_db[find_db_username(A_db, username)]
 
-                uploadString(A_userCreds, JSON.stringify(A_db)).then(() => {
+                uploadString(A_userCreds, JSON.stringify(A_db), 'raw', { contentType: 'application/json' }).then(() => {
                     return res.status(200).json({
                         verdict: `removed ${username}`
                     });
@@ -538,7 +739,6 @@ exports.history = onRequest({ region: 'europe-west2' }, async (req, res) => {
                         Volume: entry.volume
                     }));
 
-                    // todo loop through this once to save time and simplify the conditions
                     const highest = raw_data.quotes.reduce((max, entry) => (entry.high !== undefined && entry.high > max.high ? entry : max), raw_data.quotes[0]);
                     const lowest = raw_data.quotes.reduce((min, entry) => (entry.low !== null && entry.low !== undefined && (min.low === null || entry.low < min.low) ? entry : min), { low: null });
 
@@ -576,7 +776,7 @@ exports.history = onRequest({ region: 'europe-west2' }, async (req, res) => {
             const periodData = `${requestedPeriod}.json`
             const historicalData = ref(storage, periodData)
 
-            uploadString(historicalData, JSON.stringify(allData)).then(() => {
+            uploadString(historicalData, JSON.stringify(allData), 'raw', { contentType: 'application/json' }).then(() => {
                 return res.status(200).json({
                     message: `${periodData} was saved to Firebase successfully`,
                     data: allData
@@ -589,61 +789,6 @@ exports.history = onRequest({ region: 'europe-west2' }, async (req, res) => {
         }
     });
 });
-
-exports.currentUser = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
-    corsHandler(req, res, async () => {
-        try {
-            if (req.method == 'POST') {
-                const data = req.body.data;
-
-                if (!data) {
-                    return res.status(200).json({ error: `Data is required in the JSON body` })
-                }
-
-                uploadString(currentUser, JSON.stringify(data)).then(() => {
-                    return res.status(200).json({
-                        verdict: 'Current User data has been uploaded',
-                        data: data
-                    });
-                });
-            }
-
-            else if (req.method == 'GET') {
-                const db = await loadInfo(currentUser)
-                return res.status(200).json({ db })
-            }
-
-            else {
-                return res.status(200).json({ error: "Method must be a GET or POST request" })
-            }
-        }
-
-        catch (error) {
-            console.log("Couldn't get current user info: ", error)
-            return res.status(500).json({ error: "Interal server error" })
-        }
-    })
-})
-
-// async function use_scraper() {
-//     try {
-//         const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/scraper', {
-//             method: 'GET',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             }
-//         });
-
-//         if (!response.ok) {
-//             throw new Error(`HTTP error! Status: ${response.status}`);
-//         }
-
-//         const userData = await response.json();
-//         return userData.data;
-//     } catch (error) {
-//         console.error('Error fetching user data:', error);
-//     }
-// }
 
 async function use_history() {
     try {
@@ -722,6 +867,8 @@ exports.priceAlert = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
         }
     })
 })
+
+
 
 /* 
 ? to start the backend server run "firebase eumlators:start" in "functions" folder

@@ -1,4 +1,4 @@
-async function currentUser(username, data) {
+async function currentUser(data, username, email, name, password) {
     try {
         const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/currentUser', {
             method: 'POST',
@@ -6,8 +6,11 @@ async function currentUser(username, data) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                username: username,
-                data: data
+                data,
+                username,
+                email,
+                name,
+                password
             }),
         });
 
@@ -42,7 +45,7 @@ async function currentUser_test() {
             ]
         }
     };
-    let res = await currentUser('m_user1', data)
+    let res = await currentUser(data, 'manager', 'm_user1', 'm_user1@gmail.com', 'Mfirst1 Mlast1', 'm_user1_password!')
     console.log(res)
 }
 
