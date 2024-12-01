@@ -278,26 +278,33 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
                     const min = 30
                     const cash = Math.floor(Math.random() * (max - min + 1) + min);
 
-                    const newClient = {
-                        [client_username]: {
-                            name: client_name,
-                            contact: client_contact,
-                            cash: cash,
-                            managers_username: managers_username,
-                            portfolio: {}
-                        }
+                    const newClient =
+                    {
+                        name: client_name,
+                        contact: client_contact,
+                        cash: cash,
+                        managers_username: managers_username,
+                        portfolio: {}
                     }
+
+
+                    const M_db = await loadInfo(M_userCreds)
+                    const db_current = await loadInfo(currentUser)
 
                     C_db[client_username] = newClient
 
                     uploadString(C_userCreds, JSON.stringify(C_db), 'raw', { contentType: 'application/json' })
 
-                    const db_current = await loadInfo(currentUser)
-                    db_current['client'] = newClient
+                    db_current['client'] = {
+                        [client_username]: newClient
+                    }
+
+                    const managerProfile = findUserProfile(M_db, managers_username)
+                    managerProfile.clients[client_username] = newClient
+                    db_current['manager'] = managerProfile
 
                     uploadString(currentUser, JSON.stringify(db_current), 'raw', { contentType: 'application/json' })
 
-                    const M_db = await loadInfo(M_userCreds)
 
                     console.log('managers_username : ', managers_username)
                     M_db[find_db_username(M_db, managers_username)].clients[client_username] = newClient
@@ -665,72 +672,66 @@ const cryptoTickers = ["BTC-USD", "ETH-USD", "DOGE-USD"];
 exports.history = onRequest({ region: 'europe-west2' }, async (req, res) => {
     corsHandler(req, res, async () => {
 
-        const currentTime = Math.floor(new Date().getTime() / 1000)
+        const currentTime = Math.floor(new Date().getTime() / 1000);
 
         const allPeriods = {
             '1D': {
-                period1: Math.floor(new Date(Date.now() - 24 * 60 * 60 * 1000).getTime() / 1000), // 1 day ago
+                period1: currentTime - 24 * 60 * 60, // 1 day ago
                 period2: currentTime,
                 interval: '1m'
             },
             '1W': {
-                period1: Math.floor(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).getTime() / 1000), // 1 week ago
+                period1: currentTime - 7 * 24 * 60 * 60, // 1 week ago
                 period2: currentTime,
                 interval: '5m'
             },
             '1M': {
-                period1: Math.floor(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).getTime() / 1000), // 1 month ago
+                period1: currentTime - 30 * 24 * 60 * 60, // 1 month ago
                 period2: currentTime,
                 interval: '15m'
             },
             '6M': {
-                period1: Math.floor(new Date(Date.now() - 6 * 30 * 24 * 60 * 60 * 1000).getTime() / 1000), // 6 months ago
+                period1: currentTime - 6 * 30 * 24 * 60 * 60, // 6 months ago
                 period2: currentTime,
                 interval: '1h'
             },
             '1Y': {
-                period1: Math.floor(new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).getTime() / 1000), // 1 year ago
+                period1: currentTime - 365 * 24 * 60 * 60, // 1 year ago
                 period2: currentTime,
                 interval: '1d'
             }
         };
 
-        var requestedPeriod = req.body.requestedPeriod;
-
-        var period1;
-        var period2;
-        var interval;
-
-        if (!requestedPeriod) {
-            const unit = allPeriods['1D'];
-            period1 = unit.period1
-            period2 = unit.period2
-            interval = unit.interval
-            requestedPeriod = '1D'
-        }
-        else {
-            const unit = allPeriods[requestedPeriod];
-            period1 = unit.period1
-            period2 = unit.period2
-            interval = unit.interval
-        }
+        const requestedPeriod = req.body.requestedPeriod || '1D';
+        const { period1, period2, interval } = allPeriods[requestedPeriod];
 
         async function fetchHistoryData(tickers) {
             const historicalData = {};
 
             for (const ticker of tickers) {
                 try {
-                    const assetInfo = await yahooFinance.quoteSummary(ticker, { modules: ["price"] });
+                    const assetInfo = await yahooFinance.quoteSummary(ticker, { modules: ["price"] }).catch(() => null);
+                    if (!assetInfo || !assetInfo.price) {
+                        console.warn(`No price data for ${ticker}`);
+                        continue;
+                    }
+
                     const assetName = assetInfo.price.shortName || "N/A";
 
-                    const raw_data = await yahooFinance.chart(ticker, {
+                    const rawData = await yahooFinance.chart(ticker, {
                         period1,
                         period2,
-                        interval: interval
-                    });
+                        interval
+                    }).catch(() => null);
 
-                    // ? is it possible to loop through raw_data once for the histData, min and max??
-                    const histData = raw_data.quotes.map(entry => ({
+                    if (!rawData || !rawData.quotes) {
+                        console.warn(`No chart data for ${ticker}`);
+                        continue;
+                    }
+
+                    const quotes = rawData.quotes.filter(entry => entry.open !== null && entry.close !== null && entry.volume !== null);
+
+                    const histData = quotes.map(entry => ({
                         Date: new Date(entry.date).toUTCString(),
                         currentPrice: assetInfo.price.regularMarketPrice || "N/A",
                         Open: entry.open,
@@ -738,22 +739,21 @@ exports.history = onRequest({ region: 'europe-west2' }, async (req, res) => {
                         Volume: entry.volume
                     }));
 
-                    const highest = raw_data.quotes.reduce((max, entry) => (entry.high !== undefined && entry.high > max.high ? entry : max), raw_data.quotes[0]);
-                    const lowest = raw_data.quotes.reduce((min, entry) => (entry.low !== null && entry.low !== undefined && (min.low === null || entry.low < min.low) ? entry : min), { low: null });
+                    const highest = quotes.reduce((max, entry) => (entry.high !== null && entry.high > (max.high || -Infinity) ? entry : max), {});
+                    const lowest = quotes.reduce((min, entry) => (entry.low !== null && entry.low < (min.low || Infinity) ? entry : min), {});
 
                     historicalData[ticker] = {
                         name: assetName,
                         highestPriceOfDay: {
-                            time: new Date(highest.date).toUTCString() || 'N/A',
+                            time: highest.date ? new Date(highest.date).toUTCString() : 'N/A',
                             price: highest.high || 0
                         },
                         lowestPriceOfDay: {
-                            time: new Date(lowest.date).toUTCString() || 'N/A',
+                            time: lowest.date ? new Date(lowest.date).toUTCString() : 'N/A',
                             price: lowest.low || 0
                         },
                         history: histData
                     };
-
                 } catch (error) {
                     console.error(`Error fetching data for ${ticker}:`, error.message);
                 }
@@ -766,25 +766,23 @@ exports.history = onRequest({ region: 'europe-west2' }, async (req, res) => {
             const cryptosData = await fetchHistoryData(cryptoTickers);
 
             const allData = {
-                stockTickers: stockTickers,
-                cryptoTickers: cryptoTickers,
+                stockTickers,
+                cryptoTickers,
                 stocks_history: stocksData,
                 cryptos_history: cryptosData
             };
 
-            const periodData = `${requestedPeriod}.json`
-            const historicalData = ref(storage, periodData)
+            const periodData = `${requestedPeriod}.json`;
+            const historicalDataRef = ref(storage, periodData);
 
-            uploadString(historicalData, JSON.stringify(allData), 'raw', { contentType: 'application/json' }).then(() => {
-                return res.status(200).json({
-                    message: `${periodData} was saved to Firebase successfully`,
-                    data: allData
-                });
+            uploadString(historicalDataRef, JSON.stringify(allData), 'raw', { contentType: 'application/json' });
+            return res.status(200).json({
+                message: `${periodData} was saved to Firebase successfully`,
+                data: allData
             });
-
         } catch (error) {
-            console.error("Error fetching historical data:", error.message);
-            return res.status(500).json({ error: "Failed to fetch historical data" });
+            console.error("Error saving historical data:", error.message);
+            return res.status(500).json({ error: "Failed to fetch and save historical data" });
         }
     });
 });
@@ -867,6 +865,30 @@ exports.priceAlert = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
     })
 })
 
+
+exports.setReview = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+    corsHandler(req, res, async () => {
+        const username = req.body.username
+        const descripton = req.body.descripton
+        const star = req.body.star
+
+        const rating = {
+            descripton,
+            star
+        }
+
+        const A_db = await loadInfo(A_userCreds)
+
+        A_db[find_db_username(A_db, username)].rating = rating
+
+        uploadString(A_userCreds, JSON.stringify(A_db), 'raw', { contentType: 'application/json' }).then(() => {
+            return res.status(200).json({
+                verdict: `Admin ${username} has left a review`,
+                rating
+            });
+        })
+    })
+})
 
 
 /* 
