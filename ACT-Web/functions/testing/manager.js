@@ -1,6 +1,6 @@
 async function backendTest(username, email, password, operation, type) {
     try {
-        const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/userOps', {
+        const response = await fetch('https://userops-ieevug7ulq-nw.a.run.app', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -26,8 +26,8 @@ async function backendTest(username, email, password, operation, type) {
     }
 }
 
-async function clientSide_test() {
-    let res = await backendTest('m_user1', 'm_user1@gmail.com', 'm_user1_password!', 'verify', 'manager')
+async function clientSide_test() {await backendTest('user4', 'user4@gmail.com', 'user4_password4!', 'verify', 'manager')
+    let res = 
     console.log(res)
 }
 

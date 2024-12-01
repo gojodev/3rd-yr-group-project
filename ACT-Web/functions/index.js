@@ -19,7 +19,6 @@ initializeApp(firebaseConfig);
 const { getStorage, ref, getDownloadURL, uploadString } = require("firebase/storage");
 
 const cors = require('cors');
-const { load } = require("firebase-tools/lib/commands");
 const corsHandler = cors({
     origin: true,
     methods: ['DELETE', 'PUT', 'GET', 'POST', 'OPTIONS'],
@@ -119,12 +118,14 @@ exports.addAsset = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
                 });
 
             }
-            else if (managers_username == null && clients_username == null) {
+            else if (managers_username != null && clients_username != null) {
                 const C_db = await loadInfo(C_userCreds)
                 const M_db = await loadInfo(M_userCreds)
 
                 const db_managers_username = find_db_username(M_db, managers_username)
                 const db_clients_username = find_db_username(C_db, clients_username)
+
+                console.log('assetSymbol : ', assetSymbol)
 
                 M_db[db_managers_username].clients[db_clients_username].portfolio[assetSymbol] = data
 
@@ -135,7 +136,7 @@ exports.addAsset = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
                     });
                 });
 
-                C_db[db_clients_username].portfolio[assetName] = data
+                C_db[db_clients_username].portfolio[assetSymbol] = data
 
                 uploadString(C_userCreds, JSON.stringify(C_db), 'raw', { contentType: 'application/json' })
             }
@@ -195,7 +196,7 @@ exports.removeAsset = onRequest({ 'region': 'europe-west2' }, async (req, res) =
                     return res.status(200).json({ error: `The Asset's symbol: ${assetSymbol} is not in the portfolio` })
                 }
             }
-            else if (managers_username == null && clients_username == null) {
+            else if (managers_username != null && clients_username != null) {
                 const M_db = await loadInfo(M_userCreds)
                 const C_db = await loadInfo(C_userCreds)
 
@@ -269,7 +270,7 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
                 let isExistingUser = findUserProfile(C_db, client_username)
 
                 if (isExistingUser != undefined) {
-                    return res.status(200).json({ verdict: `Client with username ${client_username} has been added` });
+                    return res.status(200).json({ verdict: `Client with username ${client_username} already exists` });
                 }
 
                 else {
@@ -287,17 +288,19 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
                         }
                     }
 
-                    Object.assign(C_db, newClient)
+                    C_db[client_username] = newClient
 
-                    uploadString(C_userCreds, JSON.stringify(C_db), 'raw', { contentType: 'application/json' }).then(() => {
-                        return res.status(200).json({
-                            verdict: `Client with username ${client_username} has been created`
-                        });
-                    });
+                    uploadString(C_userCreds, JSON.stringify(C_db), 'raw', { contentType: 'application/json' })
+
+                    const db_current = await loadInfo(currentUser)
+                    db_current['client'] = newClient
+
+                    uploadString(currentUser, JSON.stringify(db_current), 'raw', { contentType: 'application/json' })
 
                     const M_db = await loadInfo(M_userCreds)
 
-                    M_db[find_db_username(M_db, managers_username)].clients.push(newClient)
+                    console.log('managers_username : ', managers_username)
+                    M_db[find_db_username(M_db, managers_username)].clients[client_username] = newClient
 
                     uploadString(M_userCreds, JSON.stringify(M_db), 'raw', { contentType: 'application/json' }).then(() => {
                         return res.status(200).json({
@@ -369,11 +372,7 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
 
                 delete C_db[find_db_username(C_db, client_username)]
 
-                uploadString(C_userCreds, JSON.stringify(C_db), 'raw', { contentType: 'application/json' }).then(() => {
-                    return res.status(200).json({
-                        verdict: `removed ${client_username}`
-                    });
-                });
+                uploadString(C_userCreds, JSON.stringify(C_db), 'raw', { contentType: 'application/json' })
 
                 const M_db = await loadInfo(M_userCreds)
                 const index = M_db[find_db_username(M_db, managers_username)].clients.indexOf(find_db_username(C_db, client_username))
@@ -878,6 +877,5 @@ http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/aiGen
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/scraper
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/history
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/updateManagersDetails
-http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/currentUser
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/priceAlert
 */
