@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(navController: NavHostController, backgroundColor: Brush) {
@@ -33,7 +35,7 @@ fun LoginScreen(navController: NavHostController, backgroundColor: Brush) {
     var email by remember { mutableStateOf("user1@gmail.com") }
     var password by remember { mutableStateOf("user1_password!") }
     var errorMessage by remember { mutableStateOf<String?>(null) }
-
+    val coroutineScope = rememberCoroutineScope()
 
     Box(
         modifier = Modifier
@@ -117,42 +119,41 @@ fun LoginScreen(navController: NavHostController, backgroundColor: Brush) {
 
             Button(
                 onClick = {
-                    navController.navigate(Screen.Home.route)
-//                    coroutineScope.launch {
-//                        try {
-//                            val result = verifyUserClient(
-//                                username = username.trim(),
-//                                name = name.trim(),
-//                                email = email.trim(),
-//                                password = password.trim() ,
-//                                operation = "verify",
-//                                type = "admin"
-//                            )
-//
-//                            result.onSuccess { response ->
-//                                if (response.verdict) {
-//                                    try {
-//                                        navController.navigate(Screen.Home.route) {
-//                                            popUpTo(Screen.Login.route) { inclusive = true }
-//                                        }
-//                                    } catch (e: Exception) {
-//                                        errorMessage = "Navigation failed: ${e.message ?: "Unknown error"}"
-//                                    }
-//                                } else {
-//                                    errorMessage = buildString {
-//                                        append("Verification failed:")
-//                                        if (!response.correctEmail) append("\n- Invalid email")
-//                                        if (!response.correctPassword) append("\n- Incorrect password")
-//                                        if (!response.correctName) append("\n- Name mismatch")
-//                                    }
-//                                }
-//                            }.onFailure { exception ->
-//                                errorMessage = "Error verifying user: ${exception.message ?: "Unknown error"}"
-//                            }
-//                        } catch (e: Exception) {
-//                            errorMessage = "Unexpected error: ${e.message ?: "Unknown error"}"
-//                        }
-//                    }
+                    coroutineScope.launch {
+                        try {
+                            val result = verifyUserClient(
+                                username = username.trim(),
+                                name = name.trim(),
+                                email = email.trim(),
+                                password = password.trim() ,
+                                operation = "verify",
+                                type = "admin"
+                            )
+
+                            result.onSuccess { response ->
+                                if (response.verdict) {
+                                    try {
+                                        navController.navigate(Screen.Home.route) {
+                                            popUpTo(Screen.Login.route) { inclusive = true }
+                                        }
+                                    } catch (e: Exception) {
+                                        errorMessage = "Navigation failed: ${e.message ?: "Unknown error"}"
+                                    }
+                                } else {
+                                    errorMessage = buildString {
+                                        append("Verification failed:")
+                                        if (!response.correctEmail) append("\n- Invalid email")
+                                        if (!response.correctPassword) append("\n- Incorrect password")
+                                        if (!response.correctName) append("\n- Name mismatch")
+                                    }
+                                }
+                            }.onFailure { exception ->
+                                errorMessage = "Error verifying user: ${exception.message ?: "Unknown error"}"
+                            }
+                        } catch (e: Exception) {
+                            errorMessage = "Unexpected error: ${e.message ?: "Unknown error"}"
+                        }
+                    }
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(36, 35, 49),
@@ -163,7 +164,7 @@ fun LoginScreen(navController: NavHostController, backgroundColor: Brush) {
                 Text("Login")
             }
             Button(
-                onClick = { navController.navigate(Screen.Login.route) },
+                onClick = { navController.navigate(Screen.Signup.route) },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(36, 35, 49),

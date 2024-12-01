@@ -1,9 +1,9 @@
 package com.example.act1
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,7 +38,7 @@ fun SignupScreen(navController: NavHostController, backgroundColor: Brush) {
     var username by remember { mutableStateOf("user4") }
     var email by remember { mutableStateOf("user4@gmail.com") }
     var password by remember { mutableStateOf("user4_password!") }
-    var errorMessage by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
     val coroutineScope = rememberCoroutineScope()
 
     Box(
@@ -47,90 +47,89 @@ fun SignupScreen(navController: NavHostController, backgroundColor: Brush) {
             .background(backgroundColor),
         contentAlignment = Alignment.Center
     ) {
-        LazyColumn(
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item {
-                Text(
-                    text = "Fund Management Starts Here.",
-                    style = MaterialTheme.typography.displayMedium,
-                    color = Color.White,
-                    modifier = Modifier.padding(bottom = 32.dp)
-                )
-            }
-            item {
-                TextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = name,
-                    onValueChange = { name = it },
-                    label = { Text("Name") },
-                    colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color(36, 35, 49),
-                        focusedContainerColor = Color(36, 35, 49).copy(alpha = 0.7f),
-                        unfocusedLabelColor = Color.White,
-                        focusedLabelColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        focusedTextColor = Color.White)
-                )
-            }
-            item {
-                TextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = username,
-                    onValueChange = { username = it },
-                    label = { Text("Username") },
-                    colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color(36, 35, 49),
-                        focusedContainerColor = Color(36, 35, 49).copy(alpha = 0.7f),
-                        unfocusedLabelColor = Color.White,
-                        focusedLabelColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        focusedTextColor = Color.White)
-                )
+            Text(
+                text = "Create Your Account.",
+                style = MaterialTheme.typography.displayMedium,
+                color = Color.White,
+                modifier = Modifier.padding(bottom = 32.dp)
+            )
+            TextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("Name") },
+                colors = TextFieldDefaults.colors(
+                    unfocusedContainerColor = Color(36, 35, 49),
+                    focusedContainerColor = Color(36, 35, 49).copy(alpha = 0.7f),
+                    unfocusedLabelColor = Color.White,
+                    focusedLabelColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    focusedTextColor = Color.White
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
 
-            }
-            item {
-                TextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = email,
-                    onValueChange = { email = it },
-                    label = { Text("Email") },
-                    colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color(36, 35, 49),
-                        focusedContainerColor = Color(36, 35, 49).copy(alpha = 0.7f),
-                        unfocusedLabelColor = Color.White,
-                        focusedLabelColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        focusedTextColor = Color.White)
-                )
-            }
-            item {
-                TextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = password,
-                    onValueChange = { password = it },
-                    label = { Text("Password") },
-                    visualTransformation = PasswordVisualTransformation(),
-                    colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color(36, 35, 49),
-                        focusedContainerColor = Color(36, 35, 49).copy(alpha = 0.7f),
-                        unfocusedLabelColor = Color.White,
-                        focusedLabelColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        focusedTextColor = Color.White)
-                )
-            }
-            item {
-                Button(
-                    onClick = {
-                        coroutineScope.launch {
+            TextField(
+                value = username,
+                onValueChange = { username = it },
+                label = { Text("Username") },
+                colors = TextFieldDefaults.colors(
+                    unfocusedContainerColor = Color(36, 35, 49),
+                    focusedContainerColor = Color(36, 35, 49).copy(alpha = 0.7f),
+                    unfocusedLabelColor = Color.White,
+                    focusedLabelColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    focusedTextColor = Color.White
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            TextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Email") },
+                colors = TextFieldDefaults.colors(
+                    unfocusedContainerColor = Color(36, 35, 49),
+                    focusedContainerColor = Color(36, 35, 49).copy(alpha = 0.7f),
+                    unfocusedLabelColor = Color.White,
+                    focusedLabelColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    focusedTextColor = Color.White
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            TextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Password") },
+                visualTransformation = PasswordVisualTransformation(),
+                colors = TextFieldDefaults.colors(
+                    unfocusedContainerColor = Color(36, 35, 49),
+                    focusedContainerColor = Color(36, 35, 49).copy(alpha = 0.7f),
+                    unfocusedLabelColor = Color.White,
+                    focusedLabelColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    focusedTextColor = Color.White
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Button(
+                onClick = {
+                    coroutineScope.launch {
+                        try {
                             val result = verifyUserClient(
-                                username = username,
-                                name = name,
-                                email = email,
-                                password = password,
+                                username = username.trim(),
+                                name = name.trim(),
+                                email = email.trim(),
+                                password = password.trim(),
                                 operation = "create",
                                 type = "admin"
                             )
@@ -138,12 +137,11 @@ fun SignupScreen(navController: NavHostController, backgroundColor: Brush) {
                             result.onSuccess { response ->
                                 if (response.verdict) {
                                     try {
-                                        Log.d("SignupScreen", "Signup successful. Navigating to Home.")
                                         navController.navigate(Screen.Home.route) {
                                             popUpTo(Screen.Signup.route) { inclusive = true }
                                         }
                                     } catch (e: Exception) {
-                                        Log.e("NavigationError", "Error during navigation: ${e.message}")
+                                        errorMessage = "Navigation failed: ${e.message ?: "Unknown error"}"
                                     }
                                 } else {
                                     errorMessage = buildString {
@@ -152,36 +150,42 @@ fun SignupScreen(navController: NavHostController, backgroundColor: Brush) {
                                         if (!response.correctPassword) append("\n- Weak password")
                                         if (!response.correctName) append("\n- Name mismatch")
                                     }
-                                    Log.d("SignupScreen", "Signup failed: $errorMessage")
                                 }
                             }.onFailure { exception ->
-                                errorMessage = "Error during signup: ${exception.message}"
-                                Log.e("SignupScreen", "Error during signup: ${exception.message}")
+                                errorMessage = "Error during signup: ${exception.message ?: "Unknown error"}"
                             }
+                        } catch (e: Exception) {
+                            errorMessage = "Unexpected error: ${e.message ?: "Unknown error"}"
                         }
-                    },modifier= Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(36, 35, 49),
-                        contentColor = Color.White
-                    )
-                ) {
-                    Text("Sign Up")
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = { navController.navigate(Screen.Login.route) },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(36, 35, 49),
-                        contentColor = Color.White
-                    )
-                ) {
-                    Text("Login")
-                }
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(36, 35, 49),
+                    contentColor = Color.White
+                ),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Sign Up")
             }
-            item {
-                if (errorMessage.isNotEmpty()) {
-                    Text(text = errorMessage, color = Color.Red)
+
+            Button(
+                onClick = { navController.navigate(Screen.Login.route) },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(36, 35, 49),
+                    contentColor = Color.White
+                )
+            ) {
+                Text("Login")
+            }
+
+            errorMessage?.let { error ->
+                if (error.isNotEmpty()) {
+                    Text(
+                        text = error,
+                        color = Color.Red,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
                 }
             }
         }

@@ -78,6 +78,7 @@ suspend fun verifyUserClient(
                 prettyPrint = true
                 isLenient = true
                 ignoreUnknownKeys = true
+                explicitNulls = false
             })
         }
     }
