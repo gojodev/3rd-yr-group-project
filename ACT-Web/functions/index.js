@@ -42,6 +42,8 @@ const C_userCreds = ref(storage, 'C_userCreds.json'); // client
 
 const currentUser = ref(storage, 'currentUser.json'); // current user data from a login or sign up for all user types
 
+const chatBot = ref(storage, 'chatBot.json') // chatBot's responses
+
 async function loadInfo(data) {
     return await Promise.resolve(getRef_json(data));
 }
@@ -890,7 +892,24 @@ exports.setReview = onRequest({ 'region': 'europe-west2' }, async (req, res) => 
     })
 })
 
-
+exports.chatBot = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+    corsHandler(req, res, async () => {
+        if (req.method == "POST") {
+            const data = req.body.data
+            uploadString(chatBot, JSON.stringify(data), 'raw', { contentType: 'application/json' }).then(() => {
+                return res.status(200).json({
+                    data
+                });
+            })
+        }
+        else {
+            const data = await loadInfo(chatBot)
+            return res.status(200).json({
+                data
+            });
+        }
+    })
+})
 /* 
 ? to start the backend server run "firebase eumlators:start" in "functions" folder
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/userOps
@@ -900,4 +919,7 @@ http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/scraper
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/history
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/updateManagersDetails
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/priceAlert
+http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/addAsset
+http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/removeAsset
+http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/chatBot
 */
