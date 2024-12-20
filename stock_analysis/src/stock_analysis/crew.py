@@ -55,21 +55,21 @@ class StockAnalysis():
 	def accounting_task(self) -> Task:
 		return Task(
 			config=self.tasks_config['accounting_task'],
-			output_file='report.md'
+			output_file='report.txt'
 		)
 	
 	@task
 	def recommending_task(self) -> Task:
 		return Task(
 			config=self.tasks_config['recommending_task'],
-			output_file='recommendation.md'
+			output_file='recommendation.txt'
 		)
 	
 	@task
 	def blogging_task(self) -> Task:
 		return Task(
 			config=self.tasks_config['blogging_task'],
-			output_file='blog.md'
+			output_file='blog.txt'
 			
 		)
 

@@ -2,6 +2,7 @@
 import sys
 import warnings
 from textwrap import dedent
+from send_data import sendToDB
 
 from stock_analysis.crew import StockAnalysis
 
@@ -46,6 +47,11 @@ def run():
 # `main` function for local execution without `crewai`
 def main():
     run()
+    f = open("../report.txt", "r")
+    content = f.read()
+    sendToDB(content)
+
 
 if __name__ == "__main__":
     main()
+    
