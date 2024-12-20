@@ -1,0 +1,51 @@
+research_task:
+  description: >
+    Conduct thorough research on the stock for {topic}. This includes analyzing its historical performance, industry trends,
+    and any significant events or market sentiment affecting the stock. Pay close attention to recent news, press releases,
+    and industry analysis. Include a summary of potential impacts from upcoming events like earnings or announcements.
+
+  expected_output: >
+    Provide a detailed research report that includes:
+    - 3 bulletpoints of the stock's recent news and performance.
+    Make sure to use the most recent data available.
+  agent: researcher
+
+accounting_task:
+  description: >
+    Perform a detailed financial analysis of {topic} by calculating key accounting ratios such as P/E ratio, EPS growth,
+    current ratio, quick ratio, and debt-to-equity ratio. Use the company's latest financial statements and compare these metrics
+    with industry standards and competitors.
+
+  expected_output: >
+    A comprehensive financial analysis report that includes:
+    - A list of all calculated ratios with short clear explanations.
+    - An interpretation of what these ratios indicate about the company's financial health.
+    The report should be well-structured and easy to interpret.
+  agent: accountant
+
+recommending_task:
+  description: >
+    Synthesize the findings from the Researcher and Accountant to create a detailed investment recommendation for {topic}.
+    Incorporate insights from research, accounting ratios, and any qualitative factors like market sentiment or industry trends.
+    Provide a clear buy, sell, or hold recommendation with a supporting rationale.
+
+  expected_output: >
+    A detailed investment recommendation report that includes:
+    - A clear buy, sell, or hold recommendation.
+    - Supporting evidence from both research and financial analysis.
+    - A strategic outlook for the stock.
+    Ensure the report is professionally formatted and customer-ready.
+  agent: recommender
+
+blogging_task:
+  description: >
+    Take the findings from the Researcher, Accountant, and Recommender to create a well-formatted and engaging blog post
+    about {topic}. The post should summarize the key points in an accessible way, including the investment recommendation,
+    and highlight the most compelling insights in a storytelling format.
+
+  expected_output: >
+    A polished blog post that includes:
+    - A five line description of the stock.
+    - A clear buy, sell, or hold recommendation.
+    Ensure the tone is professional yet engaging, suitable for both financial experts and general readers.
+  agent: blogger

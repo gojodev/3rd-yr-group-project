@@ -1,0 +1,120 @@
+{
+    "stocks": {
+        "AAPL": {
+            "name": "Apple Inc.",
+            "currentPrice": 231.41,
+            "marketCap": 3518380900352,
+            "volume": 37918358,
+            "52WeekHigh": 237.49,
+            "52WeekLow": 164.08,
+            "eps_trend": "{\"0q\":{\"current\":1.55,\"7daysAgo\":1.55,\"30daysAgo\":1.6,\"60daysAgo\":1.59,\"90daysAgo\":1.55},\"+1q\":{\"current\":2.38,\"7daysAgo\":2.38,\"30daysAgo\":2.39,\"60daysAgo\":2.39,\"90daysAgo\":2.38},\"0y\":{\"current\":6.67,\"7daysAgo\":6.67,\"30daysAgo\":6.7,\"60daysAgo\":6.7,\"90daysAgo\":6.61},\"+1y\":{\"current\":7.47,\"7daysAgo\":7.48,\"30daysAgo\":7.48,\"60daysAgo\":7.48,\"90daysAgo\":7.34}}",
+            "recommendations": "{\"0\":{\"period\":\"0m\",\"strongBuy\":11,\"buy\":21,\"hold\":6,\"sell\":0,\"strongSell\":0},\"1\":{\"period\":\"-1m\",\"strongBuy\":12,\"buy\":24,\"hold\":11,\"sell\":1,\"strongSell\":0},\"2\":{\"period\":\"-2m\",\"strongBuy\":12,\"buy\":23,\"hold\":10,\"sell\":1,\"strongSell\":0},\"3\":{\"period\":\"-3m\",\"strongBuy\":10,\"buy\":24,\"hold\":7,\"sell\":1,\"strongSell\":0}}"
+        },
+        "MSFT": {
+            "name": "Microsoft Corporation",
+            "currentPrice": 428.15,
+            "marketCap": 3183055470592,
+            "volume": 17007704,
+            "52WeekHigh": 468.35,
+            "52WeekLow": 331.83,
+            "eps_trend": "{\"0q\":{\"current\":3.09,\"7daysAgo\":3.09,\"30daysAgo\":3.09,\"60daysAgo\":3.1,\"90daysAgo\":3.17},\"+1q\":{\"current\":3.22,\"7daysAgo\":3.22,\"30daysAgo\":3.22,\"60daysAgo\":3.22,\"90daysAgo\":3.27},\"0y\":{\"current\":13.07,\"7daysAgo\":13.07,\"30daysAgo\":13.08,\"60daysAgo\":13.08,\"90daysAgo\":13.3},\"+1y\":{\"current\":15.21,\"7daysAgo\":15.23,\"30daysAgo\":15.22,\"60daysAgo\":15.23,\"90daysAgo\":15.34}}",
+            "recommendations": "{\"0\":{\"period\":\"0m\",\"strongBuy\":14,\"buy\":13,\"hold\":6,\"sell\":0,\"strongSell\":1},\"1\":{\"period\":\"-1m\",\"strongBuy\":21,\"buy\":35,\"hold\":2,\"sell\":0,\"strongSell\":0},\"2\":{\"period\":\"-2m\",\"strongBuy\":21,\"buy\":34,\"hold\":2,\"sell\":0,\"strongSell\":0},\"3\":{\"period\":\"-3m\",\"strongBuy\":20,\"buy\":27,\"hold\":6,\"sell\":0,\"strongSell\":0}}"
+        },
+        "GOOGL": {
+            "name": "Alphabet Inc.",
+            "currentPrice": 165.27,
+            "marketCap": 2013319135232,
+            "volume": 19202678,
+            "52WeekHigh": 191.75,
+            "52WeekLow": 122.69,
+            "eps_trend": "{\"0q\":{\"current\":1.84,\"7daysAgo\":1.84,\"30daysAgo\":1.83,\"60daysAgo\":1.83,\"90daysAgo\":1.83},\"+1q\":{\"current\":2.04,\"7daysAgo\":2.04,\"30daysAgo\":2.03,\"60daysAgo\":2.03,\"90daysAgo\":2.03},\"0y\":{\"current\":7.66,\"7daysAgo\":7.65,\"30daysAgo\":7.65,\"60daysAgo\":7.65,\"90daysAgo\":7.65},\"+1y\":{\"current\":8.7,\"7daysAgo\":8.69,\"30daysAgo\":8.71,\"60daysAgo\":8.71,\"90daysAgo\":8.71}}",
+            "recommendations": "{\"0\":{\"period\":\"0m\",\"strongBuy\":13,\"buy\":25,\"hold\":5,\"sell\":0,\"strongSell\":0},\"1\":{\"period\":\"-1m\",\"strongBuy\":15,\"buy\":30,\"hold\":12,\"sell\":0,\"strongSell\":0},\"2\":{\"period\":\"-2m\",\"strongBuy\":15,\"buy\":29,\"hold\":10,\"sell\":0,\"strongSell\":0},\"3\":{\"period\":\"-3m\",\"strongBuy\":15,\"buy\":29,\"hold\":10,\"sell\":0,\"strongSell\":0}}"
+        },
+        "AMZN": {
+            "name": "Amazon.com, Inc.",
+            "currentPrice": 187.83,
+            "marketCap": 1971388547072,
+            "volume": 28807294,
+            "52WeekHigh": 201.2,
+            "52WeekLow": 128.56,
+            "eps_trend": "{\"0q\":{\"current\":1.14,\"7daysAgo\":1.14,\"30daysAgo\":1.14,\"60daysAgo\":1.14,\"90daysAgo\":1.15},\"+1q\":{\"current\":1.34,\"7daysAgo\":1.34,\"30daysAgo\":1.35,\"60daysAgo\":1.35,\"90daysAgo\":1.34},\"0y\":{\"current\":4.73,\"7daysAgo\":4.73,\"30daysAgo\":4.73,\"60daysAgo\":4.73,\"90daysAgo\":4.56},\"+1y\":{\"current\":5.78,\"7daysAgo\":5.81,\"30daysAgo\":5.82,\"60daysAgo\":5.81,\"90daysAgo\":5.82}}",
+            "recommendations": "{\"0\":{\"period\":\"0m\",\"strongBuy\":15,\"buy\":28,\"hold\":3,\"sell\":1,\"strongSell\":0},\"1\":{\"period\":\"-1m\",\"strongBuy\":17,\"buy\":46,\"hold\":3,\"sell\":0,\"strongSell\":0},\"2\":{\"period\":\"-2m\",\"strongBuy\":17,\"buy\":43,\"hold\":2,\"sell\":0,\"strongSell\":0},\"3\":{\"period\":\"-3m\",\"strongBuy\":17,\"buy\":42,\"hold\":1,\"sell\":0,\"strongSell\":0}}"
+        },
+        "TSLA": {
+            "name": "Tesla, Inc.",
+            "currentPrice": 269.19,
+            "marketCap": 864116080640,
+            "volume": 160034757,
+            "52WeekHigh": 271.0,
+            "52WeekLow": 138.8,
+            "eps_trend": "{\"0q\":{\"current\":0.71,\"7daysAgo\":0.63,\"30daysAgo\":0.65,\"60daysAgo\":0.68,\"90daysAgo\":0.69},\"+1q\":{\"current\":0.65,\"7daysAgo\":0.61,\"30daysAgo\":0.65,\"60daysAgo\":0.71,\"90daysAgo\":0.7},\"0y\":{\"current\":2.4,\"7daysAgo\":2.27,\"30daysAgo\":2.29,\"60daysAgo\":2.32,\"90daysAgo\":2.4},\"+1y\":{\"current\":3.16,\"7daysAgo\":3.03,\"30daysAgo\":3.1,\"60daysAgo\":3.15,\"90daysAgo\":3.19}}",
+            "recommendations": "{\"0\":{\"period\":\"0m\",\"strongBuy\":4,\"buy\":4,\"hold\":8,\"sell\":6,\"strongSell\":1},\"1\":{\"period\":\"-1m\",\"strongBuy\":8,\"buy\":14,\"hold\":20,\"sell\":8,\"strongSell\":4},\"2\":{\"period\":\"-2m\",\"strongBuy\":7,\"buy\":12,\"hold\":20,\"sell\":8,\"strongSell\":4},\"3\":{\"period\":\"-3m\",\"strongBuy\":7,\"buy\":12,\"hold\":21,\"sell\":6,\"strongSell\":4}}"
+        },
+        "NVDA": {
+            "name": "NVIDIA Corporation",
+            "currentPrice": 141.54,
+            "marketCap": 3471975907328,
+            "volume": 203385650,
+            "52WeekHigh": 144.42,
+            "52WeekLow": 39.23,
+            "eps_trend": "{\"0q\":{\"current\":0.74,\"7daysAgo\":0.74,\"30daysAgo\":0.74,\"60daysAgo\":0.71,\"90daysAgo\":0.7},\"+1q\":{\"current\":0.81,\"7daysAgo\":0.81,\"30daysAgo\":0.81,\"60daysAgo\":0.78,\"90daysAgo\":0.77},\"0y\":{\"current\":2.84,\"7daysAgo\":2.84,\"30daysAgo\":2.84,\"60daysAgo\":2.74,\"90daysAgo\":2.72},\"+1y\":{\"current\":4.06,\"7daysAgo\":4.06,\"30daysAgo\":4.02,\"60daysAgo\":3.81,\"90daysAgo\":3.74}}",
+            "recommendations": "{\"0\":{\"period\":\"0m\",\"strongBuy\":7,\"buy\":14,\"hold\":15,\"sell\":1,\"strongSell\":1},\"1\":{\"period\":\"-1m\",\"strongBuy\":21,\"buy\":38,\"hold\":5,\"sell\":0,\"strongSell\":0},\"2\":{\"period\":\"-2m\",\"strongBuy\":18,\"buy\":37,\"hold\":5,\"sell\":0,\"strongSell\":0},\"3\":{\"period\":\"-3m\",\"strongBuy\":12,\"buy\":21,\"hold\":12,\"sell\":2,\"strongSell\":0}}"
+        },
+        "META": {
+            "name": "Meta Platforms, Inc.",
+            "currentPrice": 573.25,
+            "marketCap": 1426033999872,
+            "volume": 11285408,
+            "52WeekHigh": 602.95,
+            "52WeekLow": 296.86,
+            "eps_trend": "{\"0q\":{\"current\":5.24,\"7daysAgo\":5.24,\"30daysAgo\":5.21,\"60daysAgo\":5.2,\"90daysAgo\":4.87},\"+1q\":{\"current\":6.36,\"7daysAgo\":6.34,\"30daysAgo\":6.32,\"60daysAgo\":6.3,\"90daysAgo\":5.99},\"0y\":{\"current\":21.37,\"7daysAgo\":21.35,\"30daysAgo\":21.3,\"60daysAgo\":21.23,\"90daysAgo\":20.23},\"+1y\":{\"current\":24.44,\"7daysAgo\":24.4,\"30daysAgo\":24.2,\"60daysAgo\":24.1,\"90daysAgo\":23.21}}",
+            "recommendations": "{\"0\":{\"period\":\"0m\",\"strongBuy\":0,\"buy\":0,\"hold\":0,\"sell\":0,\"strongSell\":0},\"1\":{\"period\":\"-1m\",\"strongBuy\":21,\"buy\":39,\"hold\":6,\"sell\":2,\"strongSell\":0},\"2\":{\"period\":\"-2m\",\"strongBuy\":20,\"buy\":36,\"hold\":6,\"sell\":2,\"strongSell\":0},\"3\":{\"period\":\"-3m\",\"strongBuy\":19,\"buy\":32,\"hold\":6,\"sell\":2,\"strongSell\":0}}"
+        },
+        "DELL": {
+            "name": "Dell Technologies Inc.",
+            "currentPrice": 122.55,
+            "marketCap": 83881549824,
+            "volume": 4025220,
+            "52WeekHigh": 179.7,
+            "52WeekLow": 65.73,
+            "eps_trend": "{\"0q\":{\"current\":2.04,\"7daysAgo\":2.04,\"30daysAgo\":2.04,\"60daysAgo\":2.2,\"90daysAgo\":2.18},\"+1q\":{\"current\":2.67,\"7daysAgo\":2.67,\"30daysAgo\":2.67,\"60daysAgo\":2.57,\"90daysAgo\":2.62},\"0y\":{\"current\":7.86,\"7daysAgo\":7.86,\"30daysAgo\":7.86,\"60daysAgo\":7.7,\"90daysAgo\":7.73},\"+1y\":{\"current\":9.38,\"7daysAgo\":9.38,\"30daysAgo\":9.38,\"60daysAgo\":9.08,\"90daysAgo\":9.14}}",
+            "recommendations": "{\"0\":{\"period\":\"0m\",\"strongBuy\":0,\"buy\":0,\"hold\":0,\"sell\":0,\"strongSell\":0},\"1\":{\"period\":\"-1m\",\"strongBuy\":4,\"buy\":17,\"hold\":3,\"sell\":0,\"strongSell\":0},\"2\":{\"period\":\"-2m\",\"strongBuy\":4,\"buy\":13,\"hold\":4,\"sell\":0,\"strongSell\":0},\"3\":{\"period\":\"-3m\",\"strongBuy\":4,\"buy\":9,\"hold\":7,\"sell\":0,\"strongSell\":0}}"
+        },
+        "AMD": {
+            "name": "Advanced Micro Devices, Inc.",
+            "currentPrice": 156.23,
+            "marketCap": 252855123968,
+            "volume": 29452139,
+            "52WeekHigh": 227.3,
+            "52WeekLow": 94.07,
+            "eps_trend": "{\"0q\":{\"current\":0.91,\"7daysAgo\":0.92,\"30daysAgo\":0.91,\"60daysAgo\":0.91,\"90daysAgo\":0.94},\"+1q\":{\"current\":1.16,\"7daysAgo\":1.15,\"30daysAgo\":1.15,\"60daysAgo\":1.15,\"90daysAgo\":1.23},\"0y\":{\"current\":3.41,\"7daysAgo\":3.41,\"30daysAgo\":3.41,\"60daysAgo\":3.4,\"90daysAgo\":3.5},\"+1y\":{\"current\":5.45,\"7daysAgo\":5.44,\"30daysAgo\":5.43,\"60daysAgo\":5.43,\"90daysAgo\":5.53}}",
+            "recommendations": "{\"0\":{\"period\":\"0m\",\"strongBuy\":5,\"buy\":6,\"hold\":15,\"sell\":4,\"strongSell\":1},\"1\":{\"period\":\"-1m\",\"strongBuy\":15,\"buy\":26,\"hold\":9,\"sell\":0,\"strongSell\":0},\"2\":{\"period\":\"-2m\",\"strongBuy\":16,\"buy\":26,\"hold\":9,\"sell\":0,\"strongSell\":0},\"3\":{\"period\":\"-3m\",\"strongBuy\":12,\"buy\":19,\"hold\":10,\"sell\":0,\"strongSell\":0}}"
+        }
+    },
+    "cryptos": {
+        "BTC-USD": {
+            "name": "Bitcoin USD",
+            "currentPrice": "N/A",
+            "marketCap": 1327847571456,
+            "volume": 23922356224,
+            "52WeekHigh": 73750.07,
+            "52WeekLow": 33874.805
+        },
+        "ETH-USD": {
+            "name": "Ethereum USD",
+            "currentPrice": "N/A",
+            "marketCap": 299663065088,
+            "volume": 16603277312,
+            "52WeekHigh": 4092.2842,
+            "52WeekLow": 1766.053
+        },
+        "DOGE-USD": {
+            "name": "Dogecoin USD",
+            "currentPrice": "N/A",
+            "marketCap": 20019761152,
+            "volume": 1163350400,
+            "52WeekHigh": 0.226581,
+            "52WeekLow": 0.066129
+        }
+    }
+}

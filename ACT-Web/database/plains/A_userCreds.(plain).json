@@ -1,0 +1,20 @@
+{
+    "user1": {
+        "name":  "first1 last1",
+        "email": "user1@gmail.com",
+        "password": "$2b$10$pXeT04LdC34Yh4rBg58HPeRbfML3Xyj96I41pIHP385SLamOgZlZ6",
+        "id": "A_$2b$05$JY0rzd48rF1LPV/0R.4Ds./ublblLDLJxwZLWomcOs0seqH1tCl5W"
+    },
+    "user2": {
+        "name":  "first2 last2",
+        "email": "user2@gmail.com",
+        "password": "user2_password!",
+        "id": "A_$2b$05$6MidCJM6NJ/h7q/Lw1cny.M1qjSg3aTzsMD1WNUYS.x/3F3DWzdda"
+    },
+    "user3": {
+        "name":  "first3 last3",
+        "email": "user3@gmail.com",
+        "password": "user3_password!",
+        "id": "A_$2b$05$i16a13LTq3oKSx0fk9eajOfpy4K4vt42y13zYUD3U6aBDD2pHA0oe"
+    }
+}
