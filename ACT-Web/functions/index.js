@@ -42,7 +42,7 @@ const C_userCreds = ref(storage, 'C_userCreds.json'); // client
 
 const currentUser = ref(storage, 'currentUser.json'); // current user data from a login or sign up for all user types
 
-const chatBot = ref(storage, 'chatBot.json') // chatBot's responses
+const AI_report = ref(storage, 'AI_report.json') // AI_report's responses
 
 async function loadInfo(data) {
     return await Promise.resolve(getRef_json(data));
@@ -791,7 +791,7 @@ exports.history = onRequest({ region: 'europe-west2' }, async (req, res) => {
 
 async function use_history() {
     try {
-        const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/history', {
+        const response = await fetch('https://history-ieevug7ulq-nw.a.run.app', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -892,18 +892,18 @@ exports.setReview = onRequest({ 'region': 'europe-west2' }, async (req, res) => 
     })
 })
 
-exports.chatBot = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+exports.AI_report = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     corsHandler(req, res, async () => {
         if (req.method == "POST") {
             const data = req.body.data
-            uploadString(chatBot, JSON.stringify(data), 'raw', { contentType: 'application/json' }).then(() => {
+            uploadString(AI_report, JSON.stringify(data), 'raw', { contentType: 'application/json' }).then(() => {
                 return res.status(200).json({
                     data
                 });
             })
         }
         else {
-            const data = await loadInfo(chatBot)
+            const data = await loadInfo(AI_report)
             return res.status(200).json({
                 data
             });
@@ -921,5 +921,5 @@ http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/updateManagersDetails
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/priceAlert
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/addAsset
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/removeAsset
-http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/chatBot
+http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/AI_report
 */
