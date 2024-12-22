@@ -1,9 +1,12 @@
 from crewai import Agent, Crew, Process, Task, LLM
 from crewai.project import CrewBase, agent, crew, task
 from crewai_tools import SerperDevTool
-import os
 
-search_tool = SerperDevTool()
+search_tool = SerperDevTool(
+	n_results=5
+)
+
+
 
 @CrewBase
 class StockAnalysis():
@@ -16,7 +19,7 @@ class StockAnalysis():
 	def researcher(self) -> Agent:
 		return Agent(
 			config=self.agents_config['researcher'],
-			 tools=[search_tool], # Example of custom tool, loaded on the beginning of file
+			 tools=[search_tool], 
 			 verbose=True,
 		)
 
@@ -25,7 +28,7 @@ class StockAnalysis():
 		return Agent(
 			config=self.agents_config['accountant'],
 		    verbose=True,
-			llm = LLM(model="gemini/gemini-1.5-flash",api_key="AIzaSyAnSsm680P92G89Ca0r7eBI4rARfM7Urac")
+			#llm = LLM(model="gemini/gemini-1.5-flash",api_key="AIzaSyBd3xPQsd-cswTe90BQG2tl9fZG0FZD8kQ")
 			
 		)
 	
@@ -34,7 +37,8 @@ class StockAnalysis():
 		return Agent(
 			config=self.agents_config['recommender'],
 			verbose=True,
-			llm=LLM(model="ollama/mistral:latest",base_url="http://localhost:11434")
+			#llm=LLM(model="ollama/mistral:latest",base_url="http://localhost:11434")
+			#llm = LLM(model="gemini/gemini-1.5-flash",api_key="AIzaSyAnSsm680P92G89Ca0r7eBI4rARfM7Urac")
 		)
 	
 	@agent
@@ -42,7 +46,8 @@ class StockAnalysis():
 		return Agent(
 			config=self.agents_config['blogger'],
 			verbose=True,
-			llm=LLM(model="ollama/llama3.1:8b",base_url="http://localhost:11434")
+			#llm=LLM(model="ollama/llama3.1:8b",base_url="http://localhost:11434")
+			#llm = LLM(model="gemini/gemini-1.5-flash",api_key="AIzaSyAnSsm680P92G89Ca0r7eBI4rARfM7Urac")
 		)
 
 	@task

@@ -6,7 +6,7 @@ research_task:
 
   expected_output: >
     Provide a detailed research report that includes:
-    - 3 bulletpoints of the stock's recent news and performance.
+    - 1 bulletpoints of the stock's recent news and performance.
     Make sure to use the most recent data available.
   agent: researcher
 
@@ -18,7 +18,7 @@ accounting_task:
 
   expected_output: >
     A comprehensive financial analysis report that includes:
-    - A list of all calculated ratios with short clear explanations.
+    - A list of all calculated ratios.
     - An interpretation of what these ratios indicate about the company's financial health.
     The report should be well-structured and easy to interpret.
   agent: accountant
@@ -32,7 +32,6 @@ recommending_task:
   expected_output: >
     A detailed investment recommendation report that includes:
     - A clear buy, sell, or hold recommendation.
-    - Supporting evidence from both research and financial analysis.
     - A strategic outlook for the stock.
     Ensure the report is professionally formatted and customer-ready.
   agent: recommender
@@ -45,7 +44,7 @@ blogging_task:
 
   expected_output: >
     A polished blog post that includes:
-    - A five line description of the stock.
+    - A one line description of the stock.
     - A clear buy, sell, or hold recommendation.
     Ensure the tone is professional yet engaging, suitable for both financial experts and general readers.
   agent: blogger
