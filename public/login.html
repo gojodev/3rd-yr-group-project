@@ -91,9 +91,9 @@
     <div class="login-container">
         <h2>Login</h2>
 
-        <form id="loginForm" action="http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/verifyManager">
+        <form id="loginForm">
             <label for="username">Username:</label>
-            <input type="username" id="username" name="username" placeholder="Enter your username" required>
+            <input type="text" id="username" name="username" placeholder="Enter your username" required>
 
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" placeholder="Enter your email" required>
@@ -112,7 +112,75 @@
             <p>Don't have an account? <a href="singup.html">Sign Up</a></p>
         </div>
     </div>
-    <script src="./javascripts/loginBundle.js"></script>
+    <script>
+        async function verifyManager(username, email, password, operation, type) {
+            try {
+                const response = await fetch('https://userops-ieevug7ulq-nw.a.run.app', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username,
+                        email,
+                        password,
+                        operation,
+                        type,
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const userData = await response.json();
+                return userData;
+            } catch (error) {
+                console.error('Error verifying user data:', error);
+                return { verdict: 'error', message: 'Server error. Please try again later.' };
+            }
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            console.log(password)
+
+            if (!username || !email || !password) {
+                const errorMessage = document.getElementById('error-message');
+                errorMessage.style.display = 'block';
+                errorMessage.textContent = 'Please fill in all fields!';
+                return;
+            }
+
+            console.log('hi')
+            const result = await verifyManager(username, email, password, 'verify', 'manager');
+            console.log(result)
+            console.log(result.verdict)
+
+            if (result.verdict === true) {
+                location.href = `loggedinhomepage.html?username=${encodeURIComponent(username)}`;
+            } 
+            else if (result.verdict === false && result.reason === `${username} does not exist`) {
+                alert(`This account does not exist\nIf you don't have an account please sign up`);
+            }
+
+
+            
+
+        });
+        function autofill() {
+                document.getElementById("username").value = "m_user1"
+                document.getElementById("email").value = "m_user1@gmail.com"
+                document.getElementById("password").value = "m_user1_password!"
+            }
+
+        autofill()
+        
+    </script>
 </body>
 
 </html>

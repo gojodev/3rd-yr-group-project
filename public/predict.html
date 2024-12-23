@@ -3,33 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homepage</title>
+    <title>Predict</title>
     <script src="https://kit.fontawesome.com/cdbe41a012.js" crossorigin="anonymous"></script>
     <style>
-        .login {
-            border: 2px solid blue;
-            padding: 8px 18px;
-            border-radius: 5px;
-            transition: background-color 0.5s ease, background-position 0.5s ease;
-        }
-
-        .login:hover {
-            background-color: blue;
-            color: white;
-        }
-
-        .signup {
-            border: 2px solid red;
-            padding: 8px 18px;
-            border-radius: 5px;
-            transition: background-color 0.5s ease, background-position 0.5s ease;
-        }
-
-        .signup:hover {
-            background-color: red;
-            color: white;
-        }
-   
         body {
             padding: 0;
             margin: 0;
@@ -62,6 +38,18 @@
         .header-top .contact p {
             margin: 0;
             line-height: 1.5;
+        }
+
+        .signout {
+            border: 2px solid red;
+            padding: 8px 18px;
+            border-radius: 5px;
+            transition: background-color 0.5s ease, background-position 0.5s ease;
+        }
+
+        .signout:hover {
+            background-color: red;
+            color: white;
         }
 
         .main {
@@ -128,7 +116,7 @@
             text-decoration: none;
         }
 
-        .nav1{
+        .nav1, .nav2, .nav3, .nav4, .nav5{
             padding-top: 10px;
             padding-bottom: 10px;
             border-bottom: 2px solid black;
@@ -138,14 +126,9 @@
             padding-top: 20px;
         }
 
-        .nav2 {
+        .nav6 {
             padding-bottom: 20px;
             padding-top: 20px;
-        }
-
-        .nav3 {
-            padding-bottom: 20px;
-            padding-top: 5px;
         }
 
         footer {
@@ -181,10 +164,33 @@
             padding-bottom: 10px;
             border-top: 2px solid black;
         }
+
+        .bottommain h4 {
+            text-align: left;
+        }
+
+        .notification {
+            position: fixed;
+            top: 50px;
+            right: 20px;
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            height: 450px;
+            width: 250px;
+        }
+
+        .notification.visible {
+            opacity: 1;
+        }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
-
     <header>
         <div class="header-top">
             <div id="dropdown-menu" onclick="toggleMobileMenu(this)">
@@ -192,32 +198,35 @@
                 <div class="dropdown-line2"></div>
                 <div class="dropdown-line3"></div>
                 <ul class="mobile-menu">
-                    <li class="nav1"><a href="index.html">Home</a></li>
-                    <li class="nav2"><a href="login.html" class="login">Login</a></li>
-                    <li class="nav3"><a href="singup.html" class="signup">Sign Up</a></li>
+                    <li class="nav1"><a href="loggedinhomepage.html">Home</a></li>
+                    <li class="nav2"><a href="stocks.html">Stocks</a></li>
+                    <li class="nav2"><a href="cryptos.html">Cryptos</a></li>
+                    <li class="nav3"><a href="clients.html">Clients</a></li>
+                    <li class="nav4"><a href="predict.html">Predict</a></li>
+                    <li class="nav5"><a href="report.html">Report</a></li>
+                    <li class="nav6"><a href="index.html" class="signout">Sign Out</a></li>
                 </ul>
             </div>
             <div class="name">ACT-WEB</div>
             <div class="darkmode">
-                <i class="fa-solid fa-moon fa-2x" onclick="toggleBackgroundColor()"></i>     
+                <i class="fa-solid fa-moon fa-2x" onclick="toggleBackgroundColor()" style="padding-right: 20px;"></i>
+                <i id="notifyIcon" class="fa-solid fa-bell fa-2x notification-icon"></i>
             </div>
         </div>
-
     </header>
+    <div id="notificationBox" class="notification hidden">
+        Loading Alerts ...
+    </div>
 
     <main>
         <div class="main">
-            <h1>Hi we are </h1>
-            <h2>Welcome to our ACT-Website</h2>
-            <h2>This is the one stop shop for all fund managers</h2>
-            <h2>Need help managing you trading you have come to the right place</h2>
-            <h2>Login in today to access many features or Sign up today to get started</h2>
+            
         </div>
     </main>
 
     <footer>
         <div class="left">
-            <h4>Phone: | Email</h4>
+            <h4>Phone: 089-4590-332 | Email: Actweb@gmail.com</h4>
         </div>
         <div class="right">
             <ul>
@@ -227,6 +236,8 @@
     </footer>
 
     <script src="javascripts/mobilemenu.js"></script>
+    <script src="javascripts/noti.js"></script>
     <script src="javascripts/darkmode.js"></script>
+    <script src="javascripts/user_passer.js"></script>
 </body>
 </html>

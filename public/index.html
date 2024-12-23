@@ -6,6 +6,30 @@
     <title>Homepage</title>
     <script src="https://kit.fontawesome.com/cdbe41a012.js" crossorigin="anonymous"></script>
     <style>
+        .login {
+            border: 2px solid blue;
+            padding: 8px 18px;
+            border-radius: 5px;
+            transition: background-color 0.5s ease, background-position 0.5s ease;
+        }
+
+        .login:hover {
+            background-color: blue;
+            color: white;
+        }
+
+        .signup {
+            border: 2px solid red;
+            padding: 8px 18px;
+            border-radius: 5px;
+            transition: background-color 0.5s ease, background-position 0.5s ease;
+        }
+
+        .signup:hover {
+            background-color: red;
+            color: white;
+        }
+   
         body {
             padding: 0;
             margin: 0;
@@ -38,18 +62,6 @@
         .header-top .contact p {
             margin: 0;
             line-height: 1.5;
-        }
-
-        .signout {
-            border: 2px solid red;
-            padding: 8px 18px;
-            border-radius: 5px;
-            transition: background-color 0.5s ease, background-position 0.5s ease;
-        }
-
-        .signout:hover {
-            background-color: red;
-            color: white;
         }
 
         .main {
@@ -116,7 +128,7 @@
             text-decoration: none;
         }
 
-        .nav1, .nav2, .nav3, .nav4, .nav5{
+        .nav1{
             padding-top: 10px;
             padding-bottom: 10px;
             border-bottom: 2px solid black;
@@ -126,9 +138,14 @@
             padding-top: 20px;
         }
 
-        .nav6 {
+        .nav2 {
             padding-bottom: 20px;
             padding-top: 20px;
+        }
+
+        .nav3 {
+            padding-bottom: 20px;
+            padding-top: 5px;
         }
 
         footer {
@@ -164,33 +181,10 @@
             padding-bottom: 10px;
             border-top: 2px solid black;
         }
-
-        .bottommain h4 {
-            text-align: left;
-        }
-
-        .notification {
-            position: fixed;
-            top: 50px;
-            right: 20px;
-            background-color: green;
-            color: white;
-            padding: 15px;
-            border-radius: 5px;
-            height: 450px;
-            width: 250px;
-        }
-
-        .notification.visible {
-            opacity: 1;
-        }
-
-        .hidden {
-            display: none;
-        }
     </style>
 </head>
 <body>
+
     <header>
         <div class="header-top">
             <div id="dropdown-menu" onclick="toggleMobileMenu(this)">
@@ -198,55 +192,36 @@
                 <div class="dropdown-line2"></div>
                 <div class="dropdown-line3"></div>
                 <ul class="mobile-menu">
-                    <li class="nav1"><a href="loggedinhomepage.html">Home</a></li>
-                    <li class="nav2"><a href="stocks.html">Stocks</a></li>
-                    <li class="nav3"><a href="clients.html">Clients</a></li>
-                    <li class="nav4"><a href="predict.html">Predict</a></li>
-                    <li class="nav5"><a href="report.html">Report</a></li>
-                    <li class="nav6"><a href="index.html" class="signout">Sign Out</a></li>
+                    <li class="nav1"><a href="index.html">Home</a></li>
+                    <li class="nav2"><a href="login.html" class="login">Login</a></li>
+                    <li class="nav3"><a href="singup.html" class="signup">Sign Up</a></li>
                 </ul>
             </div>
             <div class="name">ACT-WEB</div>
             <div class="darkmode">
-                <i class="fa-solid fa-moon fa-2x" onclick="toggleBackgroundColor()" style="padding-right: 20px;"></i>
-                <i id="notifyIcon" class="fa-solid fa-bell fa-2x notification-icon"></i>
+                <i class="fa-solid fa-moon fa-2x" onclick="toggleBackgroundColor()"></i>     
             </div>
         </div>
-    </header>
 
-    <div id="notificationBox" class="notification hidden">
-        Notifications HERE
-    </div>
+    </header>
 
     <main>
         <div class="main">
-            <div class="topmain">
-                <h1>Welcome Fund Managers</h1>
-                <h2>Thank you for choosing our ACT-WEB for all your trading needs</h2>
-            </div>
-            <div class="bottommain">
-                <h1>Above in the header you have multiple options</h1>
-                <h4>Stocks: This is where you can view all available stocks and their details</h4>
-                <h4>Clients: Where you can manage your clients trading and also add new clients</h4>
-                <h4>Predict: Allows you to view predicted future prices of 10 technology shares and 3 crypto assets for each of your clients</h4>
-                <h4>Report: Where you can run financial reports on a chosen technology and crypto set</h4>
-            </div>
+            <h1>Hi we are </h1>
+            <h2>Welcome to our ACT-Website</h2>
+            <h2>This is the one stop shop for all fund managers</h2>
+            <h2>Need help managing you trading you have come to the right place</h2>
+            <h2>Login in today to access many features or Sign up today to get started</h2>
         </div>
     </main>
 
     <footer>
         <div class="left">
-            <h4>Phone: | Email</h4>
-        </div>
-        <div class="right">
-            <ul>
-                <li class="footernav1"><a href="loggedinhomepage.html">Home</a> | <a href="stocks.html">Stocks</a> | <a href="clients.html">Clients</a> | <a href="predict.html">Predict</a> | <a href="report.html">Report</a></li>
-            </ul>
+            <h4>Phone: 089-4590-332 | Email: Actweb@gmail.com</h4>
         </div>
     </footer>
 
     <script src="javascripts/mobilemenu.js"></script>
-    <script src="javascripts/noti.js"></script>
     <script src="javascripts/darkmode.js"></script>
 </body>
 </html>
