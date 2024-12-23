@@ -1,6 +1,6 @@
-from crewai import Agent, Crew, Process, Task, LLM
-from crewai.project import CrewBase, agent, crew, task
-from crewai_tools import SerperDevTool
+from crewai import Agent, Crew, Process, Task, LLM # type: ignore
+from crewai.project import CrewBase, agent, crew, task # type: ignore
+from crewai_tools import SerperDevTool # type: ignore
 
 search_tool = SerperDevTool(
 	n_results=5
@@ -21,6 +21,8 @@ class StockAnalysis():
 			config=self.agents_config['researcher'],
 			 tools=[search_tool], 
 			 verbose=True,
+			 max_iter = 3,
+			 max_tokens = 3000
 		)
 
 	@agent
@@ -28,8 +30,10 @@ class StockAnalysis():
 		return Agent(
 			config=self.agents_config['accountant'],
 		    verbose=True,
-			#llm = LLM(model="gemini/gemini-1.5-flash",api_key="AIzaSyBd3xPQsd-cswTe90BQG2tl9fZG0FZD8kQ")
-			
+			max_iter = 3,
+			# llm = LLM(model="gemini/gemini-1.5-flash",
+			# 		api_key="AIzaSyBd3xPQsd-cswTe90BQG2tl9fZG0FZD8kQ",
+			# 		max_tokens = 3000) 
 		)
 	
 	@agent
@@ -37,8 +41,10 @@ class StockAnalysis():
 		return Agent(
 			config=self.agents_config['recommender'],
 			verbose=True,
-			#llm=LLM(model="ollama/mistral:latest",base_url="http://localhost:11434")
-			#llm = LLM(model="gemini/gemini-1.5-flash",api_key="AIzaSyAnSsm680P92G89Ca0r7eBI4rARfM7Urac")
+			max_iter = 1,
+			# llm=LLM(model="ollama/mistral:latest",
+		   	# 		base_url="http://localhost:11434",
+			# 		max_tokens = 3000)
 		)
 	
 	@agent
@@ -46,8 +52,9 @@ class StockAnalysis():
 		return Agent(
 			config=self.agents_config['blogger'],
 			verbose=True,
-			#llm=LLM(model="ollama/llama3.1:8b",base_url="http://localhost:11434")
-			#llm = LLM(model="gemini/gemini-1.5-flash",api_key="AIzaSyAnSsm680P92G89Ca0r7eBI4rARfM7Urac")
+			max_iter = 3,
+			# llm=LLM(model="ollama/llama3.1:8b",
+			# 		base_url="http://localhost:11434")
 		)
 
 	@task
@@ -85,6 +92,5 @@ class StockAnalysis():
 			agents=self.agents, # Automatically created by the @agent decorator
 			tasks=self.tasks, # Automatically created by the @task decorator
 			process=Process.sequential,
-			verbose=True,
-			# process=Process.hierarchical, # In case you wanna use that instead https://docs.crewai.com/how-to/Hierarchical/
+			verbose=True
 		)

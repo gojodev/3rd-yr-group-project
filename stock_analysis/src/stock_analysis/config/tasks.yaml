@@ -25,26 +25,25 @@ accounting_task:
 
 recommending_task:
   description: >
-    Synthesize the findings from the Researcher and Accountant to create a detailed investment recommendation for {topic}.
+    Take the findings from the Accountant to create a detailed investment recommendation for {topic}.
     Incorporate insights from research, accounting ratios, and any qualitative factors like market sentiment or industry trends.
     Provide a clear buy, sell, or hold recommendation with a supporting rationale.
 
   expected_output: >
-    A detailed investment recommendation report that includes:
+    A simple investment recommendation report that includes:
     - A clear buy, sell, or hold recommendation.
-    - A strategic outlook for the stock.
-    Ensure the report is professionally formatted and customer-ready.
+    Ensure the report is professionally formatted and easy to read.
   agent: recommender
 
 blogging_task:
   description: >
-    Take the findings from the Researcher, Accountant, and Recommender to create a well-formatted and engaging blog post
+    Take the findings from the Recommender to create a well-formatted and simple blog post
     about {topic}. The post should summarize the key points in an accessible way, including the investment recommendation,
-    and highlight the most compelling insights in a storytelling format.
+    and highlight the most compelling insights.
 
   expected_output: >
-    A polished blog post that includes:
+    A simple blog post that includes:
     - A one line description of the stock.
     - A clear buy, sell, or hold recommendation.
-    Ensure the tone is professional yet engaging, suitable for both financial experts and general readers.
+    Ensure that it is simple enough for general readers to understand.
   agent: blogger
