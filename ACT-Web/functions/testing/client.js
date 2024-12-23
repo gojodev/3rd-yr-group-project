@@ -23,7 +23,7 @@ async function showClientDB(username, operation, type) {
     }
 }
 
-async function add_Asset(managers_username, clients_username, assetSymbol, assetName, currentPrice, amountBought, admins_username) {
+async function add_Asset(managers_username, clients_username, assetSymbol, name, currentPrice, amountBought, admins_username) {
     try {
         const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/addAsset', {
             method: 'POST',
@@ -34,7 +34,7 @@ async function add_Asset(managers_username, clients_username, assetSymbol, asset
                 managers_username,
                 clients_username,
                 assetSymbol,
-                assetName,
+                name,
                 currentPrice,
                 amountBought,
                 admins_username
@@ -107,7 +107,7 @@ async function add_Client(client_username, managers_username, client_name, clien
 
 async function clientSideTest() {
     // const verdict = await showClientDB('c_user1', 'read', 'client')
-    const verdict = await add_Asset('m_user1', 'c_user1', 'BTC-USD', "Bitcoin USD", '320', '1', null)
+    const verdict = await add_Asset('m_user1', 'c_user1', 'ETH-USD', "jacksons 2 milimeter small pp", '320', '1', null)
     // const verdict = await delete_Asset('m_user1', 'c_user1', 'BTC-USD')
     // const verdict = await add_Client('c_user6', 'm_user1', 'Cfirst6 Clast6', '086 343 3473', 'create', 'client')
     console.log(verdict)

@@ -113,7 +113,7 @@ exports.addAsset = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
         try {
             const managers_username = req.body.managers_username
             const clients_username = req.body.clients_username
-            const assetName = req.body.assetName
+            const name = req.body.name
             const assetSymbol = req.body.assetSymbol
             const currentPrice = req.body.currentPrice
             const amountBought = req.body.amountBought
@@ -121,7 +121,7 @@ exports.addAsset = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
             const admins_username = req.body.admins_username
 
             const data = {
-                assetName,
+                name,
                 currentPrice,
                 amountBought
             }
@@ -133,7 +133,7 @@ exports.addAsset = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
 
                 uploadString(A_userCreds, JSON.stringify(A_db), 'raw', { contentType: 'application/json' }).then(() => {
                     return res.status(200).json({
-                        verdict: `Admin ${admins_username} added the asset ${assetSymbol} (${assetName}) to their portfolio`,
+                        verdict: `Admin ${admins_username} added the asset ${assetSymbol} (${name}) to their portfolio`,
                         data
                     });
                 });
@@ -155,23 +155,21 @@ exports.addAsset = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
                 }
                 M_db[db_managers_username].clients[clients_username].portfolio[assetSymbol] = data
 
-                // todo update cash balance ---
-                // todo validate client and manager assoication (bidrectional) [NOT TESTED]
+
                 if (isManagerOfClient(clients_username, managers_username) == false) {
                     return res.status(200).json({ error: `The client ${clients_username} is not managed by ${managers_username}` })
                 }
 
-                // todo update on client db
+
                 const clientBank = C_db[db_clients_username].cash
                 const bal = clientBank - currentPrice
                 const canAfford = bal >= 0 ? true : false
                 if (canAfford) {
                     C_db[db_clients_username].cash = bal
 
-                    // todo update on manager db
+
                     M_db[db_managers_username].clients[clients_username].cash = bal
 
-                    // todo update the currentUser.json
                     C_db[db_clients_username].portfolio[assetSymbol] = data
                     const managerProfile = {
                         [managers_username]: M_db[db_managers_username]
@@ -181,18 +179,17 @@ exports.addAsset = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
 
                     uploadString(currentUser, JSON.stringify(db_current), 'raw', { contentType: 'application/json' })
 
-
                     uploadString(C_userCreds, JSON.stringify(C_db), 'raw', { contentType: 'application/json' })
 
                     uploadString(M_userCreds, JSON.stringify(M_db), 'raw', { contentType: 'application/json' }).then(() => {
                         return res.status(200).json({
-                            verdict: `${managers_username} added ${assetSymbol} (${assetName}) to ${clients_username}'s portfolio`,
+                            verdict: `${managers_username} added ${assetSymbol} (${name}) to ${clients_username}'s portfolio`,
                             data
                         });
                     });
                 }
                 else {
-                    return res.status(200).json({ error: `The client ${clients_username} does not have enough money to buy ${assetName} @ ${amountBought} units` })
+                    return res.status(200).json({ error: `The client ${clients_username} does not have enough money to buy ${name} @ ${amountBought} units` })
                 }
             }
 
