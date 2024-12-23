@@ -188,6 +188,25 @@
         .hidden {
             display: none;
         }
+
+        #report{
+            background-color: rgba(0, 0, 0, 0.5);
+            
+            color: white;
+            width: 65%;
+            margin-left: 17.5%;
+            padding: 20px;
+            margin-top: 3%;
+            margin-bottom: 3%;
+        }
+
+        button {
+            margin-top: 10px;
+            width: 30%;
+            padding: 10px;
+            font-size: 16px;
+            margin-left: 35%;
+        }
     </style>
 </head>
 <body>
@@ -200,10 +219,9 @@
                 <ul class="mobile-menu">
                     <li class="nav1"><a href="loggedinhomepage.html">Home</a></li>
                     <li class="nav2"><a href="stocks.html">Stocks</a></li>
-                    <li class="nav2"><a href="cryptos.html">Cryptos</a></li>
-                    <li class="nav3"><a href="clients.html">Clients</a></li>
-                    <li class="nav4"><a href="predict.html">Predict</a></li>
-                    <li class="nav5"><a href="report.html">Report</a></li>
+                    <li class="nav3"><a href="cryptos.html">Cryptos</a></li>
+                    <li class="nav4"><a href="clients.html">Clients</a></li>
+                    <li class="nav5"><a href="report.html">AI</a></li>
                     <li class="nav6"><a href="index.html" class="signout">Sign Out</a></li>
                 </ul>
             </div>
@@ -222,6 +240,8 @@
         <div class="main" id="main-content">
             
         </div>
+        <button id="Button">Get Report</button>
+        <div id="report"></div>
     </main>
 
     <footer>
@@ -230,7 +250,7 @@
         </div>
         <div class="right">
             <ul>
-                <li class="footernav1"><a href="loggedinhomepage.html">Home</a> | <a href="stocks.html">Stocks</a> | <a href="clients.html">Clients</a> | <a href="predict.html">Predict</a> | <a href="report.html">Report</a></li>
+                <li class="footernav1"><a href="loggedinhomepage.html">Home</a> | <a href="stocks.html">Stocks</a> | <a href="cryptos.html">Cryptos</a> | <a href="clients.html">Clients</a> | <a href="report.html">AI</a></li>
             </ul>
         </div>
     </footer>
@@ -240,6 +260,7 @@
     <script src="javascripts/darkmode.js"></script>
     <script src="javascripts/user_passer.js"></script>
     <script>
+
         const urlParams2 = new URLSearchParams(window.location.search);
         const the_name = urlParams2.get('symbol');
 
@@ -250,52 +271,9 @@
             mainContent.appendChild(h1Element); 
         }
 
-        async function send_res(companyName) {
+        async function AI_blog() {
             try {
-                const response = await fetch('https://companyname-ieevug7ulq-nw.a.run.app', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        companyName
-                    }),
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-
-                const userData = await response.json();
-                return userData;
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-            }
-        }
-
-        async function get_res() {
-            try {
-                const response = await fetch('https://companyname-ieevug7ulq-nw.a.run.app', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-
-                const userData = await response.json();
-                return userData;
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-            }
-        }
-
-        async function AI_report() {
-            try {
-                const response = await fetch('https://ai-report-ieevug7ulq-nw.a.run.app', {
+                const response = await fetch('https://ai-blog-ieevug7ulq-nw.a.run.app', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -314,17 +292,23 @@
         }
 
 
-        async function clientSide_Test() {
-            //await send_res(the_name)
-            //const get = await get_res()
-            //console.log(get)
-            const report = await AI_report()
+        document.getElementById('Button').addEventListener('click', async () => {
+            const report = await AI_blog()
             console.log(report)
-        }
 
-        clientSide_Test()
+            console.log(typeof report); 
 
+            const reportString = JSON.stringify(report);
+            let formattedReport = report.data
+                .replace(/\n/g, "<br>") 
+                .replace(/(\*\*[^*]+\*\*)/g, "<strong>$1</strong>")
+                .replace(/^###\s*(.+)$/gm, "<h3>$1</h3>") 
+                .replace(/(\d+\.\s)(.+?)(?=\n|$)/g, "<li>$2</li>")
+                .replace(/###/g, "") 
+                .replace(/\*\*/g, ""); 
 
+            document.getElementById("report").innerHTML = formattedReport;
+        });
 
 
     </script>

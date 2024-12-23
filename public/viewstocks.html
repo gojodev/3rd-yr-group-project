@@ -285,10 +285,9 @@
                 <ul class="mobile-menu">
                     <li class="nav1"><a href="loggedinhomepage.html">Home</a></li>
                     <li class="nav2"><a href="stocks.html">Stocks</a></li>
-                    <li class="nav2"><a href="cryptos.html">Cryptos</a></li>
-                    <li class="nav3"><a href="clients.html">Clients</a></li>
-                    <li class="nav4"><a href="predict.html">Predict</a></li>
-                    <li class="nav5"><a href="report.html">Report</a></li>
+                    <li class="nav3"><a href="cryptos.html">Cryptos</a></li>
+                    <li class="nav4"><a href="clients.html">Clients</a></li>
+                    <li class="nav5"><a href="report.html">AI</a></li>
                     <li class="nav6"><a href="index.html" class="signout">Sign Out</a></li>
                 </ul>
             </div>
@@ -347,7 +346,7 @@
         </div>
         <div class="right">
             <ul>
-                <li class="footernav1"><a href="loggedinhomepage.html">Home</a> | <a href="stocks.html">Stocks</a> | <a href="clients.html">Clients</a> | <a href="predict.html">Predict</a> | <a href="report.html">Report</a></li>
+                <li class="footernav1"><a href="loggedinhomepage.html">Home</a> | <a href="stocks.html">Stocks</a> | <a href="cryptos.html">Cryptos</a> | <a href="clients.html">Clients</a> | <a href="report.html">AI</a></li>
             </ul>
         </div>
     </footer>
@@ -543,7 +542,8 @@
 
                 console.log("Full user data:", JSON.stringify(currentUserData, null, 2));
 
-                const managerData = currentUserData.manager;
+                const man_username = getManagerUsername();
+                const managerData = currentUserData.manager[man_username];
 
                 if (!managerData || !managerData.clients) {
                     console.error("Manager or clients data is missing.");

@@ -1,0 +1,4 @@
+// public/javascripts/AICode.js
+var { exec } = require("child_process");
+exec("crewai run");
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsiQUlDb2RlLmpzIl0sCiAgInNvdXJjZXNDb250ZW50IjogWyJjb25zdCB7ZXhlY30gPSByZXF1aXJlKCdjaGlsZF9wcm9jZXNzJyk7XG5cbmV4ZWMoJ2NyZXdhaSBydW4nKTsiXSwKICAibWFwcGluZ3MiOiAiO0FBQUEsSUFBTSxFQUFDLEtBQUksSUFBSSxRQUFRLGVBQWU7QUFFdEMsS0FBSyxZQUFZOyIsCiAgIm5hbWVzIjogW10KfQo=
