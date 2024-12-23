@@ -43,7 +43,7 @@ const C_userCreds = ref(storage, 'C_userCreds.json'); // client
 const currentUser = ref(storage, 'currentUser.json'); // current user data from a login or sign up for all user types
 
 // for arnas
-const AI_reccomend = ref(storage, 'AI_reccomend.json')
+const AI_reccomend = ref(storage, 'AI_reccomend.json') 
 const AI_blog = ref(storage, 'AI_blog.json')
 const AI_report = ref(storage, 'AI_report.json')
 const AI_chatBot = ref(storage, 'AI_chatBot.json')

@@ -63,10 +63,10 @@ async function AI_report() {
 
 
 async function clientSide_Test() {
-    // const content = "Apple Inc."
-    // await send_res(content)
-    // const get = await get_res()
-    // console.log(get)
+    const content = "Apple Inc."
+    await send_res(content)
+    const get = await get_res()
+    console.log(get)
     const report = await AI_report()
     console.log(report)
 }

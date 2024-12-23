@@ -19,5 +19,5 @@ function runPythonScript(scriptPath, args) {
 }
 
 // ! for jackson
-document.getElementById("stockReport").addEventListener("click", runPythonScript("test.py"))
-document.getElementById("cryptoReport").addEventListener("click", runPythonScript("test.py"))
+document.getElementById("stockReport").addEventListener("click", runPythonScript("main.py"))
+document.getElementById("cryptoReport").addEventListener("click", runPythonScript("main.py"))
