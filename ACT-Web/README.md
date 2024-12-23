@@ -36,10 +36,8 @@ ACT-Web
 │  │  ├─ history.js
 │  │  ├─ manager.js
 │  │  ├─ priceAlert.js
-│  │  ├─ runPyfromJs.js
 │  │  ├─ sample.json
 │  │  ├─ test.js
-│  │  ├─ test.py
 │  │  └─ userOps.js
 │  └─ ui-debug.log
 ├─ package-lock.json
@@ -53,6 +51,8 @@ ACT-Web
 │  │  └─ .DS_Store
 │  ├─ index.html
 │  ├─ javascripts
+│  │  ├─ AICode.js
+│  │  ├─ AICodeBundle.js
 │  │  ├─ loggedin.js
 │  │  ├─ login.js
 │  │  ├─ loginBundle.js
@@ -69,13 +69,15 @@ ACT-Web
 ├─ python
 │  ├─ 2ndScript.py
 │  ├─ AI_report.py
+│  ├─ companyname.py
 │  ├─ content.txt
 │  ├─ financial_data.json
 │  ├─ getHistory.py
 │  ├─ historicalData.json
+│  ├─ main.py
+│  ├─ runPyfromJs.js
 │  ├─ sample.json
 │  ├─ scraper.py
-│  ├─ test.py
 │  └─ __pycache__
 │     └─ AI_report.cpython-312.pyc
 ├─ README.md

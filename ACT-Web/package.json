@@ -24,7 +24,8 @@
     "firebase-tools": "^13.27.0",
     "fs": "^0.0.1-security",
     "fuse.js": "^7.0.0",
-    "init": "^0.1.2"
+    "init": "^0.1.2",
+    "subprocess": "^0.3.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.1.0",

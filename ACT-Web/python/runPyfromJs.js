@@ -1,23 +1,3 @@
-const { spawn } = require('child_process');
+const { exec } = require('child_process');
 
-function runPythonScript(scriptPath, args) {
-  const pyProg = spawn('python', [scriptPath].concat(args));
-
-  let data = '';
-  pyProg.stdout.on('data', (stdout) => {
-    data += stdout.toString();
-  });
-
-  pyProg.stderr.on('data', (stderr) => {
-    console.log(`stderr: ${stderr}`);
-  });
-
-  pyProg.on('close', (code) => {
-    console.log(`child process exited with code ${code}`);
-    console.log(data);
-  });
-}
-
-// ! for jackson
-document.getElementById("stockReport").addEventListener("click", runPythonScript("main.py"))
-document.getElementById("cryptoReport").addEventListener("click", runPythonScript("main.py"))
+exec('crewai run')
