@@ -1,17 +1,56 @@
 {
     "user1": {
-        "name":  "first1 last1",
+        "name": "first1 last1",
         "email": "user1@gmail.com",
-        "password": "user1_password!"
+        "password": "user1_password!",
+        "cash": "500",
+        "portfolio": {
+            "AAPL": {
+                "name": "Apple",
+                "currentPrice": "141",
+                "amountBought": "0.61"
+            },
+            "MICRO": {
+                "name": "Microsoft",
+                "currentPrice": "141",
+                "amountBought": "0.61"
+            }
+        }
     },
     "user2": {
-        "name":  "first2 last2",
+        "name": "first2 last2",
         "email": "user2@gmail.com",
-        "password": "user2_password!"
+        "password": "user2_password!",
+        "cash": "500",
+        "portfolio": {
+            "AAPL": {
+                "name": "Apple",
+                "currentPrice": "141",
+                "amountBought": "0.61"
+            },
+            "MICRO": {
+                "name": "Microsoft",
+                "currentPrice": "141",
+                "amountBought": "0.61"
+            }
+        }
     },
     "user3": {
-        "name":  "first3 last3",
+        "name": "first3 last3",
         "email": "user3@gmail.com",
-        "password": "user3_password!"
+        "password": "user3_password!",
+        "cash": "500",
+        "portfolio": {
+            "AAPL": {
+                "name": "Apple",
+                "currentPrice": "141",
+                "amountBought": "0.61"
+            },
+            "MICRO": {
+                "name": "Microsoft",
+                "currentPrice": "141",
+                "amountBought": "0.61"
+            }
+        }
     }
 }

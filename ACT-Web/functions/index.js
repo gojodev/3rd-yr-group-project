@@ -42,7 +42,13 @@ const C_userCreds = ref(storage, 'C_userCreds.json'); // client
 
 const currentUser = ref(storage, 'currentUser.json'); // current user data from a login or sign up for all user types
 
-const AI_report = ref(storage, 'AI_report.json') // AI_report's responses
+// for arnas
+const AI_reccomend = ref(storage, 'AI_reccomend.json')
+const AI_blog = ref(storage, 'AI_blog.json')
+const AI_report = ref(storage, 'AI_report.json')
+const AI_chatBot = ref(storage, 'AI_chatBot.json')
+
+const companyNameRef = ref(storage, 'companyName.json');
 
 async function loadInfo(data) {
     return await Promise.resolve(getRef_json(data));
@@ -89,6 +95,19 @@ exports.showDB = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     });
 });
 
+async function isManagerOfClient(clients_username, managers_username) {
+    const M_db = await loadInfo(M_userCreds)
+    const clientList = Object.keys(M_db[find_db_username(M_db, managers_username)].clients)
+
+    for (let i = 0; i < clientList.length; i++) {
+        const key = clientList[i]
+        if (bcrypt.compareSync(clients_username, key)) {
+            return true
+        }
+    }
+    return false
+}
+
 exports.addAsset = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     corsHandler(req, res, async () => {
         try {
@@ -123,24 +142,58 @@ exports.addAsset = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
             else if (managers_username != null && clients_username != null) {
                 const C_db = await loadInfo(C_userCreds)
                 const M_db = await loadInfo(M_userCreds)
+                const db_current = await loadInfo(currentUser)
 
                 const db_managers_username = find_db_username(M_db, managers_username)
                 const db_clients_username = find_db_username(C_db, clients_username)
 
-                console.log('assetSymbol : ', assetSymbol)
+                if (M_db[db_managers_username].clients[clients_username] == undefined) {
+                    M_db[db_managers_username].clients[clients_username] = {}
+                }
+                if (M_db[db_managers_username].clients[clients_username].portfolio == undefined) {
+                    M_db[db_managers_username].clients[clients_username].portfolio = {}
+                }
+                M_db[db_managers_username].clients[clients_username].portfolio[assetSymbol] = data
 
-                M_db[db_managers_username].clients[db_clients_username].portfolio[assetSymbol] = data
+                // todo update cash balance ---
+                // todo validate client and manager assoication (bidrectional) [NOT TESTED]
+                if (isManagerOfClient(clients_username, managers_username) == false) {
+                    return res.status(200).json({ error: `The client ${clients_username} is not managed by ${managers_username}` })
+                }
 
-                uploadString(M_userCreds, JSON.stringify(M_db), 'raw', { contentType: 'application/json' }).then(() => {
-                    return res.status(200).json({
-                        verdict: `${managers_username} added ${assetSymbol} (${assetName}) to ${clients_username}'s portfolio`,
-                        data
+                // todo update on client db
+                const clientBank = C_db[db_clients_username].cash
+                const bal = clientBank - currentPrice
+                const canAfford = bal >= 0 ? true : false
+                if (canAfford) {
+                    C_db[db_clients_username].cash = bal
+
+                    // todo update on manager db
+                    M_db[db_managers_username].clients[clients_username].cash = bal
+
+                    // todo update the currentUser.json
+                    C_db[db_clients_username].portfolio[assetSymbol] = data
+                    const managerProfile = {
+                        [managers_username]: M_db[db_managers_username]
+                    }
+
+                    db_current['manager'] = managerProfile
+
+                    uploadString(currentUser, JSON.stringify(db_current), 'raw', { contentType: 'application/json' })
+
+
+                    uploadString(C_userCreds, JSON.stringify(C_db), 'raw', { contentType: 'application/json' })
+
+                    uploadString(M_userCreds, JSON.stringify(M_db), 'raw', { contentType: 'application/json' }).then(() => {
+                        return res.status(200).json({
+                            verdict: `${managers_username} added ${assetSymbol} (${assetName}) to ${clients_username}'s portfolio`,
+                            data
+                        });
                     });
-                });
-
-                C_db[db_clients_username].portfolio[assetSymbol] = data
-
-                uploadString(C_userCreds, JSON.stringify(C_db), 'raw', { contentType: 'application/json' })
+                }
+                else {
+                    return res.status(200).json({ error: `The client ${clients_username} does not have enough money to buy ${assetName} @ ${amountBought} units` })
+                }
             }
 
             else {
@@ -177,16 +230,35 @@ exports.removeAsset = onRequest({ 'region': 'europe-west2' }, async (req, res) =
 
             const admins_username = req.body.admins_username
 
+            const history = (await use_history()).data;
+
+            const isStock = stockTickers.includes(assetSymbol)
+            var currentPrice
+            var arr
+            if (isStock) {
+                arr = history.stocks_history[assetSymbol].history.length
+                currentPrice = history.stocks_history[assetSymbol].history[arr - 1].currentPrice
+            }
+            else {
+                arr = history.cryptos_history[assetSymbol].history.length
+                currentPrice = history.cryptos_history[assetSymbol].history[arr - 1].currentPrice
+            }
+
+            const db_current = await loadInfo(currentUser)
+
             if (admins_username != null) {
                 const A_db = await loadInfo(A_userCreds)
 
                 const db_admin_username = find_db_username(A_db, admins_username)
-
                 const portfolio = A_db[db_admin_username].portfolio
                 const isOwned = isOwnedAsset(portfolio, assetSymbol)
 
                 if (isOwned) {
-                    delete A_db[find_db_username(A_db, admins_username)].portfolio[assetSymbol]
+                    delete A_db[db_admin_username].portfolio[assetSymbol]
+
+                    A_db[db_admin_username].cash += currentPrice
+
+                    db_current['admin'] = A_db['admin'] = A_db[db_admin_username]
 
                     uploadString(A_userCreds, JSON.stringify(A_db), 'raw', { contentType: 'application/json' }).then(() => {
                         return res.status(200).json({
@@ -202,28 +274,44 @@ exports.removeAsset = onRequest({ 'region': 'europe-west2' }, async (req, res) =
                 const M_db = await loadInfo(M_userCreds)
                 const C_db = await loadInfo(C_userCreds)
 
-                const portfolio = M_db[find_db_username(M_db, managers_username)].clients[find_db_username(C_db, clients_username)].portfolio
+                if (find_db_username(M_db, managers_username) == undefined) {
+                    return res.status(200).json({ error: `The manager ${managers_username} does not exist` })
+                }
+
+                if (isManagerOfClient(clients_username, managers_username) == false) {
+                    return res.status(200).json({ error: `The client ${clients_username} is not managed by ${managers_username}` })
+                }
+
+                const portfolio = M_db[find_db_username(M_db, managers_username)].clients[clients_username].portfolio
                 const isOwned = isOwnedAsset(portfolio, assetSymbol)
 
                 if (isOwned) {
                     const db_managers_username = find_db_username(M_db, managers_username)
                     const db_clients_username = find_db_username(C_db, clients_username)
 
-                    delete M_db[db_managers_username].clients[db_clients_username].portfolio[assetSymbol]
+                    delete M_db[db_managers_username].clients[clients_username].portfolio[assetSymbol]
                     delete C_db[db_clients_username].portfolio[assetSymbol]
+
+                    C_db[db_clients_username].cash += currentPrice
+                    M_db[db_managers_username].clients[clients_username].cash += currentPrice
+
+                    db_current['manager'] = {
+                        [managers_username]: M_db[db_managers_username]
+                    }
+
+                    uploadString(C_userCreds, JSON.stringify(C_db), 'raw', { contentType: 'application/json' })
+
+                    uploadString(currentUser, JSON.stringify(db_current), 'raw', { contentType: 'application/json' })
 
                     uploadString(M_userCreds, JSON.stringify(M_db), 'raw', { contentType: 'application/json' }).then(() => {
                         return res.status(200).json({
                             verdict: `${managers_username} removed ${assetSymbol} from ${clients_username}'s portfolio`,
                         });
                     });
-
-                    uploadString(C_userCreds, JSON.stringify(C_db), 'raw', { contentType: 'application/json' })
                 }
                 else {
                     return res.status(200).json({ error: `The Asset's symbol: ${assetSymbol} is not in the portfolio` })
                 }
-
             }
             else {
                 return res.status(200).json({
@@ -285,24 +373,22 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
                         name: client_name,
                         contact: client_contact,
                         cash: cash,
-                        managers_username: managers_username,
+                        managers_username: bcrypt.hashSync(managers_username, 5),
                         portfolio: {}
                     }
 
 
                     const M_db = await loadInfo(M_userCreds)
-                    const db_current = await loadInfo(currentUser)
 
-                    C_db[client_username] = newClient
+                    C_db[bcrypt.hashSync(client_username, 5)] = newClient
 
                     uploadString(C_userCreds, JSON.stringify(C_db), 'raw', { contentType: 'application/json' })
 
-                    db_current['client'] = {
-                        [client_username]: newClient
-                    }
-
                     const managerProfile = findUserProfile(M_db, managers_username)
                     managerProfile.clients[client_username] = newClient
+
+                    const db_current = await loadInfo(currentUser)
+
                     db_current['manager'] = managerProfile
 
                     uploadString(currentUser, JSON.stringify(db_current), 'raw', { contentType: 'application/json' })
@@ -410,20 +496,6 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
                     const verdict = correctName && correctContact
 
                     if (verdict) {
-                        const profile = findUserProfile(c_db, username)
-                        const db_current = await loadInfo(currentUser)
-
-
-                        const data = {
-                            username: username,
-                            name: profile.name,
-                        }
-
-                        db_current['client'] = data
-
-
-                        uploadString(currentUser, JSON.stringify(db_current), 'raw', { contentType: 'application/json' })
-
                         return res.status(200).json({
                             'verdict': verdict
                         });
@@ -461,16 +533,9 @@ exports.userOps = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
 
                     if (verdict) {
                         const db_current = await loadInfo(currentUser)
-
-                        const profile = findUserProfile(M_db, username)
-
-                        const data = {
-                            username: username,
-                            name: profile.name,
-                            clients: profile.clients
+                        db_current['manager'] = {
+                            [username]: findUserProfile(M_db, username)
                         }
-
-                        db_current['manager'] = data
 
                         uploadString(currentUser, JSON.stringify(db_current), 'raw', { contentType: 'application/json' })
 
@@ -870,25 +935,56 @@ exports.priceAlert = onRequest({ 'region': 'europe-west2' }, async (req, res) =>
 
 exports.setReview = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
     corsHandler(req, res, async () => {
-        const username = req.body.username
-        const descripton = req.body.descripton
-        const star = req.body.star
-
-        const rating = {
-            descripton,
-            star
-        }
+        const { username, star } = req.body
 
         const A_db = await loadInfo(A_userCreds)
 
-        A_db[find_db_username(A_db, username)].rating = rating
+        A_db[find_db_username(A_db, username)].rating = star
 
         uploadString(A_userCreds, JSON.stringify(A_db), 'raw', { contentType: 'application/json' }).then(() => {
             return res.status(200).json({
                 verdict: `Admin ${username} has left a review`,
-                rating
+                star
             });
         })
+    })
+})
+
+exports.AI_reccomend = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+    corsHandler(req, res, async () => {
+        if (req.method == "POST") {
+            const data = req.body.data
+            uploadString(AI_reccomend, JSON.stringify(data), 'raw', { contentType: 'application/json' }).then(() => {
+                return res.status(200).json({
+                    data
+                });
+            })
+        }
+        else {
+            const data = await loadInfo(AI_reccomend)
+            return res.status(200).json({
+                data
+            });
+        }
+    })
+})
+
+exports.AI_blog = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+    corsHandler(req, res, async () => {
+        if (req.method == "POST") {
+            const data = req.body.data
+            uploadString(AI_blog, JSON.stringify(data), 'raw', { contentType: 'application/json' }).then(() => {
+                return res.status(200).json({
+                    data
+                });
+            })
+        }
+        else {
+            const data = await loadInfo(AI_blog)
+            return res.status(200).json({
+                data
+            });
+        }
     })
 })
 
@@ -910,6 +1006,45 @@ exports.AI_report = onRequest({ 'region': 'europe-west2' }, async (req, res) => 
         }
     })
 })
+
+exports.AI_chatBot = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+    corsHandler(req, res, async () => {
+        if (req.method == "POST") {
+            const data = req.body.data
+            uploadString(AI_chatBot, JSON.stringify(data), 'raw', { contentType: 'application/json' }).then(() => {
+                return res.status(200).json({
+                    data
+                });
+            })
+        }
+        else {
+            const data = await loadInfo(AI_chatBot)
+            return res.status(200).json({
+                data
+            });
+        }
+    })
+})
+
+exports.companyName = onRequest({ 'region': 'europe-west2' }, async (req, res) => {
+    corsHandler(req, res, async () => {
+        if (req.method == "POST") {
+            const companyName = req.body.companyName
+            uploadString(companyNameRef, JSON.stringify(companyName), 'raw', { contentType: 'application/json' }).then(() => {
+                return res.status(200).json({
+                    companyName
+                });
+            })
+        }
+        else {
+            const companyName = await loadInfo(companyNameRef)
+            return res.status(200).json({
+                companyName
+            });
+        }
+    })
+})
+
 /* 
 ? to start the backend server run "firebase eumlators:start" in "functions" folder
 http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/userOps

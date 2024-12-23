@@ -2,19 +2,52 @@
     "c_user1": {
         "name": "Cfirst1 Clast1",
         "contact": "081 343 3473",
-        "cash": "",
-        "portfolio": {}
+        "cash": "500",
+        "portfolio": {
+            "AAPL": {
+                "name": "Apple",
+                "currentPrice": "141",
+                "amountBought": "0.61"
+            },
+            "MICRO": {
+                "name": "Microsoft",
+                "currentPrice": "141",
+                "amountBought": "0.61"
+            }
+        }
     },
     "c_user2": {
         "name": "Cfirst2 Clast2",
         "contact": "082 343 3473",
-        "cash": "",
-        "portfolio": {}
+        "cash": "26000",
+        "portfolio": {
+            "AAPL": {
+                "name": "Apple",
+                "currentPrice": "141",
+                "amountBought": "0.61"
+            },
+            "MICRO": {
+                "name": "Microsoft",
+                "currentPrice": "141",
+                "amountBought": "0.61"
+            }
+        }
     },
     "c_user3": {
         "name": "Cfirst3 Clast3",
         "contact": "083 343 3473",
-        "cash": "",
-        "portfolio": {}
+        "cash": "30000",
+        "portfolio": {
+            "AAPL": {
+                "name": "Apple",
+                "currentPrice": "141",
+                "amountBought": "0.61"
+            },
+            "MICRO": {
+                "name": "Microsoft",
+                "currentPrice": "141",
+                "amountBought": "0.61"
+            }
+        }
     }
 }

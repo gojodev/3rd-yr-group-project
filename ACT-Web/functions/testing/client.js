@@ -107,9 +107,9 @@ async function add_Client(client_username, managers_username, client_name, clien
 
 async function clientSideTest() {
     // const verdict = await showClientDB('c_user1', 'read', 'client')
-    // const verdict = await add_Asset('m_user1', 'c_user1', 'TESLA', "Tesla", '320', '1', null)
-    // const verdict = await delete_Asset('m_user1', 'c_user1', 'TESLA')
-    const verdict = await add_Client('c_user6', 'm_user1', 'Cfirst6 Clast6', '086 343 3473', 'create', 'client')
+    const verdict = await add_Asset('m_user1', 'c_user1', 'BTC-USD', "Bitcoin USD", '320', '1', null)
+    // const verdict = await delete_Asset('m_user1', 'c_user1', 'BTC-USD')
+    // const verdict = await add_Client('c_user6', 'm_user1', 'Cfirst6 Clast6', '086 343 3473', 'create', 'client')
     console.log(verdict)
 }
 

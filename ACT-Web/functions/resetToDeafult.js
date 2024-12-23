@@ -18,7 +18,7 @@ const A_userCreds_data = {
         "name": "$2b$05$5XEXxbPP1FbAHyXLDOHuhufRHjpe8gfwl1DKtY6GvemCRkiTyHTTK",
         "email": "$2b$10$4Ve8ynoiv7V7tfwdcwPtF.EiOxGwumRbXOYdYrtfjjDkl78VvZJYm",
         "password": "$2b$10$pXeT04LdC34Yh4rBg58HPeRbfML3Xyj96I41pIHP385SLamOgZlZ6",
-        "cash": "",
+        "cash": "500",
         "portfolio": {
             "AAPL": {
                 "name": "Apple",
@@ -36,7 +36,7 @@ const A_userCreds_data = {
         "name": "$2b$05$ylp/2vqHnyc86EF3/A.6F.50DsgjZpOZN1J80iqTqz.WIccaLNbim",
         "email": "$2b$10$a.6SYekbpwhsl7W3uQqUMOhKuDBB90mO.4ZkY95o..ftvGB.WZ9CO",
         "password": "$2b$10$i5J96dxCXTQ7eebhl0Epl.NoD/qp97SA2VVj9LWaQBNzZaLWHOqg2",
-        "cash": "",
+        "cash": "500",
         "portfolio": {
             "AAPL": {
                 "name": "Apple",
@@ -54,7 +54,7 @@ const A_userCreds_data = {
         "name": "$2b$05$k0N7j7XPoXc7ba6HOZuHu.yZcyohl.pRzDH.Yu/.GtsdTu8rRPjBW",
         "email": "$2b$10$pKDs4WT8QLmhniL.7JK0nu4gM.38xYzD5XhUOmY/sl3P/91CeuF0a",
         "password": "$2b$10$PGo7J9BSPfTfii75m.1lf.j5pWDMarqpEJx9/3dlJaWcGuGPXwudm",
-        "cash": "",
+        "cash": "500",
         "portfolio": {
             "AAPL": {
                 "name": "Apple",
@@ -77,7 +77,7 @@ const M_userCreds_data = {
         "password": "$2b$05$fZTmA6nLg87A4aAPimY.l.yZ1HTlZAcJSuyLYqOoRZDX3YterOIwu",
         "contact": "081 143 3473",
         "clients": {
-            "$2b$05$WeIkpl2V61Vpn5edUh0l/u/164nNUPgYXyLfou92Wu2bMdARumcXK": {
+            "c_user1": {
                 "name": "Cfirst1 Clast1",
                 "contact": "081 343 3473",
                 "cash": "500",
@@ -102,7 +102,7 @@ const M_userCreds_data = {
         "password": "$2b$05$LFkH0aT4rgLE9PRsJ.uFOeRAUhyGoRkdjLIRmQL91v5zBFvGQ7oCC",
         "contact": "081 243 3473",
         "clients": {
-            "$2b$05$NCNwCNhptyU2/B.pjFgWp.IDs0B3pkGVTemXa0j2YyjddJgsD.FlO": {
+            "c_user2": {
                 "name": "Cfirst2 Clast2",
                 "contact": "082 343 3473",
                 "cash": "26000",

@@ -1,24 +1,15 @@
-import yfinance as yf
-import json
+import requests
 
-asset = yf.Ticker("BTC-USD")
-historical_data = asset.history(period="2y")
-ohlcv_data = historical_data[["Open", "High", "Low", "Close", "Volume"]]
+url = "https://companyname-ieevug7ulq-nw.a.run.app"
 
-hist_data = [
-    {
-        "Date": item.strftime("%a, %d %b %Y %H:%M:%S GMT"), 
-        "Open": row["Open"],
-        "High": row["High"],
-        "Low": row["Low"],
-        "Close": row["Close"],
-        "Volume": int(row["Volume"])
-    }
-    
-    # for loop with tuple unpacking
-    for item , row in ohlcv_data.iterrows() 
-]
+try:
+    response = requests.get(url)
 
-json_output = json.dumps(hist_data, indent=4)
-
-print(json_output)
+    if response.status_code == 200:
+        json_data = response.json()
+        companyName = json_data['companyName'] 
+        print(companyName)
+    else:
+        print(f"Failed to fetch data. Status code: {response.status_code}")
+except requests.exceptions.RequestException as e:
+    print(f"An error occurred: {e}")

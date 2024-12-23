@@ -5,7 +5,7 @@
         "password": "$2b$05$fZTmA6nLg87A4aAPimY.l.yZ1HTlZAcJSuyLYqOoRZDX3YterOIwu",
         "contact": "081 143 3473",
         "clients": {
-            "$2b$05$WeIkpl2V61Vpn5edUh0l/u/164nNUPgYXyLfou92Wu2bMdARumcXK": {
+            "c_user1": {
                 "name": "Cfirst1 Clast1",
                 "contact": "081 343 3473",
                 "cash": "500",
@@ -30,7 +30,7 @@
         "password": "$2b$05$LFkH0aT4rgLE9PRsJ.uFOeRAUhyGoRkdjLIRmQL91v5zBFvGQ7oCC",
         "contact": "081 243 3473",
         "clients": {
-            "$2b$05$NCNwCNhptyU2/B.pjFgWp.IDs0B3pkGVTemXa0j2YyjddJgsD.FlO": {
+            "c_user2": {
                 "name": "Cfirst2 Clast2",
                 "contact": "082 343 3473",
                 "cash": "26000",
