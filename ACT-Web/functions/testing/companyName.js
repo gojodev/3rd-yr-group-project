@@ -41,12 +41,34 @@ async function get_res() {
     }
 }
 
+async function AI_report() {
+    try {
+        const response = await fetch('https://ai-report-ieevug7ulq-nw.a.run.app', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const userData = await response.json();
+        return userData;
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+    }
+}
+
 
 async function clientSide_Test() {
-    const content = "Apple Inc."
-    await send_res(content)
-    const get = await get_res()
-    console.log(get)
+    // const content = "Apple Inc."
+    // await send_res(content)
+    // const get = await get_res()
+    // console.log(get)
+    const report = await AI_report()
+    console.log(report)
 }
 
 clientSide_Test()
