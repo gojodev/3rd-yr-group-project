@@ -1,0 +1,123 @@
+[debug] [2025-01-01T18:59:00.654Z] ----------------------------------------------------------------------
+[debug] [2025-01-01T18:59:00.656Z] Command:       C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions
+[debug] [2025-01-01T18:59:00.656Z] CLI Version:   13.27.0
+[debug] [2025-01-01T18:59:00.656Z] Platform:      win32
+[debug] [2025-01-01T18:59:00.656Z] Node Version:  v18.20.5
+[debug] [2025-01-01T18:59:00.665Z] Time:          Wed Jan 01 2025 18:59:00 GMT+0000 (Greenwich Mean Time)
+[debug] [2025-01-01T18:59:00.665Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-01-01T18:59:00.668Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2025-01-01T18:59:00.766Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-01-01T18:59:00.766Z] > authorizing via signed-in user (eakoledoye@gmail.com)
+[debug] [2025-01-01T18:59:00.766Z] [iam] checking project rd-year-project-1f41d for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2025-01-01T18:59:00.767Z] Checked if tokens are valid: false, expires at: 1734993127729
+[debug] [2025-01-01T18:59:00.767Z] Checked if tokens are valid: false, expires at: 1734993127729
+[debug] [2025-01-01T18:59:00.767Z] > refreshing access token with scopes: []
+[debug] [2025-01-01T18:59:00.768Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-01-01T18:59:00.768Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-01-01T18:59:00.934Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-01-01T18:59:00.934Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-01-01T18:59:00.940Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d:testIamPermissions [none]
+[debug] [2025-01-01T18:59:00.940Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d:testIamPermissions x-goog-quota-user=projects/rd-year-project-1f41d
+[debug] [2025-01-01T18:59:00.940Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-01-01T18:59:01.055Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2025-01-01T18:59:01.055Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[debug] [2025-01-01T18:59:01.610Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d:testIamPermissions 200
+[debug] [2025-01-01T18:59:01.611Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2025-01-01T18:59:01.611Z] Checked if tokens are valid: true, expires at: 1735761539934
+[debug] [2025-01-01T18:59:01.611Z] Checked if tokens are valid: true, expires at: 1735761539934
+[debug] [2025-01-01T18:59:01.611Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/rd-year-project-1f41d/serviceAccounts/rd-year-project-1f41d@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2025-01-01T18:59:01.611Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/rd-year-project-1f41d/serviceAccounts/rd-year-project-1f41d@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2025-01-01T18:59:02.291Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/rd-year-project-1f41d/serviceAccounts/rd-year-project-1f41d@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2025-01-01T18:59:02.291Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/rd-year-project-1f41d/serviceAccounts/rd-year-project-1f41d@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'rd-year-project-1f41d'...
+[info] 
+[info] i  deploying functions 
+[debug] [2025-01-01T18:59:02.296Z] Checked if tokens are valid: true, expires at: 1735761539934
+[debug] [2025-01-01T18:59:02.297Z] Checked if tokens are valid: true, expires at: 1735761539934
+[debug] [2025-01-01T18:59:02.297Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d [none]
+[debug] [2025-01-01T18:59:02.983Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d 200
+[debug] [2025-01-01T18:59:02.984Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/rd-year-project-1f41d {"projectNumber":"823208675027","projectId":"rd-year-project-1f41d","lifecycleState":"ACTIVE","name":"3rd year project","labels":{"firebase":"enabled"},"createTime":"2024-09-13T13:04:05.338766Z"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[debug] [2025-01-01T18:59:02.985Z] Checked if tokens are valid: true, expires at: 1735761539934
+[debug] [2025-01-01T18:59:02.985Z] Checked if tokens are valid: true, expires at: 1735761539934
+[debug] [2025-01-01T18:59:02.985Z] Checked if tokens are valid: true, expires at: 1735761539934
+[debug] [2025-01-01T18:59:02.985Z] Checked if tokens are valid: true, expires at: 1735761539934
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[debug] [2025-01-01T18:59:02.985Z] Checked if tokens are valid: true, expires at: 1735761539934
+[debug] [2025-01-01T18:59:02.986Z] Checked if tokens are valid: true, expires at: 1735761539934
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2025-01-01T18:59:02.986Z] Checked if tokens are valid: true, expires at: 1735761539934
+[debug] [2025-01-01T18:59:02.986Z] Checked if tokens are valid: true, expires at: 1735761539934
+[debug] [2025-01-01T18:59:02.986Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/cloudfunctions.googleapis.com [none]
+[debug] [2025-01-01T18:59:02.986Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/rd-year-project-1f41d
+[debug] [2025-01-01T18:59:02.987Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/runtimeconfig.googleapis.com [none]
+[debug] [2025-01-01T18:59:02.987Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/rd-year-project-1f41d
+[debug] [2025-01-01T18:59:02.987Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/cloudbuild.googleapis.com [none]
+[debug] [2025-01-01T18:59:02.987Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/cloudbuild.googleapis.com x-goog-quota-user=projects/rd-year-project-1f41d
+[debug] [2025-01-01T18:59:02.988Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/artifactregistry.googleapis.com [none]
+[debug] [2025-01-01T18:59:02.988Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/artifactregistry.googleapis.com x-goog-quota-user=projects/rd-year-project-1f41d
+[debug] [2025-01-01T18:59:03.851Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/runtimeconfig.googleapis.com 200
+[debug] [2025-01-01T18:59:03.852Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/runtimeconfig.googleapis.com [omitted]
+[debug] [2025-01-01T18:59:03.852Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/cloudbuild.googleapis.com 200
+[debug] [2025-01-01T18:59:03.852Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/cloudbuild.googleapis.com [omitted]
+[info] +  functions: required API cloudbuild.googleapis.com is enabled 
+[debug] [2025-01-01T18:59:03.853Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/cloudfunctions.googleapis.com 200
+[debug] [2025-01-01T18:59:03.853Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/cloudfunctions.googleapis.com [omitted]
+[info] +  functions: required API cloudfunctions.googleapis.com is enabled 
+[debug] [2025-01-01T18:59:03.860Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/artifactregistry.googleapis.com 200
+[debug] [2025-01-01T18:59:03.860Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/artifactregistry.googleapis.com [omitted]
+[info] +  artifactregistry: required API artifactregistry.googleapis.com is enabled 
+[debug] [2025-01-01T18:59:03.861Z] Checked if tokens are valid: true, expires at: 1735761539934
+[debug] [2025-01-01T18:59:03.861Z] Checked if tokens are valid: true, expires at: 1735761539934
+[debug] [2025-01-01T18:59:03.861Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d/adminSdkConfig [none]
+[debug] [2025-01-01T18:59:04.471Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d/adminSdkConfig 200
+[debug] [2025-01-01T18:59:04.471Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/rd-year-project-1f41d/adminSdkConfig {"projectId":"rd-year-project-1f41d","storageBucket":"rd-year-project-1f41d.appspot.com","locationId":"europe-west2"}
+[debug] [2025-01-01T18:59:04.472Z] Checked if tokens are valid: true, expires at: 1735761539934
+[debug] [2025-01-01T18:59:04.472Z] Checked if tokens are valid: true, expires at: 1735761539934
+[debug] [2025-01-01T18:59:04.472Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/rd-year-project-1f41d/configs [none]
+[debug] [2025-01-01T18:59:04.875Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/rd-year-project-1f41d/configs 200
+[debug] [2025-01-01T18:59:04.876Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/rd-year-project-1f41d/configs {}
+[debug] [2025-01-01T18:59:04.880Z] Validating nodejs source
+[warn] !  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2025-01-01T18:59:06.219Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "shell": "firebase functions:shell",
+    "start": "firebase emulators:start",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "20"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "bcrypt": "^5.1.1",
+    "firebase": "^10.14.1",
+    "firebase-admin": "^12.6.0",
+    "firebase-functions": "^6.0.1",
+    "firebase-tools": "^1.2.0",
+    "yahoo-finance2": "^2.13.2"
+  },
+  "devDependencies": {
+    "firebase-functions-test": "^3.1.0"
+  },
+  "private": true
+}
+[debug] [2025-01-01T18:59:06.219Z] Building nodejs source
+[info] i  functions: Loading and analyzing source code for codebase default to determine what to deploy 
+[debug] [2025-01-01T18:59:06.220Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-01-01T18:59:06.230Z] Found firebase-functions binary at 'C:\Users\eakol\OneDrive\Desktop\Emmanuel K\college stuff\year 3\3rd-yr-group-project\ACT-Web\functions\node_modules\.bin\firebase-functions'
+[info] Serving at port 8804
+
+[debug] [2025-01-01T18:59:07.517Z] Got response from /__/functions.yaml {"endpoints":{"showDB":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west2"],"labels":{},"httpsTrigger":{},"entryPoint":"showDB"},"addAsset":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west2"],"labels":{},"httpsTrigger":{},"entryPoint":"addAsset"},"removeAsset":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west2"],"labels":{},"httpsTrigger":{},"entryPoint":"removeAsset"},"userOps":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west2"],"labels":{},"httpsTrigger":{},"entryPoint":"userOps"},"history":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west2"],"labels":{},"httpsTrigger":{},"entryPoint":"history"},"priceAlert":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west2"],"labels":{},"httpsTrigger":{},"entryPoint":"priceAlert"},"setReview":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west2"],"labels":{},"httpsTrigger":{},"entryPoint":"setReview"},"AI_reccomend":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west2"],"labels":{},"httpsTrigger":{},"entryPoint":"AI_reccomend"},"AI_blog":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west2"],"labels":{},"httpsTrigger":{},"entryPoint":"AI_blog"},"AI_report":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west2"],"labels":{},"httpsTrigger":{},"entryPoint":"AI_report"},"AI_chatBot":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west2"],"labels":{},"httpsTrigger":{},"entryPoint":"AI_chatBot"},"companyName":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west2"],"labels":{},"httpsTrigger":{},"entryPoint":"companyName"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
+[info] i  extensions: ensuring required API firebaseextensions.googleapis.com is enabled... 
+[debug] [2025-01-01T18:59:07.557Z] Checked if tokens are valid: true, expires at: 1735761539934
+[debug] [2025-01-01T18:59:07.557Z] Checked if tokens are valid: true, expires at: 1735761539934
+[debug] [2025-01-01T18:59:07.557Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/firebaseextensions.googleapis.com [none]
+[debug] [2025-01-01T18:59:07.557Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/rd-year-project-1f41d/services/firebaseextensions.googleapis.com x-goog-quota-user=projects/rd-year-project-1f41d

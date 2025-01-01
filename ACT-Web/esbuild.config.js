@@ -3,12 +3,12 @@ const esbuild = require("esbuild");
 const scripts = [
     { entry: "./public/javascripts/login.js", outfile: "./public/javascripts/loginBundle.js" },
     { entry: "./public/javascripts/signup.js", outfile: "./public/javascripts/signupBundle.js" },
-    { entry: "./public/javascripts/AICode.js", outfile: "./public/javascripts/AICodeBundle.js", platform: "node" },
+    { entry: "./public/javascripts/AICode.js", outfile: "./public/javascripts/AICodeBundle.js" },
 ];
 
 scripts.forEach(script => {
     esbuild.build({
-        platform: script.platform || "browser",
+        platform: "browser",
         entryPoints: [script.entry],
         outfile: script.outfile,
         bundle: true,

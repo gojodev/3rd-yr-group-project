@@ -1,18 +1,24 @@
-// public/javascripts/AICode.js
-var { exec } = require("child_process");
-var path = require("path");
-var STOCK_ANALYSIS_DIR = path.resolve("../../../stock_analysis");
-var VENV_ACTIVATE = process.platform === "win32" ? path.join(STOCK_ANALYSIS_DIR, "venv", "Scripts", "activate") : "source ".concat(path.join(STOCK_ANALYSIS_DIR, "venv", "bin", "activate"));
-var executeCrewCommand = () => {
-  const command = "".concat(VENV_ACTIVATE, " && crewai run");
-  exec(command, {
-    cwd: STOCK_ANALYSIS_DIR,
-    shell: true
-  }, (error, stdout, stderr) => {
-    if (error) console.error("Error: ".concat(error.message));
-    if (stderr) console.error("stderr: ".concat(stderr));
-    if (stdout) console.log("stdout: ".concat(stdout));
-  });
-};
-executeCrewCommand();
-//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsiQUlDb2RlLmpzIl0sCiAgInNvdXJjZXNDb250ZW50IjogWyJjb25zdCB7IGV4ZWMgfSA9IHJlcXVpcmUoJ2NoaWxkX3Byb2Nlc3MnKTtcclxuY29uc3QgcGF0aCA9IHJlcXVpcmUoJ3BhdGgnKTtcclxuXHJcbmNvbnN0IFNUT0NLX0FOQUxZU0lTX0RJUiA9IHBhdGgucmVzb2x2ZSgnLi4vLi4vLi4vc3RvY2tfYW5hbHlzaXMnKTtcclxuY29uc3QgVkVOVl9BQ1RJVkFURSA9IHByb2Nlc3MucGxhdGZvcm0gPT09ICd3aW4zMicgXHJcbiAgPyBwYXRoLmpvaW4oU1RPQ0tfQU5BTFlTSVNfRElSLCAndmVudicsICdTY3JpcHRzJywgJ2FjdGl2YXRlJylcclxuICA6IGBzb3VyY2UgJHtwYXRoLmpvaW4oU1RPQ0tfQU5BTFlTSVNfRElSLCAndmVudicsICdiaW4nLCAnYWN0aXZhdGUnKX1gO1xyXG5cclxuY29uc3QgZXhlY3V0ZUNyZXdDb21tYW5kID0gKCkgPT4ge1xyXG4gIGNvbnN0IGNvbW1hbmQgPSBgJHtWRU5WX0FDVElWQVRFfSAmJiBjcmV3YWkgcnVuYDtcclxuXHJcbiAgZXhlYyhjb21tYW5kLCB7IFxyXG4gICAgY3dkOiBTVE9DS19BTkFMWVNJU19ESVIsXHJcbiAgICBzaGVsbDogdHJ1ZSBcclxuICB9LCAoZXJyb3IsIHN0ZG91dCwgc3RkZXJyKSA9PiB7XHJcbiAgICBpZiAoZXJyb3IpIGNvbnNvbGUuZXJyb3IoYEVycm9yOiAke2Vycm9yLm1lc3NhZ2V9YCk7XHJcbiAgICBpZiAoc3RkZXJyKSBjb25zb2xlLmVycm9yKGBzdGRlcnI6ICR7c3RkZXJyfWApO1xyXG4gICAgaWYgKHN0ZG91dCkgY29uc29sZS5sb2coYHN0ZG91dDogJHtzdGRvdXR9YCk7XHJcbiAgfSk7XHJcbn07XHJcblxyXG5leGVjdXRlQ3Jld0NvbW1hbmQoKTsiXSwKICAibWFwcGluZ3MiOiAiO0FBQUEsSUFBTSxFQUFFLEtBQUssSUFBSSxRQUFRLGVBQWU7QUFDeEMsSUFBTSxPQUFPLFFBQVEsTUFBTTtBQUUzQixJQUFNLHFCQUFxQixLQUFLLFFBQVEseUJBQXlCO0FBQ2pFLElBQU0sZ0JBQWdCLFFBQVEsYUFBYSxVQUN2QyxLQUFLLEtBQUssb0JBQW9CLFFBQVEsV0FBVyxVQUFVLElBQzNELFVBQVUsWUFBSyxLQUFLLG9CQUFvQixRQUFRLE9BQU8sVUFBVTtBQUVyRSxJQUFNLHFCQUFxQixNQUFNO0FBQy9CLFFBQU0sVUFBVSxHQUFHLHNCQUFhO0FBRWhDLE9BQUssU0FBUztBQUFBLElBQ1osS0FBSztBQUFBLElBQ0wsT0FBTztBQUFBLEVBQ1QsR0FBRyxDQUFDLE9BQU8sUUFBUSxXQUFXO0FBQzVCLFFBQUksTUFBTyxTQUFRLE1BQU0sVUFBVSxhQUFNLFFBQVM7QUFDbEQsUUFBSSxPQUFRLFNBQVEsTUFBTSxXQUFXLGNBQVE7QUFDN0MsUUFBSSxPQUFRLFNBQVEsSUFBSSxXQUFXLGNBQVE7QUFBQSxFQUM3QyxDQUFDO0FBQ0g7QUFFQSxtQkFBbUI7IiwKICAibmFtZXMiOiBbXQp9Cg==
+(() => {
+  // public/javascripts/AICode.js
+  async function runCrewAI() {
+    try {
+      const response = await fetch("https://runpythonscript-ieevug7ulq-nw.a.run.app", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to execute CrewAI");
+      }
+      console.log("CrewAI output:", data.output);
+      return data;
+    } catch (error) {
+      console.error("Error:", error);
+      throw error;
+    }
+  }
+  runCrewAI().then((result) => console.log("Success:", result)).catch((error) => console.error("Failed:", error));
+})();
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsiQUlDb2RlLmpzIl0sCiAgInNvdXJjZXNDb250ZW50IjogWyJhc3luYyBmdW5jdGlvbiBydW5DcmV3QUkoKSB7XHJcbiAgdHJ5IHtcclxuICAgICAgY29uc3QgcmVzcG9uc2UgPSBhd2FpdCBmZXRjaCgnaHR0cHM6Ly9ydW5weXRob25zY3JpcHQtaWVldnVnN3VscS1udy5hLnJ1bi5hcHAnLCB7XHJcbiAgICAgICAgICBtZXRob2Q6ICdQT1NUJyxcclxuICAgICAgICAgIGhlYWRlcnM6IHtcclxuICAgICAgICAgICAgICAnQ29udGVudC1UeXBlJzogJ2FwcGxpY2F0aW9uL2pzb24nLFxyXG4gICAgICAgICAgfVxyXG4gICAgICB9KTtcclxuXHJcbiAgICAgIGNvbnN0IGRhdGEgPSBhd2FpdCByZXNwb25zZS5qc29uKCk7XHJcbiAgICAgIGlmICghcmVzcG9uc2Uub2spIHtcclxuICAgICAgICAgIHRocm93IG5ldyBFcnJvcihkYXRhLmVycm9yIHx8ICdGYWlsZWQgdG8gZXhlY3V0ZSBDcmV3QUknKTtcclxuICAgICAgfVxyXG5cclxuICAgICAgY29uc29sZS5sb2coJ0NyZXdBSSBvdXRwdXQ6JywgZGF0YS5vdXRwdXQpO1xyXG4gICAgICByZXR1cm4gZGF0YTtcclxuICB9IGNhdGNoIChlcnJvcikge1xyXG4gICAgICBjb25zb2xlLmVycm9yKCdFcnJvcjonLCBlcnJvcik7XHJcbiAgICAgIHRocm93IGVycm9yO1xyXG4gIH1cclxufVxyXG5cclxuLy8gVXNlIGl0XHJcbnJ1bkNyZXdBSSgpXHJcbiAgLnRoZW4ocmVzdWx0ID0+IGNvbnNvbGUubG9nKCdTdWNjZXNzOicsIHJlc3VsdCkpXHJcbiAgLmNhdGNoKGVycm9yID0+IGNvbnNvbGUuZXJyb3IoJ0ZhaWxlZDonLCBlcnJvcikpOyJdLAogICJtYXBwaW5ncyI6ICI7O0FBQUEsaUJBQWUsWUFBWTtBQUN6QixRQUFJO0FBQ0EsWUFBTSxXQUFXLE1BQU0sTUFBTSxtREFBbUQ7QUFBQSxRQUM1RSxRQUFRO0FBQUEsUUFDUixTQUFTO0FBQUEsVUFDTCxnQkFBZ0I7QUFBQSxRQUNwQjtBQUFBLE1BQ0osQ0FBQztBQUVELFlBQU0sT0FBTyxNQUFNLFNBQVMsS0FBSztBQUNqQyxVQUFJLENBQUMsU0FBUyxJQUFJO0FBQ2QsY0FBTSxJQUFJLE1BQU0sS0FBSyxTQUFTLDBCQUEwQjtBQUFBLE1BQzVEO0FBRUEsY0FBUSxJQUFJLGtCQUFrQixLQUFLLE1BQU07QUFDekMsYUFBTztBQUFBLElBQ1gsU0FBUyxPQUFPO0FBQ1osY0FBUSxNQUFNLFVBQVUsS0FBSztBQUM3QixZQUFNO0FBQUEsSUFDVjtBQUFBLEVBQ0Y7QUFHQSxZQUFVLEVBQ1AsS0FBSyxZQUFVLFFBQVEsSUFBSSxZQUFZLE1BQU0sQ0FBQyxFQUM5QyxNQUFNLFdBQVMsUUFBUSxNQUFNLFdBQVcsS0FBSyxDQUFDOyIsCiAgIm5hbWVzIjogW10KfQo=
