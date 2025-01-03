@@ -6,17 +6,14 @@
     <title>Homepage</title>
     <script src="https://kit.fontawesome.com/cdbe41a012.js" crossorigin="anonymous"></script>
     <style>
-   
         body {
             padding: 0;
             margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
             font-family: Arial, sans-serif;
             background: linear-gradient(90deg, #b90529, #ed6104, #b90529);
-        }
-
-        main {
-            min-height: 462px;
-            height: auto;
         }
 
         .header-top {
@@ -31,7 +28,7 @@
         .header-top .name {
             font-size: 24px;
             font-weight: bold;
-            margin-left: 3%;
+            width: 90%;
         }
 
         .header-top .contact {
@@ -43,55 +40,14 @@
             line-height: 1.5;
         }
 
-        .divider {
-            height: 1px;
-            background-color: black;
-        }
-
-        .header-bottom {
-            background-color: #ececec;
-            
-        }
-
-        .header-bottom nav {
-            display: flex;
-            justify-content: center;
-            align-items:center;
-            padding: 10px 0;
-        }
-
-        .header-bottom nav a {
-            color: black;
-            text-decoration: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-
-        .header-bottom nav a:hover {
-            background-color: #555;
-        }
-
-        .login {
-            border: 2px solid blue;
-            padding: 8px 18px;
-            border-radius: 5px;
-            transition: background-color 0.5s ease, background-position 0.5s ease;
-        }
-
-        .login:hover {
-            background-color: blue;
-            color: white;
-        }
-
-        .signup {
+        .signout {
             border: 2px solid red;
             padding: 8px 18px;
             border-radius: 5px;
             transition: background-color 0.5s ease, background-position 0.5s ease;
         }
 
-        .signup:hover {
+        .signout:hover {
             background-color: red;
             color: white;
         }
@@ -104,171 +60,137 @@
             margin-left: 17.5%;
             padding: 20px;
             margin-top: 3%;
-            
         }
 
+        #dropdown-menu div {
+            width: 35px;
+            height: 3px;
+            background-color: black;
+            margin: 6px 0;
+            transition: 0.4s;
+        }
 
-    
-#dropdown-menu div {
-    width: 35px;
-    height: 3px;
-    background-color: black;
-    margin: 6px 0;
-    transition: 0.4s;
-}
-    
-.open .dropdown-line1 {
-    -webkit-transform: rotate(-45deg) translate(-6px, 6px);
-    transform: rotate(-45deg) translate(-6px, 6px);
-}
-    
-.open .dropdown-line2 {
-    opacity: 0;
-}
-    
-.open .dropdown-line3 {
-    -webkit-transform: rotate(45deg) translate(-6px, -8px);
-    transform: rotate(45deg) translate(-6px, -8px);
-}
-    
-.open .mobile-menu {
-    display: flex;
-    flex-direction: column;
-}
-    
-.mobile-menu {
-    display: none;
-    position: absolute;
-    top: auto;
-    left: 0;
-    width: 100%;
-    background-color: #ececec;
-    padding: 0;
-}
+        .open .dropdown-line1 {
+            -webkit-transform: rotate(-45deg) translate(-6px, 6px);
+            transform: rotate(-45deg) translate(-6px, 6px);
+        }
 
-ul {
-    list-style-type: none;
-}
+        .open .dropdown-line2 {
+            opacity: 0;
+        }
 
-.mobile-menu li {
-    text-align: center;
-    margin-left: 37.5%;
-    width: 25%;
-    
-}
-    
-.mobile-menu a {
-    color: black;
-    text-decoration: none;
-}
+        .open .dropdown-line3 {
+            -webkit-transform: rotate(45deg) translate(-6px, -8px);
+            transform: rotate(45deg) translate(-6px, -8px);
+        }
 
-.nav1 {
-    padding-top: 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid black;
-}
-
-.nav2 {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid black;
-}
-
-.nav3 {
-    padding-bottom: 10px;
-    padding-top: 10px;
-    border-bottom: 2px solid black;
-}
-
-.nav4 {
-    padding-bottom: 10px;
-    padding-top: 10px;
-    border-bottom: 2px solid black;
-}
-
-.nav5 {
-    padding-bottom: 10px;
-    padding-top: 10px;
-    border-bottom: 2px solid black;
-}
-
-.nav6 {
-    padding-bottom: 20px;
-    padding-top: 20px;
-}
-
-footer {
-    background-color: #ececec;
-    color: black;
-}
-
-.footers {
+        .open .mobile-menu {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
+            flex-direction: column;
         }
 
-.right ul {
-    list-style-type: none;
-}
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: auto;
+            left: 0;
+            width: 20%;
+            background-color: #ececec;
+            padding: 0;
+            border-right: 5px solid black;
+            border-bottom: 5px solid black;
+        }
 
-.right a {
-    color: black;
-    text-decoration: none;
-}
+        ul {
+            list-style-type: none;
+        }
 
-.right{ 
-    padding-right: 12.5%;
-    width: 25%;
-    text-align: center;
-}
+        .mobile-menu li {
+            text-align: center;
+            margin-left: 25%;
+            width: 50%;
+        }
 
-.left {
-    padding-left: 12.5%;
-    width: 25%;
-    text-align: center;
-}
+        .mobile-menu a {
+            color: black;
+            text-decoration: none;
+        }
 
-.footernav1 {
-    padding-bottom: 10px;
-    border-bottom: 2px solid black;
-}
+        .nav1, .nav2, .nav3, .nav4, .nav5{
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid black;
+        }
 
-.footernav2 {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid black;
-}
+        .nav1 {
+            padding-top: 20px;
+        }
 
-.footernav3 {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid black;
-}
+        .nav6 {
+            padding-bottom: 20px;
+            padding-top: 20px;
+        }
 
-.footernav4 {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid black;
-}
+        footer {
+            background-color: #ececec;
+            color: black;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: auto;
+        }
 
-.footernav5 {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid black;
-}
+        .left, .right {
+            padding: 5px 0;
+            margin: 0;
+            width: 100%;
+            text-align: center;
+        }
 
+        .right ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
 
-.bottommain h4 {
-    text-align: left;
-}
+        .right a {
+            color: black;
+            text-decoration: none;
+        }
 
+        .footernav1 {
+            padding-top: 20px;
+            padding-bottom: 10px;
+            border-top: 2px solid black;
+        }
 
+        .bottommain h4 {
+            text-align: left;
+        }
+
+        .notification {
+            position: fixed;
+            top: 50px;
+            right: 20px;
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            height: 450px;
+            width: 250px;
+        }
+
+        .notification.visible {
+            opacity: 1;
+        }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    
     <header>
         <div class="header-top">
             <div id="dropdown-menu" onclick="toggleMobileMenu(this)">
@@ -276,140 +198,57 @@ footer {
                 <div class="dropdown-line2"></div>
                 <div class="dropdown-line3"></div>
                 <ul class="mobile-menu">
-                    <li class="nav1"><a href="loggedinindex.html">Home</a></li>
-                    <li class="nav2"><a href="clients.html">Clients</a></li>
-                    <li class="nav3"><a href="predict.html">Predict</a></li>
-                    <li class="nav4"><a href="report.html">Report</a></li>
-                    <li class="nav5"><a href="pricealerts.html"><i class="fa-solid fa-bell fa-2x" style="color: black;"></i></a></li>
-                    <li class="nav6"><a href="index.html" class="signup">Sign Out</a></li>
+                    <li class="nav1"><a href="loggedinhomepage.html">Home</a></li>
+                    <li class="nav2"><a href="stocks.html">Stocks</a></li>
+                    <li class="nav3"><a href="cryptos.html">Cryptos</a></li>
+                    <li class="nav4"><a href="clients.html">Clients</a></li>
+                    <li class="nav5"><a href="report.html">AI</a></li>
+                    <li class="nav6"><a href="index.html" class="signout">Sign Out</a></li>
                 </ul>
             </div>
-            <div class="name">Name</div>
+            <div class="name">ACT-WEB</div>
             <div class="darkmode">
-                <button onclick="toggleBackgroundColor()">Dark Mode</button>         
+                <i class="fa-solid fa-moon fa-2x" onclick="toggleBackgroundColor()" style="padding-right: 20px;"></i>
+                <i id="notifyIcon" class="fa-solid fa-bell fa-2x notification-icon"></i>
             </div>
         </div>
-
     </header>
 
+    <div id="notificationBox" class="notification hidden">
+        Loading Alerts ...
+    </div>
 
     <main>
         <div class="main">
             <div class="topmain">
                 <h1>Welcome Fund Managers</h1>
-                <h2>Thank you for choosing Buy High, Cry Later for all your trading needs</h2>
+                <h2>Thank you for choosing our ACT-WEB for all your trading needs</h2>
             </div>
             <div class="bottommain">
                 <h1>Above in the header you have multiple options</h1>
+                <h4>Stocks: This is where you can view all available stocks and their details</h4>
+                <h4>Cryptos: This is where you can view all available cryptos and their details</h4>
                 <h4>Clients: Where you can manage your clients trading and also add new clients</h4>
-                <h4>Predict: Allows you view predicted future prices of 10 technology shares and 3 crypto assets for each of your clients</h4>
-                <h4>Report: Where you can run financial reports on a chosen technology and crypto set</h4>
-                <h4>Bell: Takes you to our price alerts page</h4>
+                <h4>AI: Where you can run financial reports on a chosen technology and crypto set or you can get recommendation on any stock or crypto</h4>
+                <h4>You can also click the bell icon to get the price alerts</h4>
             </div>
         </div>
     </main>
 
     <footer>
-        <div class="footers">
         <div class="left">
-            <h4>Phone:</h4>
-            <h4>Email</h4>
+            <h4>Phone: 089-4590-332 | Email: Actweb@gmail.com</h4>
         </div>
         <div class="right">
             <ul>
-                <li class="footernav1"><a href="index.html">> Home</a></li>
-                <li class="footernav2"><a href="">> Clients</a></li>
-                <li class="footernav3"><a href="">> Predict</a></li>
-                <li class="footernav4"><a href="">> Report</a></li>
-                <li class="footernav5"><a href="">> Price Alerts</a></li>
+                <li class="footernav1"><a href="loggedinhomepage.html">Home</a> | <a href="stocks.html">Stocks</a> | <a href="cryptos.html">Cryptos</a> | <a href="clients.html">Clients</a> | <a href="report.html">AI</a></li>
             </ul>
-        </div>
         </div>
     </footer>
 
     <script src="javascripts/mobilemenu.js"></script>
-    <script>
-        let isRedYellow = true;
-
-        function toggleBackgroundColor() {
-            if (isRedYellow) {
-                document.body.style.background = 'linear-gradient(90deg, #07037a, #086903, #07037a)';
-
-                document.querySelector('.header-top').style.backgroundColor = 'black';
-                document.querySelector('.header-top').style.color = 'white';
-                document.querySelector('.dropdown-line1').style.backgroundColor = 'white';
-                document.querySelector('.dropdown-line2').style.backgroundColor = 'white';
-                document.querySelector('.dropdown-line3').style.backgroundColor = 'white';
-
-                document.querySelector('footer').style.backgroundColor = 'black';
-                document.querySelector('.footernav1 a').style.color = 'white';
-                document.querySelector('.footernav2 a').style.color = 'white';
-                document.querySelector('.footernav3 a').style.color = 'white';
-                document.querySelector('.footernav4 a').style.color = 'white';
-                document.querySelector('.footernav5 a').style.color = 'white';
-                document.querySelector('footer').style.color = 'white';
-
-                document.querySelector('.footernav1').style.borderBottom = '2px solid white';
-                document.querySelector('.footernav2').style.borderBottom = '2px solid white';
-                document.querySelector('.footernav3').style.borderBottom = '2px solid white';
-                document.querySelector('.footernav4').style.borderBottom = '2px solid white';
-                document.querySelector('.footernav5').style.borderBottom = '2px solid white';
-
-                document.querySelector('.nav1').style.borderBottom = '2px solid white';
-                document.querySelector('.nav2').style.borderBottom = '2px solid white';
-                document.querySelector('.nav3').style.borderBottom = '2px solid white';
-                document.querySelector('.nav4').style.borderBottom = '2px solid white';
-                document.querySelector('.nav5').style.borderBottom = '2px solid white';
-
-                document.querySelector('.mobile-menu').style.backgroundColor = 'black';
-
-                document.querySelector('.nav1 a').style.color = 'white';
-                document.querySelector('.nav2 a').style.color = 'white';
-                document.querySelector('.nav3 a').style.color = 'white';
-                document.querySelector('.nav4 a').style.color = 'white';
-                document.querySelector('.nav5 i').style.color = 'white';
-                document.querySelector('.nav6 a').style.color = 'white';
-            } else {
-                document.body.style.background = 'linear-gradient(90deg, #b90529, #ed6104, #b90529)';
-
-                document.querySelector('.header-top').style.backgroundColor = '#ececec';
-                document.querySelector('.header-top').style.color = 'black';
-                document.querySelector('.dropdown-line1').style.backgroundColor = 'black';
-                document.querySelector('.dropdown-line2').style.backgroundColor = 'black';
-                document.querySelector('.dropdown-line3').style.backgroundColor = 'black';
-
-                document.querySelector('footer').style.backgroundColor = '#ececec';
-                document.querySelector('.footernav1 a').style.color = 'black';
-                document.querySelector('.footernav2 a').style.color = 'black';
-                document.querySelector('.footernav3 a').style.color = 'black';
-                document.querySelector('.footernav4 a').style.color = 'black';
-                document.querySelector('.footernav5 a').style.color = 'black';
-                document.querySelector('footer').style.color = 'black';
-
-                document.querySelector('.footernav1').style.borderBottom = '2px solid black';
-                document.querySelector('.footernav2').style.borderBottom = '2px solid black';
-                document.querySelector('.footernav3').style.borderBottom = '2px solid black';
-                document.querySelector('.footernav4').style.borderBottom = '2px solid black';
-                document.querySelector('.footernav5').style.borderBottom = '2px solid black';
-
-                document.querySelector('.nav1').style.borderBottom = '2px solid black';
-                document.querySelector('.nav2').style.borderBottom = '2px solid black';
-                document.querySelector('.nav3').style.borderBottom = '2px solid black';
-                document.querySelector('.nav4').style.borderBottom = '2px solid black';
-                document.querySelector('.nav5').style.borderBottom = '2px solid black';
-
-                document.querySelector('.mobile-menu').style.backgroundColor = 'white';
-
-                document.querySelector('.nav1 a').style.color = 'black';
-                document.querySelector('.nav2 a').style.color = 'black';
-                document.querySelector('.nav3 a').style.color = 'black';
-                document.querySelector('.nav4 a').style.color = 'black';
-                document.querySelector('.nav5 i').style.color = 'black';
-                document.querySelector('.nav6 a').style.color = 'black';
-            }
-            isRedYellow = !isRedYellow;
-        }
-    </script>
-
+    <script src="javascripts/noti.js"></script>
+    <script src="javascripts/darkmode.js"></script>
+    <script src="javascripts/user_passer.js"></script>
 </body>
 </html>

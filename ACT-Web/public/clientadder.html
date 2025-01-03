@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>Client Add</title>
     <style>
-    
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -40,8 +39,7 @@
             margin-bottom: 8px;
         }
 
-        .login-container input[type="email"],
-        .login-container input[type="password"] {
+        .login-container input {
             padding: 10px;
             margin-bottom: 20px;
             border: 1px solid #ccc;
@@ -91,21 +89,93 @@
     <div class="login-container">
         <h2>New Client</h2>
 
-        <form id="loginForm">
-            <label for="email">First Name:</label>
-            <input type="email" id="email" name="email" placeholder="Enter First Name" required>
+        <form id="adderForm">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" placeholder="Enter your username" required>
 
-            <label for="password">Second Name:</label>
-            <input type="password" id="password" name="password" placeholder="Enter Second Name" required>
+            <label for="username">Name:</label>
+            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+
+            <label for="username">Contact:</label>
+            <input type="text" id="contact" name="contact" placeholder="Enter your contact number" required>
 
             <div class="error-message" id="error-message">
                 Invalid email or password!
             </div>
 
-            <input type="submit" value="Add">
+            <input type="submit" value="Create Client" id="loginButton">
         </form>
 
     </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const managers_username = urlParams.get('username');
+
+        async function addClient(client_username, managers_username, client_name, client_contact, operation, type) {
+            try {
+                const response = await fetch('https://userops-ieevug7ulq-nw.a.run.app', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        client_username,
+                        managers_username,
+                        client_name,
+                        client_contact,
+                        operation,
+                        type,
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const userData = await response.json();
+                return userData;
+            } catch (error) {
+                console.error('Error verifying user data:', error);
+                return { verdict: 'error', message: 'Server error. Please try again later.' };
+            }
+        }
+
+        document.getElementById('adderForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const client_username = document.getElementById('username').value.trim();
+            const name = document.getElementById('name').value.trim();
+            const contact = document.getElementById('contact').value.trim();
+
+            if (!client_username || !name || !contact) {
+                const errorMessage = document.getElementById('error-message');
+                errorMessage.style.display = 'block';
+                errorMessage.textContent = 'Please fill in all fields!';
+                return;
+            }
+
+            console.log('hi')
+            const result = await addClient(client_username, managers_username, name, contact, 'create', 'client');
+            console.log(result)
+            console.log(result.verdict)
+            console.log(`Updated ${managers_username}'s' client list with ${client_username}'s' details`)
+
+            if (result.verdict == `Updated ${managers_username}'s client list with ${client_username}'s details`) {
+                location.href = `clients.html?username=${encodeURIComponent(managers_username)}`;
+            }
+
+        });
+        function autofill() {
+                document.getElementById("username").value = "c_user5"
+                document.getElementById("name").value = "Client five"
+                document.getElementById("contact").value = "089-6787-8905"
+            }
+
+        autofill()
+
+
+    </script>
 
 </body>
 </html>

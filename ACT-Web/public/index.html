@@ -6,72 +6,6 @@
     <title>Homepage</title>
     <script src="https://kit.fontawesome.com/cdbe41a012.js" crossorigin="anonymous"></script>
     <style>
-   
-        body {
-            padding: 0;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(90deg, #b90529, #ed6104, #b90529);
-        }
-
-        main {
-            min-height: 542px;
-            height: auto;
-        }
-
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            background-color: #ececec;
-            color: black;
-        }
-
-        .header-top .name {
-            font-size: 24px;
-            font-weight: bold;
-            margin-left: 3%;
-        }
-
-        .header-top .contact {
-            text-align: right;
-        }
-
-        .header-top .contact p {
-            margin: 0;
-            line-height: 1.5;
-        }
-
-        .divider {
-            height: 1px;
-            background-color: black;
-        }
-
-        .header-bottom {
-            background-color: #ececec;
-            
-        }
-
-        .header-bottom nav {
-            display: flex;
-            justify-content: center;
-            align-items:center;
-            padding: 10px 0;
-        }
-
-        .header-bottom nav a {
-            color: black;
-            text-decoration: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-
-        .header-bottom nav a:hover {
-            background-color: #555;
-        }
-
         .login {
             border: 2px solid blue;
             padding: 8px 18px;
@@ -95,6 +29,40 @@
             background-color: red;
             color: white;
         }
+   
+        body {
+            padding: 0;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(90deg, #b90529, #ed6104, #b90529);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #ececec;
+            color: black;
+        }
+
+        .header-top .name {
+            font-size: 24px;
+            font-weight: bold;
+            width: 90%;
+        }
+
+        .header-top .contact {
+            text-align: right;
+        }
+
+        .header-top .contact p {
+            margin: 0;
+            line-height: 1.5;
+        }
 
         .main {
             background-color: rgba(0, 0, 0, 0.5);
@@ -104,132 +72,115 @@
             margin-left: 17.5%;
             padding: 20px;
             margin-top: 3%;
-            
         }
 
+        #dropdown-menu div {
+            width: 35px;
+            height: 3px;
+            background-color: black;
+            margin: 6px 0;
+            transition: 0.4s;
+        }
 
-    
-#dropdown-menu div {
-    width: 35px;
-    height: 3px;
-    background-color: black;
-    margin: 6px 0;
-    transition: 0.4s;
-}
-    
-.open .dropdown-line1 {
-    -webkit-transform: rotate(-45deg) translate(-6px, 6px);
-    transform: rotate(-45deg) translate(-6px, 6px);
-}
-    
-.open .dropdown-line2 {
-    opacity: 0;
-}
-    
-.open .dropdown-line3 {
-    -webkit-transform: rotate(45deg) translate(-6px, -8px);
-    transform: rotate(45deg) translate(-6px, -8px);
-}
-    
-.open .mobile-menu {
-    display: flex;
-    flex-direction: column;
-}
-    
-.mobile-menu {
-    display: none;
-    position: absolute;
-    top: auto;
-    left: 0;
-    width: 100%;
-    background-color: #ececec;
-    padding: 0;
-}
+        .open .dropdown-line1 {
+            -webkit-transform: rotate(-45deg) translate(-6px, 6px);
+            transform: rotate(-45deg) translate(-6px, 6px);
+        }
 
-ul {
-    list-style-type: none;
-}
+        .open .dropdown-line2 {
+            opacity: 0;
+        }
 
-.mobile-menu li {
-    text-align: center;
-    margin-left: 37.5%;
-    width: 25%;
-    
-}
-    
-.mobile-menu a {
-    color: black;
-    text-decoration: none;
-}
+        .open .dropdown-line3 {
+            -webkit-transform: rotate(45deg) translate(-6px, -8px);
+            transform: rotate(45deg) translate(-6px, -8px);
+        }
 
-.nav1 {
-    padding-top: 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid black;
-}
-
-.nav2 {
-    padding-top: 30px;
-    margin-bottom: 10px;
-}
-
-.nav3 {
-    padding-bottom: 20px;
-    padding-top: 20px;
-}
-
-footer {
-    background-color: #ececec;
-    color: black;
-}
-
-.footers {
+        .open .mobile-menu {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
+            flex-direction: column;
         }
 
-.right ul {
-    list-style-type: none;
-}
+        .mobile-menu {
+            display: none;
+            position: absolute;
+            top: auto;
+            left: 0;
+            width: 20%;
+            background-color: #ececec;
+            padding: 0;
+            border-right: 5px solid black;
+            border-bottom: 5px solid black;
+        }
 
-.right a {
-    color: black;
-    text-decoration: none;
-}
+        ul {
+            list-style-type: none;
+        }
 
-.right{ 
-    padding-right: 12.5%;
-    width: 25%;
-    text-align: center;
-}
+        .mobile-menu li {
+            text-align: center;
+            margin-left: 25%;
+            width: 50%;
+        }
 
-.left {
-    padding-left: 12.5%;
-    width: 25%;
-    text-align: center;
-}
+        .mobile-menu a {
+            color: black;
+            text-decoration: none;
+        }
 
-.footernav1 {
-    padding-bottom: 10px;
-    border-bottom: 2px solid black;
-}
+        .nav1{
+            padding-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid black;
+        }
 
-.footernav2 {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid black;
-}
+        .nav1 {
+            padding-top: 20px;
+        }
 
-.footernav3 {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid black;
-}
+        .nav2 {
+            padding-bottom: 20px;
+            padding-top: 20px;
+        }
 
+        .nav3 {
+            padding-bottom: 20px;
+            padding-top: 5px;
+        }
 
+        footer {
+            background-color: #ececec;
+            color: black;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: auto;
+        }
 
+        .left, .right {
+            padding: 5px 0;
+            margin: 0;
+            width: 100%;
+            text-align: center;
+        }
+
+        .right ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .right a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .footernav1 {
+            padding-top: 20px;
+            padding-bottom: 10px;
+            border-top: 2px solid black;
+        }
     </style>
 </head>
 <body>
@@ -246,8 +197,10 @@ footer {
                     <li class="nav3"><a href="singup.html" class="signup">Sign Up</a></li>
                 </ul>
             </div>
-            <div class="name">Name</div>
-            <div class="darkmode"><button onclick="toggleBackgroundColor()">Dark Mode</button></div>
+            <div class="name">ACT-WEB</div>
+            <div class="darkmode">
+                <i class="fa-solid fa-moon fa-2x" onclick="toggleBackgroundColor()"></i>     
+            </div>
         </div>
 
     </header>
@@ -263,69 +216,12 @@ footer {
     </main>
 
     <footer>
-        <div class="footers">
         <div class="left">
-            <h4>Phone:</h4>
-            <h4>Email</h4>
-        </div>
-        <div class="right">
-            <ul>
-                <li class="footernav1"><a href="index.html">> Home</a></li>
-                <li class="footernav2"><a href="login.html">> Login</a></li>
-                <li class="footernav3"><a href="singup.html">> Sign Up</a></li>
-            </ul>
-        </div>
+            <h4>Phone: 089-4590-332 | Email: Actweb@gmail.com</h4>
         </div>
     </footer>
 
     <script src="javascripts/mobilemenu.js"></script>
-    <script>
-        let isRedYellow = true;
-
-        function toggleBackgroundColor() {
-            if (isRedYellow) {
-                document.body.style.background = 'linear-gradient(90deg, #07037a, #086903, #07037a)';
-                document.querySelector('.header-top').style.backgroundColor = 'black';
-                document.querySelector('.header-top').style.color = 'white';
-                document.querySelector('.dropdown-line1').style.backgroundColor = 'white';
-                document.querySelector('.dropdown-line2').style.backgroundColor = 'white';
-                document.querySelector('.dropdown-line3').style.backgroundColor = 'white';
-                document.querySelector('footer').style.backgroundColor = 'black';
-                document.querySelector('.footernav1 a').style.color = 'white';
-                document.querySelector('.footernav2 a').style.color = 'white';
-                document.querySelector('.footernav3 a').style.color = 'white';
-                document.querySelector('footer').style.color = 'white';
-                document.querySelector('.footernav1').style.borderBottom = '2px solid white';
-                document.querySelector('.footernav2').style.borderBottom = '2px solid white';
-                document.querySelector('.footernav3').style.borderBottom = '2px solid white';
-                document.querySelector('.nav1').style.borderBottom = '2px solid white';
-                document.querySelector('.mobile-menu').style.backgroundColor = 'black';
-                document.querySelector('.nav1 a').style.color = 'white';
-                document.querySelector('.nav2 a').style.color = 'white';
-                document.querySelector('.nav3 a').style.color = 'white';
-            } else {
-                document.body.style.background = 'linear-gradient(90deg, #b90529, #ed6104, #b90529)';
-                document.querySelector('.header-top').style.backgroundColor = '#ececec';
-                document.querySelector('.header-top').style.color = 'black';
-                document.querySelector('.dropdown-line1').style.backgroundColor = 'black';
-                document.querySelector('.dropdown-line2').style.backgroundColor = 'black';
-                document.querySelector('.dropdown-line3').style.backgroundColor = 'black';
-                document.querySelector('footer').style.backgroundColor = '#ececec';
-                document.querySelector('.footernav1 a').style.color = 'black';
-                document.querySelector('.footernav2 a').style.color = 'black';
-                document.querySelector('.footernav3 a').style.color = 'black';
-                document.querySelector('footer').style.color = 'black';
-                document.querySelector('.footernav1').style.borderBottom = '2px solid black';
-                document.querySelector('.footernav2').style.borderBottom = '2px solid black';
-                document.querySelector('.footernav3').style.borderBottom = '2px solid black';
-                document.querySelector('.nav1').style.borderBottom = '2px solid black';
-                document.querySelector('.mobile-menu').style.backgroundColor = 'white';
-                document.querySelector('.nav1 a').style.color = 'black';
-                document.querySelector('.nav2 a').style.color = 'black';
-                document.querySelector('.nav3 a').style.color = 'black';
-            }
-            isRedYellow = !isRedYellow;
-        }
-    </script>
+    <script src="javascripts/darkmode.js"></script>
 </body>
 </html>

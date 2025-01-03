@@ -6,8 +6,6 @@ search_tool = SerperDevTool(
 	n_results=5
 )
 
-
-
 @CrewBase
 class StockAnalysis():
 	"""StockAnalysis crew"""
@@ -21,8 +19,7 @@ class StockAnalysis():
 			config=self.agents_config['researcher'],
 			 tools=[search_tool], 
 			 verbose=True,
-			 max_iter = 3,
-			 max_tokens = 3000
+			 max_iter = 3
 		)
 
 	@agent
@@ -32,8 +29,7 @@ class StockAnalysis():
 		    verbose=True,
 			max_iter = 3,
 			# llm = LLM(model="gemini/gemini-1.5-flash",
-			# 		api_key="AIzaSyBd3xPQsd-cswTe90BQG2tl9fZG0FZD8kQ",
-			# 		max_tokens = 3000) 
+			# 		api_key="AIzaSyBd3xPQsd-cswTe90BQG2tl9fZG0FZD8kQ") 
 		)
 	
 	@agent
@@ -43,8 +39,7 @@ class StockAnalysis():
 			verbose=True,
 			max_iter = 1,
 			# llm=LLM(model="ollama/mistral:latest",
-		   	# 		base_url="http://localhost:11434",
-			# 		max_tokens = 3000)
+		   	# 		base_url="http://localhost:11434")
 		)
 	
 	@agent

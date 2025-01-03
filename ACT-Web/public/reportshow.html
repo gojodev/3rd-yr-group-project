@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clients</title>
+    <title>Predict</title>
     <script src="https://kit.fontawesome.com/cdbe41a012.js" crossorigin="anonymous"></script>
     <style>
         body {
             padding: 0;
             margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
             font-family: Arial, sans-serif;
             background: linear-gradient(90deg, #b90529, #ed6104, #b90529);
-        }
-
-        main {
-            min-height: 502px;
-            height: auto;
         }
 
         .header-top {
@@ -43,16 +40,26 @@
             line-height: 1.5;
         }
 
+        .signout {
+            border: 2px solid red;
+            padding: 8px 18px;
+            border-radius: 5px;
+            transition: background-color 0.5s ease, background-position 0.5s ease;
+        }
+
+        .signout:hover {
+            background-color: red;
+            color: white;
+        }
+
         .main {
             background-color: rgba(0, 0, 0, 0.5);
             text-align: center;
             color: white;
-            width: 60%;
-            margin-left: 18.5%;
+            width: 65%;
+            margin-left: 17.5%;
             padding: 20px;
             margin-top: 3%;
-            margin-bottom: 3%;
-            padding-bottom: 40px;
         }
 
         #dropdown-menu div {
@@ -82,18 +89,6 @@
             flex-direction: column;
         }
 
-        .signout {
-            border: 2px solid red;
-            padding: 8px 18px;
-            border-radius: 5px;
-            transition: background-color 0.5s ease, background-position 0.5s ease;
-        }
-
-        .signout:hover {
-            background-color: red;
-            color: white;
-        }
-
         .mobile-menu {
             display: none;
             position: absolute;
@@ -121,11 +116,7 @@
             text-decoration: none;
         }
 
-        .nav1,
-        .nav2,
-        .nav3,
-        .nav4,
-        .nav5 {
+        .nav1, .nav2, .nav3, .nav4, .nav5{
             padding-top: 10px;
             padding-bottom: 10px;
             border-bottom: 2px solid black;
@@ -150,8 +141,7 @@
             margin-top: auto;
         }
 
-        .left,
-        .right {
+        .left, .right {
             padding: 5px 0;
             margin: 0;
             width: 100%;
@@ -199,17 +189,27 @@
             display: none;
         }
 
-        .clientbottom a {
-            text-decoration: none;
+        #report{
+            background-color: rgba(0, 0, 0, 0.5);
+            
             color: white;
-            border: 5px solid black;
+            width: 65%;
+            margin-left: 17.5%;
+            padding: 20px;
+            margin-top: 3%;
+            margin-bottom: 3%;
+        }
+
+        button {
+            margin-top: 10px;
+            width: 30%;
             padding: 10px;
+            font-size: 16px;
+            margin-left: 35%;
         }
     </style>
 </head>
-
 <body>
-
     <header>
         <div class="header-top">
             <div id="dropdown-menu" onclick="toggleMobileMenu(this)">
@@ -232,25 +232,16 @@
             </div>
         </div>
     </header>
-
     <div id="notificationBox" class="notification hidden">
         Loading Alerts ...
     </div>
 
     <main>
-        <div class="main">
-            <div class="clienttop">
-                <h2>Here you can see all your client details:</h2>
-            </div>
-            <div class="clientmiddle">
-
-            </div>
-
-            <div class="clientbottom">
-                <h3>Want to add new clients? Click the button below and fill in the details</h3>
-                <a href="clientadder.html">Add New Clients</a>
-            </div>
+        <div class="main" id="main-content">
+            
         </div>
+        <button id="Button">Get Report</button>
+        <div id="report"></div>
     </main>
 
     <footer>
@@ -269,127 +260,57 @@
     <script src="javascripts/darkmode.js"></script>
     <script src="javascripts/user_passer.js"></script>
     <script>
+
         const urlParams2 = new URLSearchParams(window.location.search);
-        const username2 = urlParams2.get('username');
+        const the_name = urlParams2.get('symbol');
 
-        if (username2) {
-            const link = document.querySelector('.clientbottom a');
-            const href = link.href;
-            link.href = `${href}?username=${encodeURIComponent(username)}`;
+        const mainContent = document.getElementById('main-content');
+        if (the_name) {
+            const h1Element = document.createElement('h1');
+            h1Element.textContent = the_name; 
+            mainContent.appendChild(h1Element); 
         }
-    </script>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-        import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAFayRb90ywbg82EcLOnH5iBDm3qnZx9TU",
-            authDomain: "rd-year-project-1f41d.firebaseapp.com",
-            projectId: "rd-year-project-1f41d",
-            storageBucket: "rd-year-project-1f41d.appspot.com",
-            messagingSenderId: "823208675027",
-            appId: "1:823208675027:web:040ff96eac0fc89b0e3626",
-            measurementId: "G-86DQSH17PT"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const storage = getStorage(app);
-
-        async function fetchJsonFromFirebase() {
+        async function AI_blog() {
             try {
-                const storageRef = ref(storage, "currentUser.json"); 
-                const url = await getDownloadURL(storageRef);
+                const response = await fetch('https://ai-blog-ieevug7ulq-nw.a.run.app', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
 
-                const response = await fetch(url);
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
 
-                const jsonData = await response.json();
-                return jsonData;
+                const userData = await response.json();
+                return userData;
             } catch (error) {
-                console.error("Error fetching JSON file:", error);
+                console.error('Error fetching user data:', error);
             }
         }
 
 
-function createClientBox(clientID, client) {
-    const clientBox = document.createElement("div");
-    clientBox.style.border = "1px solid black";
-    clientBox.style.margin = "10px";
-    clientBox.style.padding = "15px";
-    clientBox.style.backgroundColor = "white";
-    clientBox.style.borderRadius = "25px";
-    clientBox.style.color = "black";
+        document.getElementById('Button').addEventListener('click', async () => {
+            const report = await AI_blog()
+            console.log(report)
 
-    const name = document.createElement("h3");
-    name.textContent = `Name: ${client.name}`;
+            console.log(typeof report); 
 
-    const viewClientButton = document.createElement("button");
-    viewClientButton.textContent = "View Client";
-    viewClientButton.style.padding = "10px 20px";
-    viewClientButton.style.marginTop = "10px";
-    viewClientButton.style.border = "none";
-    viewClientButton.style.borderRadius = "5px";
-    viewClientButton.style.backgroundColor = "#007BFF";
-    viewClientButton.style.color = "white";
-    viewClientButton.style.cursor = "pointer";
+            const reportString = JSON.stringify(report);
+            let formattedReport = report.data
+                .replace(/\n/g, "<br>") 
+                .replace(/(\*\*[^*]+\*\*)/g, "<strong>$1</strong>")
+                .replace(/^###\s*(.+)$/gm, "<h3>$1</h3>") 
+                .replace(/(\d+\.\s)(.+?)(?=\n|$)/g, "<li>$2</li>")
+                .replace(/###/g, "") 
+                .replace(/\*\*/g, ""); 
 
-    viewClientButton.onclick = () => {
-        window.location.href = `individual_clients.html?username=${encodeURIComponent(username2)}&client=${encodeURIComponent(clientID)}`;
-    };
-
-    clientBox.appendChild(name);
-    clientBox.appendChild(viewClientButton);
-
-    return clientBox;
-}
-
-async function loadClients() {
-    try {
-        const currentUserData = await fetchJsonFromFirebase();
-
-        if (!currentUserData) {
-            console.error("No user data available.");
-            return;
-        }
-
-        console.log("Full user data:", JSON.stringify(currentUserData, null, 2));
-
-        const managerData = currentUserData.manager[username2];
-
-        if (!managerData || !managerData.clients) {
-            console.error("Manager or clients data is missing.");
-            return;
-        }
-
-        const clients = managerData.clients;
-
-        console.log("Extracted clients:", clients);
-
-        const clientContainer = document.querySelector(".clientmiddle");
-        if (!clientContainer) {
-            console.error("Client container not found in DOM.");
-            return;
-        }
-
-        Object.entries(clients).forEach(([clientID, client]) => {
-            console.log("Processing client:", clientID, client);
-
-            const clientBox = createClientBox(clientID, client);
-            clientContainer.appendChild(clientBox);
+            document.getElementById("report").innerHTML = formattedReport;
         });
-    } catch (error) {
-        console.error("Error loading clients:", error);
-    }
-}
 
 
-
-
-document.addEventListener("DOMContentLoaded", loadClients);
     </script>
 </body>
-
 </html>
-
