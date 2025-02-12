@@ -1,6 +1,6 @@
 import requests
 
-url = "https://history-ieevug7ulq-nw.a.run.app"
+url = "http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/history"
 
 try:
     response = requests.get(url) 

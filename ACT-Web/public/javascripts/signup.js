@@ -2,7 +2,7 @@ const DarkReader = require('darkreader');
 
 async function addManager(username, name, email, password) {
     try {
-        const response = await fetch('https://addmanager-ieevug7ulq-nw.a.run.app', {
+        const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/addManager', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -41,15 +41,6 @@ signUpButton.addEventListener('click', async (event) => {
     let response = await addManager(username, name, email, password)
     console.log(response)
 })
-
-function autofill() {
-    document.getElementById("username").value = "m_user4"
-    document.getElementById("name").value = "Mfirst4 Mlast4"
-    document.getElementById("email").value = "m_user4@gmail.com"
-    document.getElementById("password").value = "m_user4_password!"
-}
-
-autofill()
 
 DarkReader.auto({
     brightness: 100,

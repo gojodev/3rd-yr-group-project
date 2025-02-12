@@ -1,6 +1,6 @@
 async function send_res(companyName) {
     try {
-        const response = await fetch('https://companyname-ieevug7ulq-nw.a.run.app', {
+        const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/companyName', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -23,7 +23,7 @@ async function send_res(companyName) {
 
 async function get_res() {
     try {
-        const response = await fetch('https://companyname-ieevug7ulq-nw.a.run.app', {
+        const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/companyName', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ async function get_res() {
 
 async function AI_report() {
     try {
-        const response = await fetch('https://ai-report-ieevug7ulq-nw.a.run.app', {
+        const response = await fetch('http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/AI_report', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

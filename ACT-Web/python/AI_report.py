@@ -1,7 +1,7 @@
 import requests
 
 def sendToDB(content):
-    url = "https://ai-report-ieevug7ulq-nw.a.run.app"
+    url = "http://127.0.0.1:5001/rd-year-project-1f41d/europe-west2/AI_report"
 
     # ! its important that your JSON object has the "data" key
     data = {"data": content}
